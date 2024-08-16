@@ -1,56 +1,48 @@
-ifneq ($(words $(CURDIR)),1)
- $(error Unsupported: GNU Make cannot build in directories containing spaces, build elsewhere: '$(CURDIR)')
-endif
-
-ifeq ($(VERILATOR_ROOT),)
 VERILATOR = verilator
 VERILATOR_COVERAGE = verilator_coverage
-else
-export VERILATOR_ROOT
-VERILATOR = $(VERILATOR_ROOT)/bin/verilator
-VERILATOR_COVERAGE = $(VERILATOR_ROOT)/bin/verilator_coverage
-endif
 
-VERILATOR_FLAGS += -cc --exe --build
-VERILATOR_FLAGS += -x-assign fast
+VERILATOR_FLAGS += --cc --exe --build
 VERILATOR_FLAGS += -Wall
-VERILATOR_FLAGS += --trace
-VERILATOR_FLAGS += --assert
-VERILATOR_FLAGS += --coverage
-# VERILATOR_FLAGS += debug
+# VERILATOR_FLAGS += --trace
 
-VERILATOR_INPUT = vsrc/top.v csrc/main.cpp
+VERILATOR_INPUT = csrc/NVBoardTest.cpp vsrc/top.v
 
-default: sim
+# NVBoard部分
+TOPNAME = top
+NXDC_FILES = constr/top.nxdc
+
+SRC_AUTO_BIND = $(abspath ./auto_bind.cpp)
+
+$(SRC_AUTO_BIND): $(NXDC_FILES)
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
+
+VERILATOR_INPUT += ./auto_bind.cpp
+
+include $(NVBOARD_HOME)/scripts/nvboard.mk
+
+INCFLAGS = $(addprefix -I, $(INC_PATH))
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 
 all:
-	@echo "Write this Makefile by your self."
 
-sim:
+sim: $(SRC_AUTO_BIND) $(NVBOARD_ARCHIVE)
 	@echo
-	@echo "-- Verilator tracing example"
+	@echo "---------- verilator run ----------"
 	@echo
-	@echo "-- VERILATE ----------------"
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT)
-	
-	@echo
-	@echo "-- BUILD -------------------"
-# $(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by your self."
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT)
-#	$(MAKE) -j -C obj_dir -f Vtop.mk
-#	$(MAKE) -j -C obj_dir -f ../Makefile_obj
+
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) \
+		--top-module $(TOPNAME) $^ \
+		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))
+
 
 	@echo
-	@echo "-- RUN ---------------------"
-	@rm -rf logs
-	@mkdir -p logs
-	obj_dir/Vtop +trace
+	@echo "---------- RUN ----------"
+	obj_dir/Vtop
 
 	@echo
-	@echo "-- COVERAGE ----------------"
-	@rm -rf logs/annotated
-	$(VERILATOR_COVERAGE) --annotate logs/annotated logs/coverage.dat
+	@echo "---------- DONE ----------"
+
+#	$(call git_commit, "sim RTL")
 
 maintainer-copy::
 clean mostlyclean distclean maintainer-clean::
