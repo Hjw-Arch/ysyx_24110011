@@ -98,15 +98,16 @@ static int cmd_x(char* args) {
   int expr_result;
   sscanf(EXPR + 2, "%x", &expr_result);
 
-  if (expr_result > PMEM_RIGHT) {
-    printf("Start address is larger then the end of memory!\n");
+  if (expr_result > PMEM_RIGHT || expr_result < PMEM_LEFT) {
+    printf("Start address is out of range of memory size!\n");
     return 0;
   }
 
   for (int i = 0; i < atoi(N); i++) {
-    if (i + expr_result > PMEM_RIGHT) return 0;
     printf("0x%-10x", vaddr_read(expr_result, 4));
-    if (i % 8 == 0) printf("\n");
+    if ((i + 1) % 11 == 0) printf("\n");
+    expr_result += 4;
+    if (expr_result > PMEM_RIGHT) return 0;
   }
 
   printf("\n");
