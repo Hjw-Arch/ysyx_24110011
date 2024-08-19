@@ -105,8 +105,8 @@ static int cmd_x(char* args) {
 
   for (int i = 0; i < atoi(N); i++) {
     if (i + expr_result > PMEM_RIGHT) return 0;
-    printf("0x%-15x", vaddr_read(expr_result, 4));
-    if (i % 10 == 0) printf("\n");
+    printf("0x%-10x", vaddr_read(expr_result, 4));
+    if (i % 8 == 0) printf("\n");
   }
 
   printf("\n");
