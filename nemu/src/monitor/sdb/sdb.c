@@ -55,7 +55,8 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
   char *num_p = strtok(args, " ");
-  int num = *(int *)num_p;
+  int num = (num_p == NULL) ? 1 : *(int *)num_p;
+  printf("test num = %d\n", num);
   for (int i = 0; i < num; ++i) {
     cpu_exec(1);
   }
