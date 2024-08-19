@@ -17,6 +17,8 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "../include/memory/vaddr.h"
+#include "../include/memory/paddr.h"
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -80,6 +82,37 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_x(char* args) {
+  char *N = strtok(args, " ");
+  if (N == NULL) {
+    printf("Missing parameter\n");
+    return 0;
+  }
+
+  char *EXPR = strtok(NULL, " ");
+  if (EXPR == NULL) {
+    printf("Missing parameter\n");
+    return 0;
+  }
+
+  int expr_result;
+  sscanf(EXPR + 2, "%x", &expr_result);
+
+  if (expr_result > PMEM_RIGHT) {
+    printf("Start address is larger then the end of memory!\n");
+    return 0;
+  }
+
+  for (int i = 0; i < atoi(N); i++) {
+    if (i + expr_result > PMEM_RIGHT) return 0;
+    printf("0x%-15x", vaddr_read(expr_result, 4));
+    if (i % 10 == 0) printf("\n");
+  }
+
+  printf("\n");
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -92,6 +125,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   {"si", "si [N], Let the program step through N instructions, the default N is 1", cmd_si},
   {"info", "info r, Print register status", cmd_info},
+  {"x", "x N EXPR, Evaluate the expression EXPR and use the result as the starting memory \
+  output N consecutive 4 bytes in hexadecimal form", cmd_x},
 
   /* TODO: Add more commands */
 
