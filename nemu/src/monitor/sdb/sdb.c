@@ -55,7 +55,11 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
   char *num_p = strtok(args, " ");
-  int num = (num_p == NULL) ? 1 : *(int *)num_p - 48;
+  int num = (num_p == NULL) ? 1 : atoi(num_p);
+  if (num > (0x7fffffff) || num < 0) {
+    printf("The \"N\" is out of range, N ranges from 0 to 2,147,483,647\n");
+    return 0;
+  }
   printf("test num = %d\n", num);
   for (int i = 0; i < num; ++i) {
     cpu_exec(1);
