@@ -60,10 +60,23 @@ static int cmd_si(char *args) {
     printf("The \"N\" is out of range, N ranges from 0 to 2,147,483,647\n");
     return 0;
   }
-  printf("test num = %d\n", num);
   for (int i = 0; i < num; ++i) {
     cpu_exec(1);
   }
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  char *next_arg = strtok(args, " ");
+  if (next_arg == NULL) {
+    printf("Missing parameter\n");
+    return 0;
+  }
+  if (*next_arg != 'r') {
+    printf("Parameter error\n");
+    return 0;
+  }
+  isa_reg_display();
   return 0;
 }
 
@@ -78,6 +91,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   {"si", "si [N], Let the program step through N instructions, the default N is 1", cmd_si},
+  {"info", "info r, Print register status", cmd_info},
 
   /* TODO: Add more commands */
 
