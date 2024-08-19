@@ -26,9 +26,9 @@ const char *regs[] = {
 void isa_reg_display() {
 #define R(i) gpr(i)
   for (int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); i++) {
-    printf("15%s20%x%u\n", regs[i], R(i), R(i));
+    printf("-15%s-20%x-%u\n", regs[i], R(i), R(i));
   }
-  printf("15%s20%x%x", "pc", cpu.pc, cpu.pc);
+  printf("-15%s-20%x%x", "pc", cpu.pc, cpu.pc);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
