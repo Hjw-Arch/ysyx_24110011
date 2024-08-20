@@ -128,10 +128,13 @@ static bool make_token(char *e)
                 case TK_NUM:
                     do
                     {
+                        // test code
+                        printf("test pos1\n");
+                        // test code end
                         tokens[nr_token].type = TK_NUM;
-                        memcpy(tokens[nr_token++].str, substr_start, substr_len > 32 ? 32 : substr_len);
+                        strncpy(tokens[nr_token++].str, substr_start, substr_len > 32 ? 32 : substr_len);
                         substr_len = substr_len - 32;
-                    } while (substr_len <= 0);
+                    } while (substr_len > 0);
                     break;
                 case TK_NOTYPE:
                 default:
