@@ -165,12 +165,13 @@ word_t expr(char *e, bool *success)
 // 8.21测试代码
     for(int i = 0; i < nr_token; i++) {
         if (tokens[i].type < 256) {
-            printf("%-5c", tokens[i].type);
+            printf("%c", tokens[i].type);
         } else {
             printf("%-5d", tokens[i].type);
         }
         if ((i + 1) % 11 == 0) puts("");
     }
+    puts("");
     *success = true;
     return 0;
 
