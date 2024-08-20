@@ -55,6 +55,7 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+// 实现单步运行
 static int cmd_si(char *args) {
   char *num_p = strtok(args, " ");
   int num = (num_p == NULL) ? 1 : atoi(num_p);
@@ -68,6 +69,7 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+// 实现打印寄存器
 static int cmd_info(char *args) {
   char *next_arg = strtok(args, " ");
   if (next_arg == NULL) {
@@ -82,6 +84,7 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+// 实现内存扫描
 static int cmd_x(char* args) {
   char *N = strtok(args, " ");
   if (N == NULL) {
