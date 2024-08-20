@@ -167,7 +167,7 @@ word_t expr(char *e, bool *success)
         if (tokens[i].type < 256) {
             printf("%c", tokens[i].type);
         } else {
-            printf("%d", (u_int32_t)atoi(tokens[i].str));
+            printf("%s", tokens[i].str);
         }
         if ((i + 1) % 11 == 0) puts("");
     }
