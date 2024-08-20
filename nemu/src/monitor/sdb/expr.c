@@ -45,7 +45,7 @@ static struct rule
     {"==", TK_EQ},     // equal
     {"\\-", '-'},      // sub
     {"\\*", '*'},      // mul
-    {"\\/", '/'},        // div
+    {"/", '/'},        // div
     {"\\(", '('},      // (
     {"\\)", ')'},      // )
     {"[0-9]+", TK_NUM}, // 数字
@@ -169,7 +169,7 @@ word_t expr(char *e, bool *success)
         } else {
             printf("%s", tokens[i].str);
         }
-        if ((i + 1) % 11 == 0) puts("");
+        // if ((i + 1) % 11 == 0) puts("");
     }
     puts("");
     *success = true;
