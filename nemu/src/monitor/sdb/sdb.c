@@ -135,6 +135,10 @@ static int cmd_x(char *args)
 }
 
 static int cmd_test_expr(char* args) {
+    if (args == NULL) {
+        printf("Missing parameter\n");
+        return 0;
+    }
     bool is_success;
     expr(args, &is_success);
     printf("is_success: %s\n", is_success ? "yes" : "no");
