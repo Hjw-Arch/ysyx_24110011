@@ -120,6 +120,7 @@ static bool make_token(char *e)
                 case '/':
                 case '(':
                 case ')':
+                    nr_token++;
                     tokens[nr_token++].type = rules[i].token_type;
                     break;
                 case TK_NUM:
