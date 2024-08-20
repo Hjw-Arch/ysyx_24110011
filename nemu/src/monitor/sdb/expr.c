@@ -121,16 +121,10 @@ static bool make_token(char *e)
                 case '(':
                 case ')':
                     tokens[nr_token++].type = rules[i].token_type;
-                    // test code
-                    printf("match %c: %d\n", *substr_start, tokens[nr_token++].type);
-                    // test code end
                     break;
                 case TK_NUM:
                     do
                     {
-                        // test code
-                        printf("test pos1\n");
-                        // test code end
                         tokens[nr_token].type = TK_NUM;
                         strncpy(tokens[nr_token++].str, substr_start, substr_len > 32 ? 32 : substr_len);
                         substr_len = substr_len - 32;
@@ -163,6 +157,7 @@ word_t expr(char *e, bool *success)
     }
 
 // 8.21测试代码
+    printf("nr_tokens: %d\n", nr_token);
     for(int i = 0; i < nr_token; i++) {
         if (tokens[i].type < 256) {
             printf("%c", tokens[i].type);
