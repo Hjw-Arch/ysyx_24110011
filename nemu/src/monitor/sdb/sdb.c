@@ -129,8 +129,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   {"si", "si [N], Let the program step through N instructions, the default N is 1", cmd_si},
   {"info", "info r, Print register status", cmd_info},
-  {"x", "x N EXPR, Evaluate the expression EXPR and use the result as the starting memory \
-  output N consecutive 4 bytes in hexadecimal form", cmd_x},
+  {"x", "x N EXPR, Evaluate the expression EXPR and use the result as the starting memory output N consecutive 4 bytes in hexadecimal form", cmd_x},
 
   /* TODO: Add more commands */
 
