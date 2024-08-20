@@ -123,12 +123,15 @@ static bool make_token(char *e)
                     tokens[nr_token++].type = rules[i].token_type;
                     break;
                 case TK_NUM:
-                    do
+                    tokens[nr_token].type = TK_NUM;
+                    strncpy(tokens[nr_token++].str, substr_start, substr_len > 10 ? 10 : substr_len);
+                    if (substr_len > 10 || atol(tokens[nr_token].str) > 4294967296)
                     {
-                        tokens[nr_token].type = TK_NUM;
-                        strncpy(tokens[nr_token++].str, substr_start, substr_len > 32 ? 32 : substr_len);
-                        substr_len = substr_len - 32;
-                    } while (substr_len > 0);
+                        printf("Number out of range\n");
+                        printf("%*.s\n", substr_len, substr_start);
+                        printf("%*.s^\n", substr_len, "");
+                        return false;
+                    }
                     break;
                 case TK_NOTYPE:
                 default:
@@ -146,6 +149,36 @@ static bool make_token(char *e)
     }
 
     return true;
+}
+
+// 检查表达式是否被括号包裹
+bool check_parentheses(int p, int q) {
+    if (!(tokens[p].type == '(' && tokens[q].type == ')')) {
+        return false;
+    }
+
+    bool is_bad = false;
+    int num_left_parenthese = 0, num_right_parenthese = 0;
+    for (int i = p + 1; i < q; i++) {
+        if (tokens[i].type == '(') num_left_parenthese++;
+        if (tokens[i].type == ')') num_right_parenthese++;
+        if (num_right_parenthese > num_left_parenthese) is_bad = true;
+        if (num_left_parenthese >= num_right_parenthese && num_right_parenthese > 0) {
+            num_left_parenthese--;
+            num_right_parenthese--;
+        }
+    }
+    if (num_left_parenthese != num_right_parenthese || is_bad == true) return false;
+    return true;
+}
+
+int eval_expression(char *expr, int p, int q, bool *is_bad_expr){
+    if (p > q) {
+        *is_bad_expr = true;
+        return 0;
+    }
+
+    return 0;
 }
 
 word_t expr(char *e, bool *success)
