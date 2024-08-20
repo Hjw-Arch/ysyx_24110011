@@ -121,6 +121,9 @@ static bool make_token(char *e)
                 case '(':
                 case ')':
                     tokens[nr_token++].type = rules[i].token_type;
+                    // test code
+                    printf("match %c: %d\n", *substr_start, tokens[nr_token++].type);
+                    // test code end
                     break;
                 case TK_NUM:
                     do
