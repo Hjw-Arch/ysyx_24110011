@@ -128,7 +128,7 @@ static bool make_token(char *e)
                     if (substr_len > 10 || atol(tokens[nr_token].str) > 4294967296)
                     {
                         printf("Number out of range\n");
-                        printf("%*.ss\n", substr_len, substr_start);
+                        printf("%-*.s\n", substr_len, substr_start);
                         printf("%*.s^\n", substr_len, "");
                         return false;
                     }
