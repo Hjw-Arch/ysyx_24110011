@@ -129,7 +129,7 @@ static bool make_token(char *e)
                     {
                         printf("Number out of range\n");
                         printf("%-.*s\n", substr_len, substr_start);
-                        printf("%*.s^\n", substr_len, "");
+                        printf("%-*.s^\n", substr_len, "");
                         return false;
                     }
                     break;
