@@ -125,7 +125,7 @@ static bool make_token(char *e)
                 case TK_NUM:
                     tokens[nr_token].type = TK_NUM;
                     strncpy(tokens[nr_token++].str, substr_start, substr_len > 10 ? 10 : substr_len);
-                    if ((substr_len > 10) || (atoll(tokens[nr_token].str) > 4294967296))
+                    if ((substr_len > 10) || (atoll(tokens[nr_token - 1].str) > 4294967296))
                     {
                         printf("Number out of range\n");
                         printf("%-.*s\n", substr_len, substr_start);
