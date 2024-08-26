@@ -147,7 +147,10 @@ static bool make_token(char *e)
             printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
             return false;
         }
+
     }
+
+    nr_token--;     // 多算了一个，要减去
 
     return true;
 }
