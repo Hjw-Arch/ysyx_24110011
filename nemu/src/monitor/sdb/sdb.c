@@ -157,7 +157,7 @@ static int cmd_test_expr(char* args) {
     bool is_bad_expr;
     long long int result = eval_expression(0, nr_token - 1, &is_bad_expr);
     if (is_bad_expr == true) printf("Bad expression!\n");
-    else printf("result is: %lld", result);
+    else printf("result is: %lld\n", result);
     return 0;
 }
 
