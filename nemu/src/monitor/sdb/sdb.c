@@ -136,6 +136,7 @@ static int cmd_x(char *args)
 
 bool check_parentheses(int p, int q);
 int search_for_main_operator(int p, int q);
+long long int eval_expression(int p, int q, bool *is_bad_expr);
 
 static int cmd_test_expr(char* args) {
     if (args == NULL) {
@@ -152,6 +153,11 @@ static int cmd_test_expr(char* args) {
     int pos_op = search_for_main_operator(0, nr_token - 1);
     if (!pos_op) printf("Bad expression\n");
     else printf("The main operator is at pos: %d\n", pos_op);
+
+    bool is_bad_expr;
+    long long int result = eval_expression(0, nr_token - 1, &is_bad_expr);
+    if (is_bad_expr == true) printf("Bad expression!\n");
+    else printf("result is: %lld", result);
     return 0;
 }
 
