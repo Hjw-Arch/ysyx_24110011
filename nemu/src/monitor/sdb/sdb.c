@@ -135,6 +135,7 @@ static int cmd_x(char *args)
 }
 
 bool check_parentheses(int p, int q);
+int search_for_main_operator(int p, int q);
 
 static int cmd_test_expr(char* args) {
     if (args == NULL) {
@@ -145,8 +146,12 @@ static int cmd_test_expr(char* args) {
     expr(args, &is_success);
     printf("is_success: %s\n", is_success ? "yes" : "no");
     extern int nr_token;
+
     
-    printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token - 1) == true ? "is" : "is not");
+    // printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token - 1) == true ? "is" : "is not");
+    int pos_op = search_for_main_operator(0, nr_token - 1);
+    if (!pos_op) printf("Bad expression\n");
+    else printf("The main operator is at pos: %d\n", pos_op);
     return 0;
 }
 
