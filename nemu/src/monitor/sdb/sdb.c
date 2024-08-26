@@ -146,7 +146,7 @@ static int cmd_test_expr(char* args) {
     printf("is_success: %s\n", is_success ? "yes" : "no");
     extern int nr_token;
     
-    printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token) == true ? "is" : "is not");
+    printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token - 1) == true ? "is" : "is not");
     return 0;
 }
 

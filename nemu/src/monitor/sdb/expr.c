@@ -150,8 +150,6 @@ static bool make_token(char *e)
 
     }
 
-    nr_token--;     // 多算了一个，要减去
-
     return true;
 }
 
