@@ -159,18 +159,17 @@ bool check_parentheses(int p, int q) {
         return false;
     }
 
-    bool is_bad = false;
     int num_left_parenthese = 0, num_right_parenthese = 0;
     for (int i = p + 1; i < q; i++) {
         if (tokens[i].type == '(') num_left_parenthese++;
         if (tokens[i].type == ')') num_right_parenthese++;
-        if (num_right_parenthese > num_left_parenthese) is_bad = true;
-        if (num_left_parenthese >= num_right_parenthese && num_right_parenthese > 0) {
+        if (num_right_parenthese > num_left_parenthese) return false;
+        if (num_right_parenthese > 0) {
             num_left_parenthese--;
             num_right_parenthese--;
         }
     }
-    if (num_left_parenthese != num_right_parenthese || is_bad == true) return false;
+    if (num_left_parenthese != num_right_parenthese) return false;
     return true;
 }
 
