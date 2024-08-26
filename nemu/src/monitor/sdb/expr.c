@@ -194,7 +194,7 @@ int search_for_main_operator(int p, int q) {
                     right_parentheses--;
                 }
                 if (left_parentheses == 0) {        // 如果左括号被消除完毕，说明完成括号匹配，可以退出
-                    ++i;
+                    // ++i;
                     break;
                 }
             }
