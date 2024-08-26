@@ -241,24 +241,24 @@ long long int eval_expression(int p, int q, bool *is_bad_expr){
         {
         case '+':
             return val1 + val2;
-            break;
         
         case '-':
             return val1 - val2;
-            break;
 
         case '*':
             return val1 * val2;
-            break;
         
         case '/':
+            if (val2 == 0) {
+                printf("ZeroDivisionError!\n");
+                *is_bad_expr = true;
+                return 0;
+            }
             return val1 / val2;
-            break;
 
         default:
             *is_bad_expr = true;
             return 0;
-            break;
         }
     }
     return 0;
