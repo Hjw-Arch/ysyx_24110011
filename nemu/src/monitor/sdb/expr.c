@@ -82,7 +82,8 @@ typedef struct token
 } Token;
 
 static Token tokens[32] __attribute__((used)) = {};
-static int nr_token __attribute__((used)) = 0;
+// static int nr_token __attribute__((used)) = 0;
+int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
 {
@@ -172,12 +173,93 @@ bool check_parentheses(int p, int q) {
     return true;
 }
 
-int eval_expression(char *expr, int p, int q, bool *is_bad_expr){
+// 寻找主运算符
+int search_for_main_operator(int p, int q) {
+    int temp_op = 0;        // 若主运算符的位置出现在0，则表达式错误
+
+    for (int i = p; i <= q; i++) {
+        switch (tokens[i].type)
+        {
+        case '(':
+            int left_parentheses = 1;
+            int right_parentheses = 0;
+            while(++i) {
+                if (i > q) return 0;        // 遍历到末尾还没有找到匹配项，表达式错误！
+                if (tokens[i].type == '(') left_parentheses++;  // 遍历到左括号，说明有嵌套括号，都不能要
+                if (tokens[i].type == ')') right_parentheses++; // 遍历到右括号，消除与之匹配的左括号
+                if (left_parentheses < right_parentheses) return 0; // 不可能出现左括号数量少于右括号，否则表达式错误！
+                if (right_parentheses > 0) {    // 如果存在右括号，那么消除此右括号和与之匹配的左括号
+                    left_parentheses--;
+                    right_parentheses--;
+                }
+                if (left_parentheses == 0) {        // 如果左括号被消除完毕，说明完成括号匹配，可以退出
+                    ++i;
+                    break;
+                }
+            }
+            break;
+        
+        case ')':       // 先匹配到右括号，说明表达式错误
+            return 0;
+
+        case '+':       // + -为低优先级运算符，若发现不在括号中的+ -号可以直接返回这个+ -号
+        case '-':
+            return i;
+        
+        case '*':       // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看后面是否还存在更低优先级的运算符
+        case '/':
+            temp_op = i;
+
+        default:
+            break;
+        }
+    }
+    return temp_op;
+}
+
+long long int eval_expression(int p, int q, bool *is_bad_expr){
     if (p > q) {
         *is_bad_expr = true;
         return 0;
-    }
+    } else if (p == q) {
+        if (tokens[q].type == TK_NUM) {
+            return atoll(tokens[q].str);
+        } else {
+            *is_bad_expr = true;
+            return 0;
+        }
+    } else if (check_parentheses(p, q) == true) {
+        return eval_expression(p + 1, q - 1, is_bad_expr);
+    } else {
+        int pos_op = search_for_main_operator(p, q);
+        if (!pos_op) *is_bad_expr = true;
+        long long int val1 = eval_expression(p, pos_op - 1, is_bad_expr);
+        long long int val2 = eval_expression(pos_op + 1, q, is_bad_expr);
 
+        switch (tokens[pos_op].type)
+        {
+        case '+':
+            return val1 + val2;
+            break;
+        
+        case '-':
+            return val1 - val2;
+            break;
+
+        case '*':
+            return val1 * val2;
+            break;
+        
+        case '/':
+            return val1 / val2;
+            break;
+
+        default:
+            *is_bad_expr = true;
+            return 0;
+            break;
+        }
+    }
     return 0;
 }
 

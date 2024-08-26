@@ -134,6 +134,8 @@ static int cmd_x(char *args)
     return 0;
 }
 
+bool check_parentheses(int p, int q);
+
 static int cmd_test_expr(char* args) {
     if (args == NULL) {
         printf("Missing parameter\n");
@@ -142,6 +144,9 @@ static int cmd_test_expr(char* args) {
     bool is_success;
     expr(args, &is_success);
     printf("is_success: %s\n", is_success ? "yes" : "no");
+    extern int nr_token;
+    
+    printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token) == true ? "is" : "is not");
     return 0;
 }
 
