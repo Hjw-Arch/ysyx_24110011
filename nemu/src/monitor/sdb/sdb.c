@@ -161,6 +161,21 @@ static int cmd_test_expr(char* args) {
     return 0;
 }
 
+static int cmd_p(char *args) {
+    if (args == NULL) {
+        printf("Missing parameter\n");
+        return 0;
+    }
+
+    bool is_success;
+    expr(args, &is_success);
+    if (!is_success) {
+        printf("Bad expression\n");
+        return 0;
+    }
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct
@@ -172,9 +187,10 @@ static struct
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
-    {"si", "si [N], Let the program step through N instructions, the default N is 1", cmd_si},
-    {"info", "info r, Print register status", cmd_info},
-    {"x", "x N EXPR, Evaluate the expression EXPR and use the result as the starting memory, output N consecutive 4 bytes in hexadecimal form", cmd_x},
+    {"si", "si [N] | Let the program step through N instructions, the default N is 1", cmd_si},
+    {"info", "info r | Print register status", cmd_info},
+    {"x", "x N EXPR | Evaluate the expression EXPR and use the result as the starting memory, output N consecutive 4 bytes in hexadecimal form", cmd_x},
+    {"p", "p EXPR | Evaluate the expression EXPR", cmd_p},
     {"test_expr", "test expr", cmd_test_expr},
     /* TODO: Add more commands */
 

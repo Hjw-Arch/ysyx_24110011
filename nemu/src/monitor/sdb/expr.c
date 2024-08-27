@@ -211,31 +211,31 @@ int search_for_main_operator(int p, int q) {
         case '/':
             temp_op = i;
 
-        default:
+        default:        // 读取表达式时即不允许除了四则运算符与括号和数字之外的类型存在，因此default处理的就是数字类型，直接跳过
             break;
         }
     }
     return temp_op;
 }
 
-long long int eval_expression(int p, int q, bool *is_bad_expr){
+long long int eval_expression(int p, int q, bool *success){
     if (p > q) {
-        *is_bad_expr = true;
+        *success = false;
         return 0;
     } else if (p == q) {
         if (tokens[q].type == TK_NUM) {
             return atoll(tokens[q].str);
         } else {
-            *is_bad_expr = true;
+            *success = false;
             return 0;
         }
     } else if (check_parentheses(p, q) == true) {
-        return eval_expression(p + 1, q - 1, is_bad_expr);
+        return eval_expression(p + 1, q - 1, success);
     } else {
         int pos_op = search_for_main_operator(p, q);
-        if (!pos_op) *is_bad_expr = true;
-        long long int val1 = eval_expression(p, pos_op - 1, is_bad_expr);
-        long long int val2 = eval_expression(pos_op + 1, q, is_bad_expr);
+        if (!pos_op) *success = false;
+        long long int val1 = eval_expression(p, pos_op - 1, success);
+        long long int val2 = eval_expression(pos_op + 1, q, success);
 
         switch (tokens[pos_op].type)
         {
@@ -251,13 +251,13 @@ long long int eval_expression(int p, int q, bool *is_bad_expr){
         case '/':
             if (val2 == 0) {
                 printf("ZeroDivisionError!\n");
-                *is_bad_expr = true;
+                *success = false;
                 return 0;
             }
             return val1 / val2;
 
         default:
-            *is_bad_expr = true;
+            *success = false;
             return 0;
         }
     }
@@ -272,24 +272,16 @@ word_t expr(char *e, bool *success)
         return 0;
     }
 
-// 8.21测试代码
-    printf("nr_tokens: %d\n", nr_token);
-    for(int i = 0; i < nr_token; i++) {
-        if (tokens[i].type < 256) {
-            printf("%c", tokens[i].type);
-        } else {
-            printf("%s", tokens[i].str);
-        }
-        // if ((i + 1) % 11 == 0) puts("");
-    }
-    puts("");
-    *success = true;
-    return 0;
-
-//测试代码结束
-
     /* TODO: Insert codes to evaluate the expression. */
-    TODO();
+//    TODO();
+    long long int result = eval_expression(0, nr_token - 1, success);
+    if (result > 4294967296) {
+        printf("result out of range\n");
+        *success = false;
+        return 0;
+    }
+
+    printf("%d", (uint32_t)result);
 
     return 0;
 }
