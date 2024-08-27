@@ -168,11 +168,17 @@ static int cmd_p(char *args) {
     }
 
     bool is_success = true;
-    expr(args, &is_success);
-    if (!is_success) {
-        printf("Bad expression\n");
-        return 0;
+    uint32_t result = expr(args, &is_success);
+
+    if (is_success)
+    {
+        printf("%d\n", result);
     }
+    else
+    {
+        printf("Bad expression\n");
+    }
+
     return 0;
 }
 
