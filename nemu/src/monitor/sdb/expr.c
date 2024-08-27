@@ -233,7 +233,10 @@ long long int eval_expression(int p, int q, bool *success){
         return eval_expression(p + 1, q - 1, success);
     } else {
         int pos_op = search_for_main_operator(p, q);
-        if (!pos_op) *success = false;
+        if (!pos_op) {
+            *success = false;
+            return 0;
+        }
         long long int val1 = eval_expression(p, pos_op - 1, success);
         long long int val2 = eval_expression(pos_op + 1, q, success);
 
