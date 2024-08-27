@@ -281,7 +281,7 @@ word_t expr(char *e, bool *success)
         return 0;
     }
 
-    printf("%d", (uint32_t)result);
+    printf("%d\n", (uint32_t)result);
 
     return 0;
 }

@@ -167,7 +167,7 @@ static int cmd_p(char *args) {
         return 0;
     }
 
-    bool is_success;
+    bool is_success = true;
     expr(args, &is_success);
     if (!is_success) {
         printf("Bad expression\n");
