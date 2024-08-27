@@ -233,7 +233,7 @@ long long int eval_expression(int p, int q, bool *success){
         return eval_expression(p + 1, q - 1, success);
     } else {
         int pos_op = search_for_main_operator(p, q);
-        if (!pos_op) {
+        if (!pos_op) {      // 如果pos_op为0，需要直接返回，不然pos_op - 1会导致负数
             *success = false;
             return 0;
         }
