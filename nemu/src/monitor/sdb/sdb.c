@@ -138,26 +138,39 @@ bool check_parentheses(int p, int q);
 int search_for_main_operator(int p, int q);
 long long int eval_expression(int p, int q, bool *is_bad_expr);
 
+char buf[100010];
+
 static int cmd_test_expr(char* args) {
     if (args == NULL) {
         printf("Missing parameter\n");
         return 0;
     }
-    bool is_success;
-    expr(args, &is_success);
-    printf("is_success: %s\n", is_success ? "yes" : "no");
-    extern int nr_token;
 
+    FILE *fp = fopen("~/input.txt", "r");
+    if (fp == NULL) {
+        printf("Can not open the file\n");
+        return 0;
+    }
+
+    while (fgets(buf, sizeof(buf), fp) != NULL)
+    {
+
+        char *result_str = strtok(buf, " ");
+        uint32_t result = (uint32_t)atoll(result_str);
+        char *expr_str = result_str + strlen(result_str) + 1;
+        bool is_success = true;
+        uint32_t result_test = expr(expr_str, &is_success);
+        if (is_success) {
+            if (result_test == result) {
+                printf("test right\n");
+            } else {
+                printf("test error!\n");
+            }
+        } else {
+            printf("Bad expr or ZeroDivError\n");
+        }
+    }
     
-    // printf("Expr %s surrounded by a matched pair of parenthese\n", check_parentheses(0, nr_token - 1) == true ? "is" : "is not");
-    int pos_op = search_for_main_operator(0, nr_token - 1);
-    if (!pos_op) printf("Bad expression\n");
-    else printf("The main operator is at pos: %d\n", pos_op);
-
-    bool is_bad_expr;
-    long long int result = eval_expression(0, nr_token - 1, &is_bad_expr);
-    if (is_bad_expr == true) printf("Bad expression!\n");
-    else printf("result is: %lld\n", result);
     return 0;
 }
 
