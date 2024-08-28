@@ -174,7 +174,7 @@ static int cmd_test_expr(char* args) {
                 count++;
                 printf("result:%s ", result_str);
                 printf("result of turn: %u", result);
-                printf("result of sdb: %u", result_test);
+                printf("  result of sdb: %u", result_test);
                 printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
                 
             }
