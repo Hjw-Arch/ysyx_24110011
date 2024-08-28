@@ -146,7 +146,7 @@ static int cmd_test_expr(char* args) {
         return 0;
     }
 
-    FILE *fp = fopen("~/input.txt", "r");
+    FILE *fp = fopen("/home/hjw-arch/input.txt", "r");
     if (fp == NULL) {
         printf("Can not open the file\n");
         return 0;
@@ -170,6 +170,8 @@ static int cmd_test_expr(char* args) {
             printf("Bad expr or ZeroDivError\n");
         }
     }
+
+    fclose(fp);
     
     return 0;
 }
