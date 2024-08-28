@@ -51,7 +51,7 @@ static int countBits(uint32_t num) {
 }
 
 static void gen_num() {
-    uint32_t rand32 = ((uint32_t)rand() << 16) | rand();
+    uint32_t rand32 = (uint32_t)(rand() << 16 | rand());
     sprintf(buf + pos_buf, "%u", rand32);
 
     int rand_blank = choose(3);

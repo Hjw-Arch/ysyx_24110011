@@ -178,6 +178,9 @@ static int cmd_test_expr(char* args) {
             }
         } else {
             printf("Bad expr or ZeroDivError\n");
+            printf("result:%s ", result_str);
+            printf("result of turn: %u", result);
+            printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
             count++;
         }
     }
