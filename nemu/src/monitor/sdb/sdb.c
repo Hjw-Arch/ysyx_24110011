@@ -175,6 +175,7 @@ static int cmd_test_expr(char* args) {
             }
         } else {
             printf("Bad expr or ZeroDivError\n");
+            count++;
         }
     }
 
