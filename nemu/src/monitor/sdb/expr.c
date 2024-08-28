@@ -269,6 +269,8 @@ long long int eval_expression(int p, int q, bool *success){
 
 word_t expr(char *e, bool *success)
 {
+    memset(tokens, 0, sizeof(tokens));
+    nr_token = 0;
     if (!make_token(e))
     {
         *success = false;
