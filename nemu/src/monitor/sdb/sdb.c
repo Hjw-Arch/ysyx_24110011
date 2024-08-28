@@ -152,16 +152,18 @@ static int cmd_test_expr(char* args) {
         return 0;
     }
 
+    int count = 0;
+
     while (fgets(buf, sizeof(buf), fp) != NULL)
     {
 
         char *result_str = strtok(buf, " ");
-        printf("\n\nresult:%s ", result_str);
+//        printf("\n\nresult:%s ", result_str);
         uint32_t result = (uint32_t)atoll(result_str);
-        printf("result of turn: %u", result);
+//        printf("result of turn: %u", result);
         // char *expr_str = result_str + strlen(result_str) + 1;
         char *expr_str = strtok(NULL, "\n");
-        printf("\n\nexpr:%s\n\n", expr_str);
+//        printf("\n\nexpr:%s\n\n", expr_str);
         bool is_success = true;
         uint32_t result_test = expr(expr_str, &is_success);
         if (is_success) {
@@ -169,11 +171,14 @@ static int cmd_test_expr(char* args) {
                 printf("test right\n");
             } else {
                 printf("test error!\n");
+                count++;
             }
         } else {
             printf("Bad expr or ZeroDivError\n");
         }
     }
+
+    printf("error times: %d\n", count);
 
     fclose(fp);
     
