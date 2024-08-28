@@ -158,6 +158,7 @@ static int cmd_test_expr(char* args) {
         char *result_str = strtok(buf, " ");
         uint32_t result = (uint32_t)atoll(result_str);
         char *expr_str = result_str + strlen(result_str) + 1;
+        printf("\n\nexpr:%s\n\n", expr_str);
         bool is_success = true;
         uint32_t result_test = expr(expr_str, &is_success);
         if (is_success) {
