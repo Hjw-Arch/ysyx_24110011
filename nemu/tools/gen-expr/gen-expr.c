@@ -138,13 +138,9 @@ int main(int argc, char *argv[])
     {
         pos_buf = 0;
 
-        printf("\n\ntimes: %d\n\n", i);
-
         gen_rand_expr(1);
 
         sprintf(code_buf, code_format, buf);
-
-        printf("\n\n EXPR:\n%s\n\n", code_buf);
 
         FILE *fp = fopen("/tmp/.code.c", "w");
         assert(fp != NULL);
@@ -160,7 +156,17 @@ int main(int argc, char *argv[])
 
         uint32_t result;
         ret = fscanf(fp, "%u", &result);
-        pclose(fp);
+        long long int result_ll;
+        fscanf(fp, "%lld", &result_ll);
+        int status = pclose(fp);
+
+        if (result_ll > 4294967296) {
+            continue;
+        }
+
+        if (status != 0) {
+            continue;
+        }
 
         printf("%u %s\n", result, buf);
     }
