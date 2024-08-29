@@ -28,7 +28,7 @@ static char *code_format =
     "#include <stdint.h>\n"
     "int main() { "
     "  uint64_t result = %s; "
-    "  printf(\"%%llud\", result); "
+    "  printf(\"%%lud\", result); "
     "  return 0; "
     "}";
 
@@ -155,13 +155,13 @@ int main(int argc, char *argv[])
         fp = popen("/tmp/.expr", "r");
         assert(fp != NULL);
 
-        uint32_t result;
-        ret = fscanf(fp, "%llu", &result);
-        uint64_t result_ll;
-        fscanf(fp, "%llu", &result_ll);
+        uint64_t result;
+        ret = fscanf(fp, "%lu", &result);
+//        uint64_t result_ll;
+//        fscanf(fp, "%llu", &result_ll);
         int status = pclose(fp);
 
-        if (result_ll > 4294967296) {
+        if (result > 4294967296) {
             continue;
         }
 
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        printf("%u %s\n", result, buf);
+        printf("%u %s\n", (uint32_t)result, buf);
     }
     return 0;
 }
