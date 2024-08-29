@@ -224,7 +224,7 @@ uint64_t eval_expression(int p, int q, bool *success){
         return 0;
     } else if (p == q) {
         if (tokens[q].type == TK_NUM) {
-            return atoll(tokens[q].str);
+            return (uint64_t)atoll(tokens[q].str);
         } else {
             *success = false;
             return 0;
