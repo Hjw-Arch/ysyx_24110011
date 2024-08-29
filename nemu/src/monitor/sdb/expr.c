@@ -174,42 +174,45 @@ bool check_parentheses(int p, int q) {
     return true;
 }
 
-// 寻找主运算符
+// 寻找主运算符     可检查括号匹配的错误
 int search_for_main_operator(int p, int q) {
-    int temp_op = 0;        // 若主运算符的位置出现在0，则表达式错误
+    int temp_op = 0;        // 返回零则表达式错误
 
-    for (int i = p; i <= q; i++) {
+    for (int i = q; i >= p; i--) {      // 从右往左遍历
         switch (tokens[i].type)
         {
-        case '(':
-            int left_parentheses = 1;
-            int right_parentheses = 0;
-            while(++i) {
-                if (i > q) return 0;        // 遍历到末尾还没有找到匹配项，表达式错误！
-                if (tokens[i].type == '(') left_parentheses++;  // 遍历到左括号，说明有嵌套括号，都不能要
-                if (tokens[i].type == ')') right_parentheses++; // 遍历到右括号，消除与之匹配的左括号
-                if (left_parentheses < right_parentheses) return 0; // 不可能出现左括号数量少于右括号，否则表达式错误！
-                if (right_parentheses > 0) {    // 如果存在右括号，那么消除此右括号和与之匹配的左括号
+        case ')':
+            int left_parentheses = 0;
+            int right_parentheses = 1;
+            while(--i) {
+                if (i < p) return 0;       // 遍历到开头还没有找到匹配项，表达式错误！
+                if (tokens[i].type == ')') right_parentheses++;  // 遍历到右括号，说明有嵌套括号，都不能要
+                if (tokens[i].type == '(') left_parentheses++; // 遍历到左括号，消除与之匹配的左括号
+                if (left_parentheses > right_parentheses) return 0; // 不可能出现右括号数量少于左括号，否则表达式错误！
+                if (left_parentheses > 0) {    // 如果存在右括号，那么消除此右括号和与之匹配的左括号
                     left_parentheses--;
                     right_parentheses--;
                 }
-                if (left_parentheses == 0) {        // 如果左括号被消除完毕，说明完成括号匹配，可以退出
-                    // ++i;
+                if (right_parentheses == 0) {        // 如果左括号被消除完毕，说明完成括号匹配，可以退出
                     break;
                 }
             }
             break;
         
-        case ')':       // 先匹配到右括号，说明表达式错误
+        case '(':       // 先匹配到左括号，说明表达式错误
             return 0;
 
-        case '+':       // + -为低优先级运算符，若发现不在括号中的+ -号可以直接返回这个+ -号
+        case '+':       // + -为低优先级运算符, 寻找最右边的运算符，直接返回
         case '-':
             return i;
         
-        case '*':       // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看后面是否还存在更低优先级的运算符
-        case '/':
-            temp_op = i;
+        case '*':       // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看前面是否还存在更低优先级的运算符
+        case '/':       // 否则就返回这个运算符
+            // if((temp_op == 0) && (temp_op = i));     可读性太低
+
+            if (!temp_op) {
+                temp_op = i;
+            }
 
         default:        // 读取表达式时即不允许除了四则运算符与括号和数字之外的类型存在，因此default处理的就是数字类型，直接跳过
             break;
