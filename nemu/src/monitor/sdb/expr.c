@@ -218,7 +218,7 @@ int search_for_main_operator(int p, int q) {
     return temp_op;
 }
 
-unsigned long long eval_expression(int p, int q, bool *success){
+uint64_t eval_expression(int p, int q, bool *success){
     if (p > q) {
         *success = false;
         return 0;
@@ -237,8 +237,8 @@ unsigned long long eval_expression(int p, int q, bool *success){
             *success = false;
             return 0;
         }
-        unsigned long long val1 = eval_expression(p, pos_op - 1, success);
-        unsigned long long val2 = eval_expression(pos_op + 1, q, success);
+        uint64_t val1 = eval_expression(p, pos_op - 1, success);
+        uint64_t val2 = eval_expression(pos_op + 1, q, success);
 
         switch (tokens[pos_op].type)
         {
