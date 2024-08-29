@@ -156,9 +156,9 @@ int main(int argc, char *argv[])
         assert(fp != NULL);
 
         uint32_t result;
-        ret = fscanf(fp, "%u", &result);
+        ret = fscanf(fp, "%llu", &result);
         uint64_t result_ll;
-        fscanf(fp, "%ulld", &result_ll);
+        fscanf(fp, "%llu", &result_ll);
         int status = pclose(fp);
 
         if (result_ll > 4294967296) {
