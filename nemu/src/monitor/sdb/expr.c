@@ -104,8 +104,8 @@ static bool make_token(char *e)
                 char *substr_start = e + position;
                 int substr_len = pmatch.rm_eo;
 
-                Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-                    i, rules[i].regex, position, substr_len, substr_len, substr_start);
+                // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+                //    i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
                 position += substr_len;
 
@@ -127,7 +127,7 @@ static bool make_token(char *e)
                 case TK_NUM:
                     tokens[nr_token].type = TK_NUM;
                     strncpy(tokens[nr_token++].str, substr_start, substr_len > 10 ? 10 : substr_len);
-                    if ((substr_len > 10) || (atoll(tokens[nr_token - 1].str) > 4294967296))
+                    if ((substr_len > 10) || (((uint64_t)atoll(tokens[nr_token - 1].str)) > 4294967296))
                     {
                         printf("Number out of range\n");
                         printf("%-.*s\n", substr_len, substr_start);
@@ -218,7 +218,7 @@ int search_for_main_operator(int p, int q) {
     return temp_op;
 }
 
-long long int eval_expression(int p, int q, bool *success){
+unsigned long long eval_expression(int p, int q, bool *success){
     if (p > q) {
         *success = false;
         return 0;
@@ -237,8 +237,8 @@ long long int eval_expression(int p, int q, bool *success){
             *success = false;
             return 0;
         }
-        long long int val1 = eval_expression(p, pos_op - 1, success);
-        long long int val2 = eval_expression(pos_op + 1, q, success);
+        unsigned long long val1 = eval_expression(p, pos_op - 1, success);
+        unsigned long long val2 = eval_expression(pos_op + 1, q, success);
 
         switch (tokens[pos_op].type)
         {
@@ -279,7 +279,7 @@ word_t expr(char *e, bool *success)
 
     /* TODO: Insert codes to evaluate the expression. */
 //    TODO();
-    long long int result = eval_expression(0, nr_token - 1, success);
+    unsigned long long result = eval_expression(0, nr_token - 1, success);
     if (result > 4294967296) {
         printf("result out of range\n");
         *success = false;

@@ -27,7 +27,7 @@ static char *code_format =
     "#include <stdio.h>\n"
     "int main() { "
     "  unsigned long long int result = %s; "
-    "  printf(\"%%lld\", result); "
+    "  printf(\"%%ulld\", result); "
     "  return 0; "
     "}";
 
@@ -156,8 +156,8 @@ int main(int argc, char *argv[])
 
         uint32_t result;
         ret = fscanf(fp, "%u", &result);
-        long long int result_ll;
-        fscanf(fp, "%lld", &result_ll);
+        uint64_t result_ll;
+        fscanf(fp, "%ulld", &result_ll);
         int status = pclose(fp);
 
         if (result_ll > 4294967296) {
