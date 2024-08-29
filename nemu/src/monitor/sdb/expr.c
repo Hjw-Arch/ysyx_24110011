@@ -280,13 +280,12 @@ word_t expr(char *e, bool *success)
     /* TODO: Insert codes to evaluate the expression. */
 //    TODO();
     uint64_t result = eval_expression(0, nr_token - 1, success);
-    /*
+    
     if (result > 4294967296) {
         printf("result out of range\n");
         *success = false;
         return 0;
     }
-    */
 
     return (uint32_t)result;
 }
