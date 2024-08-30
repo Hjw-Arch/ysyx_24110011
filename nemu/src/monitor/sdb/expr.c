@@ -25,6 +25,7 @@ enum
     TK_NOTYPE = 256,
     TK_EQ,
     TK_NUM,
+    TK_UL,
 
     /* TODO: Add more token types */
 
@@ -49,6 +50,7 @@ static struct rule
     {"\\(", '('},      // (
     {"\\)", ')'},      // )
     {"[0-9]+", TK_NUM}, // 数字
+    {"UL", TK_UL},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -135,6 +137,7 @@ static bool make_token(char *e)
                         return false;
                     }
                     break;
+                case TK_UL:
                 case TK_NOTYPE:
                 default:
                     break;
