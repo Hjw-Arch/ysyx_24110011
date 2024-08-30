@@ -140,14 +140,17 @@ long long int eval_expression(int p, int q, bool *is_bad_expr);
 
 char buf[100010];
 
-static int cmd_test_expr(char* args) {
-    if (args == NULL) {
+static int cmd_test_expr(char *args)
+{
+    if (args == NULL)
+    {
         printf("Missing parameter\n");
         return 0;
     }
 
     FILE *fp = fopen("/home/hjw-arch/input.txt", "r");
-    if (fp == NULL) {
+    if (fp == NULL)
+    {
         printf("Can not open the file\n");
         return 0;
     }
@@ -158,58 +161,61 @@ static int cmd_test_expr(char* args) {
     {
 
         char *result_str = strtok(buf, " ");
-//        printf("\n\nresult:%s ", result_str);
+        //        printf("\n\nresult:%s ", result_str);
         uint32_t result = (uint32_t)atoll(result_str);
-//        printf("result of turn: %u", result);
+        //        printf("result of turn: %u", result);
         // char *expr_str = result_str + strlen(result_str) + 1;
         char *expr_str = strtok(NULL, "\n");
-//        printf("\n\nexpr:%s\n\n", expr_str);
+        //        printf("\n\nexpr:%s\n\n", expr_str);
         bool is_success = true;
         uint32_t result_test = expr(expr_str, &is_success);
-        if (result_test == result) {
-                printf("test right\n");
-            } else {
-                printf("test error!\n");
-                count++;
-                printf("result:%s ", result_str);
-                printf("result of turn: %u", result);
-                printf("  result of sdb: %u", result_test);
-                printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-                
-            }
-/*
-        if (is_success) {
-            if (result_test == result) {
-                printf("test right\n");
-            } else {
-                printf("test error!\n");
-                count++;
-                printf("result:%s ", result_str);
-                printf("result of turn: %u", result);
-                printf("  result of sdb: %u", result_test);
-                printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-                
-            }
-        } else {
-            printf("Bad expr or ZeroDivError\n");
+        if (result_test == result)
+        {
+            printf("test right\n");
+        }
+        else
+        {
+            printf("test error!\n");
+            count++;
             printf("result:%s ", result_str);
             printf("result of turn: %u", result);
             printf("  result of sdb: %u", result_test);
             printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-            count++;
-        }*/
-    }
-    
+        }
+        /*
+                if (is_success) {
+                    if (result_test == result) {
+                        printf("test right\n");
+                    } else {
+                        printf("test error!\n");
+                        count++;
+                        printf("result:%s ", result_str);
+                        printf("result of turn: %u", result);
+                        printf("  result of sdb: %u", result_test);
+                        printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
 
+                    }
+                } else {
+                    printf("Bad expr or ZeroDivError\n");
+                    printf("result:%s ", result_str);
+                    printf("result of turn: %u", result);
+                    printf("  result of sdb: %u", result_test);
+                    printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+                    count++;
+                }
+        */
+    }
     printf("error times: %d\n", count);
 
     fclose(fp);
-    
+
     return 0;
 }
 
-static int cmd_p(char *args) {
-    if (args == NULL) {
+static int cmd_p(char *args)
+{
+    if (args == NULL)
+    {
         printf("Missing parameter\n");
         return 0;
     }
