@@ -166,6 +166,18 @@ static int cmd_test_expr(char* args) {
 //        printf("\n\nexpr:%s\n\n", expr_str);
         bool is_success = true;
         uint32_t result_test = expr(expr_str, &is_success);
+        if (result_test == result) {
+                printf("test right\n");
+            } else {
+                printf("test error!\n");
+                count++;
+                printf("result:%s ", result_str);
+                printf("result of turn: %u", result);
+                printf("  result of sdb: %u", result_test);
+                printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+                
+            }
+/*
         if (is_success) {
             if (result_test == result) {
                 printf("test right\n");
@@ -185,8 +197,9 @@ static int cmd_test_expr(char* args) {
             printf("  result of sdb: %u", result_test);
             printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
             count++;
-        }
+        }*/
     }
+    
 
     printf("error times: %d\n", count);
 
