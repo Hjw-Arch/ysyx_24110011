@@ -243,8 +243,8 @@ int search_for_main_operator(int p, int q)
 
 uint64_t eval_expression(int p, int q, bool *success)
 {
-    // if (!(*success))
-    //     return 0;
+    if (!(*success))
+        return 0;
 
     if (p > q)
     {
