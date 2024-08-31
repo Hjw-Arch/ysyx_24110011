@@ -245,8 +245,8 @@ bool is_allow_zeroDiv = false; // 过滤掉除数表达式中除零错误的输�
 
 uint64_t eval_expression(int p, int q, bool *success)
 {
-    if (!(*success))
-        return 0;
+    // if (!(*success))
+    //     return 0;
 
     if (p > q)
     {
