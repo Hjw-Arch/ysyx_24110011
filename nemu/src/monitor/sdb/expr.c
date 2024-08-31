@@ -285,7 +285,7 @@ uint64_t eval_expression(int p, int q, bool *success)
         {
             bool state_temp = is_allow_zeroDiv;
             is_allow_zeroDiv = true;
-            // eval_expression(pos_op + 1, q, success);
+            eval_expression(pos_op + 1, q, success);
             is_allow_zeroDiv = state_temp;
             return 0;
         }
@@ -309,8 +309,8 @@ uint64_t eval_expression(int p, int q, bool *success)
             {
                 if (!is_allow_zeroDiv)
                 {
-                printf("ZeroDivisionError!\n");
-                *success = false;
+                // printf("ZeroDivisionError!\n");
+                // *success = false;
                 }
                 return 0;
             }
