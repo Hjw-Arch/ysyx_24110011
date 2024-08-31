@@ -318,6 +318,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             return val1 / val2;
 
         default:
+            assert(0);
             *success = false;
             return 0;
         }
