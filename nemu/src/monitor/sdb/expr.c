@@ -243,8 +243,8 @@ int search_for_main_operator(int p, int q)
 
 uint64_t eval_expression(int p, int q, bool *success)
 {
-    if (!(*success))
-        return 0;
+    // if (!(*success))
+    //     return 0;
 
     if (p > q)
     {
@@ -307,8 +307,11 @@ uint64_t eval_expression(int p, int q, bool *success)
             {
                 // if (!is_allow_zeroDiv)
                 // {
-                    printf("ZeroDivisionError!\n");
-                    *success = false;
+                if (val1 == 0) {
+                    return 0;
+                }
+                printf("ZeroDivisionError!\n");
+                *success = false;
                 // }
                 return 0;
             }
