@@ -186,38 +186,31 @@ static int cmd_test_expr(char *args)
         //     fclose(fp);
         // }
 
-                if (is_success) {
-                    if (result_test == result) {
-                        printf("test right\n");
-                    } else {
-                        printf("test error!\n");
-                        count++;
-                        printf("result:%s ", result_str);
-                        printf("result of turn: %u", result);
-                        printf("  result of sdb: %u", result_test);
-                        printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-                        FILE *fp = fopen("/home/hjw-arch/output1.txt", "a");
-                        if (fp == NULL) {
-                            assert(0);
-                        }
-                        fprintf(fp, "test_result: %u, sdb_result: %u\nexpr:\n%s\n\n", result, result_test, expr_str);
-                        fclose(fp);
-                    }
-                } else {
-                    printf("Bad expr or ZeroDivError\n");
-                    printf("result:%s ", result_str);
-                    printf("result of turn: %u", result);
-                    printf("  result of sdb: %u", result_test);
-                    printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-                    count++;
-                    FILE *fp = fopen("/home/hjw-arch/output1.txt", "a");
-                        if (fp == NULL) {
-                            assert(0);
-                        }
-                        fprintf(fp, "test_result: %u, sdb_result: %u\nexpr:\n%s\n\n", result, result_test, expr_str);
-                        fclose(fp);
-                }
-        
+        if (is_success)
+        {
+            if (result_test == result)
+            {
+                printf("test right\n");
+            }
+            else
+            {
+                printf("test error!\n");
+                count++;
+                printf("result:%s ", result_str);
+                printf("result of turn: %u", result);
+                printf("  result of sdb: %u", result_test);
+                printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+            }
+        }
+        else
+        {
+            printf("Bad expr or ZeroDivError\n");
+            printf("result:%s ", result_str);
+            printf("result of turn: %u", result);
+            printf("  result of sdb: %u", result_test);
+            printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+            count++;
+        }
     }
     printf("error times: %d\n", count);
 
