@@ -283,9 +283,9 @@ uint64_t eval_expression(int p, int q, bool *success)
         // 作为对GCC行为的模仿，但此行为会导致除数表达式中的错误被掩盖：
         if ((val1 == 0) && (tokens[pos_op].type == '/' || tokens[pos_op].type == '*'))
         {
-            is_allow_zeroDiv = true;
-            eval_expression(pos_op + 1, q, success);
-            is_allow_zeroDiv = false;
+            // is_allow_zeroDiv = true;
+            // eval_expression(pos_op + 1, q, success);
+            // is_allow_zeroDiv = false;
             return 0;
         }
         // 模仿结束
