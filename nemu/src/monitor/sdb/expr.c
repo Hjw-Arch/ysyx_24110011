@@ -241,7 +241,6 @@ int search_for_main_operator(int p, int q)
     return temp_op;
 }
 
-bool is_allow_zeroDiv = false; // 过滤掉除数表达式中除零错误的输出
 
 uint64_t eval_expression(int p, int q, bool *success)
 {
@@ -308,7 +307,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             if (val2 == 0)
             {
                 printf("ZeroDivisionError!\n");
-                *success = false;
+                // *success = false;
                 return 0;
             }
             return val1 / val2;
