@@ -165,32 +165,41 @@ static int cmd_test_expr(char *args)
         char *expr_str = strtok(NULL, "\n");
         bool is_success = true;
         uint32_t result_test = expr(expr_str, &is_success);
-
-        if (is_success)
+        if (result_test == result)
         {
-            if (result_test == result)
-            {
-                printf("test right\n");
-            }
-            else
-            {
-                printf("test error!\n");
-                count++;
-                printf("result:%s ", result_str);
-                printf("result of turn: %u", result);
-                printf("  result of sdb: %u", result_test);
-                printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-            }
+            printf("test right\n");
         }
         else
         {
-            printf("Bad expr or ZeroDivError\n");
+            printf("test error!\n");
+            count++;
             printf("result:%s ", result_str);
             printf("result of turn: %u", result);
             printf("  result of sdb: %u", result_test);
             printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-            count++;
         }
+        /*
+                if (is_success) {
+                    if (result_test == result) {
+                        printf("test right\n");
+                    } else {
+                        printf("test error!\n");
+                        count++;
+                        printf("result:%s ", result_str);
+                        printf("result of turn: %u", result);
+                        printf("  result of sdb: %u", result_test);
+                        printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+
+                    }
+                } else {
+                    printf("Bad expr or ZeroDivError\n");
+                    printf("result:%s ", result_str);
+                    printf("result of turn: %u", result);
+                    printf("  result of sdb: %u", result_test);
+                    printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
+                    count++;
+                }
+        */
     }
     printf("error times: %d\n", count);
 
