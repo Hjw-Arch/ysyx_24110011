@@ -193,7 +193,7 @@ static int cmd_test_expr(char *args)
                         if (fp == NULL) {
                             assert(0);
                         }
-                        fprintf(fp, "test_result: %u, sdb_result: %u, \nexpr:\n%s\n\n", result, result_test, expr_str);
+                        fprintf(fp, "test_result: %u, sdb_result: %u\nexpr:\n%s\n\n", result, result_test, expr_str);
                         fclose(fp);
                     }
                 } else {
@@ -207,7 +207,7 @@ static int cmd_test_expr(char *args)
                         if (fp == NULL) {
                             assert(0);
                         }
-                        fprintf(fp, "test_result: %u, sdb_result: %u, \nexpr:\n%s\n\n", result, result_test, expr_str);
+                        fprintf(fp, "test_result: %u, sdb_result: %u\nexpr:\n%s\n\n", result, result_test, expr_str);
                         fclose(fp);
                 }
         
