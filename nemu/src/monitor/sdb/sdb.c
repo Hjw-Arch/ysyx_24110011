@@ -213,6 +213,7 @@ static int cmd_test_expr(char *args)
         }
     }
     printf("error times: %d\n", count);
+    
 
     fclose(fp);
 
@@ -237,6 +238,7 @@ static int cmd_p(char *args)
     else
     {
         printf("Bad expression\n");
+        printf("  result of sdb: %u", result);
     }
 
     return 0;
