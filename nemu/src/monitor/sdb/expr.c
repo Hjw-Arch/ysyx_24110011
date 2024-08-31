@@ -41,14 +41,14 @@ static struct rule
      * Pay attention to the precedence level of different rules.
      */
 
-    {" +", TK_NOTYPE}, // spaces
-    {"\\+", '+'},      // plus
-    {"==", TK_EQ},     // equal
-    {"\\-", '-'},      // sub
-    {"\\*", '*'},      // mul
-    {"/", '/'},        // div
-    {"\\(", '('},      // (
-    {"\\)", ')'},      // )
+    {" +", TK_NOTYPE},  // spaces
+    {"\\+", '+'},       // plus
+    {"==", TK_EQ},      // equal
+    {"\\-", '-'},       // sub
+    {"\\*", '*'},       // mul
+    {"/", '/'},         // div
+    {"\\(", '('},       // (
+    {"\\)", ')'},       // )
     {"[0-9]+", TK_NUM}, // 数字
     {"UL", TK_UL},
 };
@@ -151,117 +151,166 @@ static bool make_token(char *e)
             printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
             return false;
         }
-
     }
 
     return true;
 }
 
 // 检查表达式是否被括号包裹
-bool check_parentheses(int p, int q) {
-    if (!(tokens[p].type == '(' && tokens[q].type == ')')) {
+bool check_parentheses(int p, int q)
+{
+    if (!(tokens[p].type == '(' && tokens[q].type == ')'))
+    {
         return false;
     }
 
     int num_left_parenthese = 0, num_right_parenthese = 0;
-    for (int i = p + 1; i < q; i++) {
-        if (tokens[i].type == '(') num_left_parenthese++;
-        if (tokens[i].type == ')') num_right_parenthese++;
-        if (num_right_parenthese > num_left_parenthese) return false;
-        if (num_right_parenthese > 0) {
+    for (int i = p + 1; i < q; i++)
+    {
+        if (tokens[i].type == '(')
+            num_left_parenthese++;
+        if (tokens[i].type == ')')
+            num_right_parenthese++;
+        if (num_right_parenthese > num_left_parenthese)
+            return false;
+        if (num_right_parenthese > 0)
+        {
             num_left_parenthese--;
             num_right_parenthese--;
         }
     }
-    if (num_left_parenthese != num_right_parenthese) return false;
+    if (num_left_parenthese != num_right_parenthese)
+        return false;
     return true;
 }
 
 // 寻找主运算符     可检查括号匹配的错误
-int search_for_main_operator(int p, int q) {
-    int temp_op = 0;        // 返回零则表达式错误
+int search_for_main_operator(int p, int q)
+{
+    int temp_op = 0; // 返回零则表达式错误
 
-    for (int i = q; i >= p; i--) {      // 从右往左遍历
+    for (int i = q; i >= p; i--)
+    { // 从右往左遍历
         switch (tokens[i].type)
         {
         case ')':
             int left_parentheses = 0;
             int right_parentheses = 1;
-            while(--i) {
-                if (i < p) return 0;       // 遍历到开头还没有找到匹配项，表达式错误！
-                if (tokens[i].type == ')') right_parentheses++;  // 遍历到右括号，说明有嵌套括号，都不能要
-                if (tokens[i].type == '(') left_parentheses++; // 遍历到左括号，消除与之匹配的左括号
-                if (left_parentheses > right_parentheses) return 0; // 不可能出现右括号数量少于左括号，否则表达式错误！
-                if (left_parentheses > 0) {    // 如果存在右括号，那么消除此右括号和与之匹配的左括号
+            while (--i)
+            {
+                if (i < p)
+                    return 0; // 遍历到开头还没有找到匹配项，表达式错误！
+                if (tokens[i].type == ')')
+                    right_parentheses++; // 遍历到右括号，说明有嵌套括号，都不能要
+                if (tokens[i].type == '(')
+                    left_parentheses++; // 遍历到左括号，消除与之匹配的左括号
+                if (left_parentheses > right_parentheses)
+                    return 0; // 不可能出现右括号数量少于左括号，否则表达式错误！
+                if (left_parentheses > 0)
+                { // 如果存在右括号，那么消除此右括号和与之匹配的左括号
                     left_parentheses--;
                     right_parentheses--;
                 }
-                if (right_parentheses == 0) {        // 如果左括号被消除完毕，说明完成括号匹配，可以退出
+                if (right_parentheses == 0)
+                { // 如果左括号被消除完毕，说明完成括号匹配，可以退出
                     break;
                 }
             }
             break;
-        
-        case '(':       // 先匹配到左括号，说明表达式错误
+
+        case '(': // 先匹配到左括号，说明表达式错误
             return 0;
 
-        case '+':       // + -为低优先级运算符, 寻找最右边的运算符，直接返回
+        case '+': // + -为低优先级运算符, 寻找最右边的运算符，直接返回
         case '-':
             return i;
-        
-        case '*':       // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看前面是否还存在更低优先级的运算符
-        case '/':       // 否则就返回这个运算符
+
+        case '*': // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看前面是否还存在更低优先级的运算符
+        case '/': // 否则就返回这个运算符
             // if((temp_op == 0) && (temp_op = i));     可读性太低
 
-            if (!temp_op) {
+            if (!temp_op)
+            {
                 temp_op = i;
             }
 
-        default:        // 读取表达式时即不允许除了四则运算符与括号和数字之外的类型存在，因此default处理的就是数字类型，直接跳过
+        default: // 读取表达式时即不允许除了四则运算符与括号和数字之外的类型存在，因此default处理的就是数字类型，直接跳过
             break;
         }
     }
     return temp_op;
 }
 
-uint64_t eval_expression(int p, int q, bool *success){
-    if (p > q) {
+uint64_t eval_expression(int p, int q, bool *success)
+{
+    if (!(*success))
+        return 0;
+
+    if (p > q)
+    {
         *success = false;
         return 0;
-    } else if (p == q) {
-        if (tokens[q].type == TK_NUM) {
+    }
+    else if (p == q)
+    {
+        if (tokens[q].type == TK_NUM)
+        {
             return (uint64_t)atoll(tokens[q].str);
-        } else {
+        }
+        else
+        {
             *success = false;
             return 0;
         }
-    } else if (check_parentheses(p, q) == true) {
+    }
+    else if (check_parentheses(p, q) == true)
+    {
         return eval_expression(p + 1, q - 1, success);
-    } else {
+    }
+    else
+    {
         int pos_op = search_for_main_operator(p, q);
-        if (!pos_op) {      // 如果pos_op为0，需要直接返回，不然pos_op - 1会导致负数
+        if (!pos_op)
+        { // 如果pos_op为0，需要直接返回，不然pos_op - 1会导致负数
             *success = false;
             return 0;
         }
+
         uint64_t val1 = eval_expression(p, pos_op - 1, success);
+
+        // 作为对GCC行为的模仿，但此行为会导致除数表达式中的错误被掩盖：
+        static bool is_allow_zeroDiv = false; // 过滤掉除数表达式中除零错误的输出
+        if (val1 == 0 && (tokens[pos_op].type == '/' || tokens[pos_op].type == '*'))
+        {
+            is_allow_zeroDiv = true;
+            eval_expression(pos_op + 1, q, success);
+            is_allow_zeroDiv = false;
+            return 0;
+        }
+        // 模仿结束
+        
         uint64_t val2 = eval_expression(pos_op + 1, q, success);
 
         switch (tokens[pos_op].type)
         {
         case '+':
             return val1 + val2;
-        
+
         case '-':
             return val1 - val2;
 
         case '*':
             return val1 * val2;
-        
+
         case '/':
-            if (val2 == 0) {
-                printf("ZeroDivisionError!\n");
-                *success = false;
-                return 114514;
+            if (val2 == 0)
+            {
+                if (!is_allow_zeroDiv)
+                {
+                    printf("ZeroDivisionError!\n");
+                    *success = false;
+                }
+                return 0;
             }
             return val1 / val2;
 
@@ -284,10 +333,11 @@ word_t expr(char *e, bool *success)
     }
 
     /* TODO: Insert codes to evaluate the expression. */
-//    TODO();
+    //    TODO();
     uint64_t result = eval_expression(0, nr_token - 1, success);
-    
-    if (result > 4294967296) {
+
+    if (result > 4294967296)
+    {
         printf("result out of range\n");
         *success = false;
         return 0;
