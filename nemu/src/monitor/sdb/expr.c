@@ -23,9 +23,14 @@
 enum
 {
     TK_NOTYPE = 256,
+    TK_REG,
     TK_EQ,
+    TK_NEQ,
     TK_NUM,
+    TK_HEX,
     TK_UL,
+    TK_AND,
+    TK_DEREF,           // 解引用
 
     /* TODO: Add more token types */
 
@@ -42,14 +47,19 @@ static struct rule
      */
 
     {" +", TK_NOTYPE},  // spaces
+    // {"\\$(0|ra|sp|gp|tp|t[0-6]|s([0-9]|1[0-1])|a[0-7]|[xX]([1-2]?[0-9]|3[0-1])|pc)", TK_REG},    // 完全匹配名称
+    {"\\$[0-9a-zA-Z]+", TK_REG},
+    {"[0-9]+", TK_NUM}, // 数字
+    {"0[xX][0-9a-fA-F]+", TK_HEX},  // 16进制数字
     {"\\+", '+'},       // plus
-    {"==", TK_EQ},      // equal
     {"\\-", '-'},       // sub
     {"\\*", '*'},       // mul
     {"/", '/'},         // div
     {"\\(", '('},       // (
     {"\\)", ')'},       // )
-    {"[0-9]+", TK_NUM}, // 数字
+    {"==", TK_EQ},      // equal
+    {"!=", TK_NEQ},     // not equal
+    {"&&", TK_AND},
     {"UL", TK_UL},
 };
 
@@ -83,10 +93,10 @@ typedef struct token
     char str[32];
 } Token;
 
-// static Token tokens[32] __attribute__((used)) = {};
-// static int nr_token __attribute__((used)) = 0;
-Token tokens[10000] __attribute__((used)) = {};
-int nr_token __attribute__((used)) = 0;
+static Token tokens[32] __attribute__((used)) = {};
+static int nr_token __attribute__((used)) = 0;
+// Token tokens[10000] __attribute__((used)) = {};
+// int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
 {
@@ -120,22 +130,45 @@ static bool make_token(char *e)
                 {
                 case '+':
                 case '-':
-                case '*':
                 case '/':
                 case '(':
                 case ')':
+                case TK_EQ:
+                case TK_NEQ:
+                case TK_AND:
                     tokens[nr_token++].type = rules[i].token_type;
+                    break;
+                case '*':
+                    if(nr_token == 0 || (tokens[nr_token - 1].type != ')' && tokens[nr_token - 1].type != TK_NUM && 
+                    tokens[nr_token - 1].type != TK_HEX)) {
+                        tokens[nr_token++].type = TK_DEREF;
+                    } else {
+                        tokens[nr_token++].type = '*';
+                    }
                     break;
                 case TK_NUM:
                     tokens[nr_token].type = TK_NUM;
                     strncpy(tokens[nr_token++].str, substr_start, substr_len > 10 ? 10 : substr_len);
-                    if ((substr_len > 10) || (((uint64_t)atoll(tokens[nr_token - 1].str)) > 4294967296))
+                    if ((substr_len > 10) || ((substr_len == 10) && ((uint64_t)atoll(tokens[nr_token - 1].str) > 4294967296)))
                     {
                         printf("Number out of range\n");
                         printf("%-.*s\n", substr_len, substr_start);
                         printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, substr_len - 1, "");
                         return false;
                     }
+                    break;
+                case TK_HEX:
+                    tokens[nr_token].type = TK_HEX;
+                    if (substr_len > 10) {
+                        printf("Number out of range\n");
+                        printf("%-.*s\n", substr_len, substr_start);
+                        printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, substr_len - 1, "");
+                        return false;
+                    }
+                    strncpy(tokens[nr_token++].str, substr_start + 1, substr_len - 1);  // 只保存数值，不保存0x
+                    break;
+                case TK_REG:    // 直接保存寄存器名称，不做判断
+                    strncpy(tokens[nr_token++].str, substr_start + 1, substr_len - 1);  // 只保存名称，不保存$引用
                     break;
                 case TK_UL:
                 case TK_NOTYPE:
@@ -228,7 +261,6 @@ int search_for_main_operator(int p, int q)
         case '*': // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看前面是否还存在更低优先级的运算符
         case '/': // 否则就返回这个运算符
             // if((temp_op == 0) && (temp_op = i));     可读性太低
-
             if (!temp_op)
             {
                 temp_op = i;
@@ -254,14 +286,24 @@ uint64_t eval_expression(int p, int q, bool *success)
     }
     else if (p == q)
     {
-        if (tokens[q].type == TK_NUM)
+        switch (tokens[p].type)
         {
-            return (uint64_t)atoll(tokens[q].str);
-        }
-        else
-        {
+        case TK_NUM:
+            return (uint64_t)atol(tokens[q].str);
+            break;
+
+        case TK_HEX:
+            return (uint64_t)strtol(tokens[p].str, NULL, 16);
+            break;
+
+        case TK_REG:
+            return (uint64_t)isa_reg_str2val(tokens[p].str, success);
+            break;
+
+        default:
             *success = false;
             return 0;
+            break;
         }
     }
     else if (check_parentheses(p, q) == true)
@@ -311,6 +353,18 @@ uint64_t eval_expression(int p, int q, bool *success)
                 return 0;
             }
             return val1 / val2;
+        
+        case TK_AND:
+            return val1 && val2;
+        
+        case TK_EQ:
+            return val1 == val2;
+        
+        case TK_NEQ:
+            return val1 != val2;
+        
+        case TK_DEREF:
+            TODO();
 
         default:
             *success = false;

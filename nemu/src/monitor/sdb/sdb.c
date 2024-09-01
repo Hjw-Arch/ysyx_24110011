@@ -238,7 +238,6 @@ static int cmd_p(char *args)
     else
     {
         printf("Bad expression\n");
-        printf("  result of sdb: %u", result);
     }
 
     return 0;
