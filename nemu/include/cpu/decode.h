@@ -44,9 +44,9 @@ static inline void pattern_decode(const char *str, int len,
     } \
   }
 
-#define macro2(i)  macro(i);   macro((i) + 1)
-#define macro4(i)  macro2(i);  macro2((i) + 2)
-#define macro8(i)  macro4(i);  macro4((i) + 4)
+#define macro2(i)  macro(i);   macro((i) + 1)     // 0， 1
+#define macro4(i)  macro2(i);  macro2((i) + 2)    // 0，1，2，3
+#define macro8(i)  macro4(i);  macro4((i) + 4)    // 0，1，2，3，4，5，6，7
 #define macro16(i) macro8(i);  macro8((i) + 8)
 #define macro32(i) macro16(i); macro16((i) + 16)
 #define macro64(i) macro32(i); macro32((i) + 32)
