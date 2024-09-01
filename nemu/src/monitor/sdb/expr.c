@@ -165,7 +165,7 @@ static bool make_token(char *e)
                         printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, substr_len - 1, "");
                         return false;
                     }
-                    strncpy(tokens[nr_token++].str, substr_start + 1, substr_len - 1);  // 只保存数值，不保存0x
+                    strncpy(tokens[nr_token++].str, substr_start + 2, substr_len - 2);  // 只保存数值，不保存0x
                     break;
                 case TK_REG:    // 直接保存寄存器名称，不做判断
                     tokens[nr_token].type = TK_REG;
@@ -290,7 +290,7 @@ uint64_t eval_expression(int p, int q, bool *success)
         switch (tokens[p].type)
         {
         case TK_NUM:
-            return (uint64_t)atol(tokens[q].str);
+            return (uint64_t)atol(tokens[p].str);
             break;
 
         case TK_HEX:
