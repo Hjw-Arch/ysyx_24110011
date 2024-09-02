@@ -360,7 +360,7 @@ uint64_t eval_expression(int p, int q, bool *success)
                 if (val2 == 0) {
                     printf("ZeroDivisionError!\n");
                     *success = false;
-                    return 1;
+                    return -1;
                 }
                 return val1 / val2;
             }
