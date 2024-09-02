@@ -388,6 +388,7 @@ uint64_t eval_expression(int p, int q, bool *success)
                 break;
             
             case TK_DEREF: {
+                assert(0);
                 uint64_t val = eval_expression(pos_op + 1, q, success);
                 if (!(val >= 0x80000000 && val <= 0x80000000 + 0x8000000)) {
                     *success = false;
