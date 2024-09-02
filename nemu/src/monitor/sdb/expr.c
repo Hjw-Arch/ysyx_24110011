@@ -237,7 +237,7 @@ bool check_parentheses(int p, int q)
 // 寻找主运算符     可检查括号匹配的错误
 int search_for_main_operator(int p, int q, bool *success)
 {
-    int temp_op = 0;
+    int temp_op = q;
 
     for (int i = q; i >= p; i--)
     { // 从右往左遍历
@@ -278,6 +278,7 @@ int search_for_main_operator(int p, int q, bool *success)
 
         case TK_AND:    // 最高优先级，直接返回
             return i;
+            break;
         case TK_EQ:     // 判断优先级，返回最高优先级，同优先级返回最右边的值
         case TK_NEQ:
         case '+':
@@ -285,7 +286,7 @@ int search_for_main_operator(int p, int q, bool *success)
         case '*':
         case '/':
         case TK_DEREF:
-            if (priority_list[tokens[i].type] > temp_op) {
+            if (priority_list[tokens[i].type] > priority_list[tokens[temp_op].type]) {
                 temp_op = i;
             }
 
