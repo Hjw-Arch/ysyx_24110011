@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include <isa.h>
+#include <memory/vaddr.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -23,9 +24,9 @@
 enum
 {
     TK_NOTYPE = 256,
-    TK_REG,
-    TK_EQ,
-    TK_NEQ,
+    TK_REG, // 寄存器引用
+    TK_EQ,  // 等于
+    TK_NEQ, // 不等于
     TK_NUM,
     TK_HEX,
     TK_UL,
@@ -34,6 +35,19 @@ enum
 
     /* TODO: Add more token types */
 
+};
+
+// 优先级列表，用于判断运算符；也可通过上面的枚举类型来定义优先级，但编码时还需要考虑优先级一致的问题，导致代码编写变得臃肿难以维护
+// 考虑到并不运行在一个对存储要求苛刻的环境下，因此采用优先级列表来维护优先级
+static uint32_t priority_list[] = {
+    [TK_AND] = 256,
+    [TK_EQ] = 255,
+    [TK_NEQ] = 255,
+    ['+'] = 254,
+    ['-'] = 254,
+    ['*'] = 253,
+    ['/'] = 253,
+    [TK_DEREF] = 252,
 };
 
 static struct rule
@@ -95,8 +109,6 @@ typedef struct token
 
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
-// Token tokens[10000] __attribute__((used)) = {};
-// int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
 {
@@ -219,9 +231,9 @@ bool check_parentheses(int p, int q)
 }
 
 // 寻找主运算符     可检查括号匹配的错误
-int search_for_main_operator(int p, int q)
+int search_for_main_operator(int p, int q, bool *success)
 {
-    int temp_op = 0; // 返回零则表达式错误
+    int temp_op = 0;
 
     for (int i = q; i >= p; i--)
     { // 从右往左遍历
@@ -232,42 +244,48 @@ int search_for_main_operator(int p, int q)
             int right_parentheses = 1;
             while (--i)
             {
-                if (i < p)
+                if (i < p) {
+                    *success = false;
                     return 0; // 遍历到开头还没有找到匹配项，表达式错误！
-                if (tokens[i].type == ')')
-                    right_parentheses++; // 遍历到右括号，说明有嵌套括号，都不能要
-                if (tokens[i].type == '(')
-                    left_parentheses++; // 遍历到左括号，消除与之匹配的左括号
-                if (left_parentheses > right_parentheses)
+                }
+
+                if (tokens[i].type == ')') right_parentheses++; // 遍历到右括号，说明有嵌套括号，都不能要
+                if (tokens[i].type == '(') left_parentheses++; // 遍历到左括号，需要消除与之匹配的左括号
+
+                if (left_parentheses > right_parentheses) {
+                    *success = false;
                     return 0; // 不可能出现右括号数量少于左括号，否则表达式错误！
-                if (left_parentheses > 0)
-                { // 如果存在右括号，那么消除此右括号和与之匹配的左括号
+                }
+
+                if (left_parentheses > 0) { // 如果存在左括号，那么消除此右括号和与之匹配的左括号
                     left_parentheses--;
                     right_parentheses--;
                 }
-                if (right_parentheses == 0)
-                { // 如果左括号被消除完毕，说明完成括号匹配，可以退出
+
+                if (right_parentheses == 0) { // 如果左括号被消除完毕，说明完成括号匹配，可以退出
                     break;
                 }
             }
             break;
 
         case '(': // 先匹配到左括号，说明表达式错误
+            *success = false;
             return 0;
 
-        case '+': // + -为低优先级运算符, 寻找最右边的运算符，直接返回
-        case '-':
+        case TK_AND:    // 最高优先级，直接返回
             return i;
-
-        case '*': // * /位高优先级运算符，若发现不在括号中的* /号，需要继续看前面是否还存在更低优先级的运算符
-        case '/': // 否则就返回这个运算符
-            // if((temp_op == 0) && (temp_op = i));     可读性太低
-            if (!temp_op)
-            {
+        case TK_EQ:     // 判断优先级，返回最高优先级，同优先级返回最右边的值
+        case TK_NEQ:
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        case TK_DEREF:
+            if (priority_list[tokens[i].type] > temp_op) {
                 temp_op = i;
             }
 
-        default: // 读取表达式时即不允许除了四则运算符与括号和数字之外的类型存在，因此default处理的就是数字类型，直接跳过
+        default: // default处理的就是数字类型，直接跳过
             break;
         }
     }
@@ -277,99 +295,108 @@ int search_for_main_operator(int p, int q)
 
 uint64_t eval_expression(int p, int q, bool *success)
 {
-    if (!(*success))
-        return 0;
+    if (!(*success)) return 0;
 
-    if (p > q)
-    {
+    if (p > q) {
         *success = false;
         return 0;
-    }
-    else if (p == q)
-    {
-        switch (tokens[p].type)
-        {
-        case TK_NUM:
-            return (uint64_t)atol(tokens[p].str);
-            break;
+    } else if (p == q) {
+        switch (tokens[p].type) {
+            case TK_NUM:
+                return (uint64_t)atol(tokens[p].str);
+                break;
 
-        case TK_HEX:
-            return (uint64_t)strtol(tokens[p].str, NULL, 16);
-            break;
+            case TK_HEX:
+                return (uint64_t)strtol(tokens[p].str, NULL, 16);
+                break;
 
-        case TK_REG:
-            return (uint64_t)isa_reg_str2val(tokens[p].str, success);
-            break;
+            case TK_REG:
+                return (uint64_t)isa_reg_str2val(tokens[p].str, success);
+                break;
 
-        default:
-            *success = false;
-            return 0;
-            break;
+            default:
+                *success = false;
+                return 0;
+                break;
         }
-    }
-    else if (check_parentheses(p, q) == true)
-    {
+    } else if (check_parentheses(p, q) == true) {
         return eval_expression(p + 1, q - 1, success);
-    }
-    else
-    {
-        int pos_op = search_for_main_operator(p, q);
-        if (!pos_op)
-        { // 如果pos_op为0，需要直接返回，不然pos_op - 1会导致负数
-            *success = false;
-            return 0;
-        }
-
-        uint64_t val1 = eval_expression(p, pos_op - 1, success);
-
-        // // 作为对GCC行为的模仿，但此行为会导致除数表达式中的错误被掩盖：
-        // if ((val1 == 0) && (tokens[pos_op].type == '/' || tokens[pos_op].type == '*'))
-        // {
-        //     bool state_temp = is_allow_zeroDiv;
-        //     is_allow_zeroDiv = true;
-        //     eval_expression(pos_op + 1, q, success);
-        //     is_allow_zeroDiv = state_temp;
-        //     return 0;
-        // }
-        // // 模仿结束
-
-        uint64_t val2 = eval_expression(pos_op + 1, q, success);
+    } else {
+        int pos_op = search_for_main_operator(p, q, success);
 
         switch (tokens[pos_op].type)
         {
-        case '+':
-            return val1 + val2;
+            case '+': {
+                // 使用val1 val2来存储是为了方便GDB查看
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 + val2;
+            }
+                break;
 
-        case '-':
-            return val1 - val2;
+            case '-': {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 - val2;
+            }
+                break;
 
-        case '*':
-            return val1 * val2;
+            case '*': {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 * val2;
+            }
+                break;
 
-        case '/':
-            if (val2 == 0)
-            {
-                printf("ZeroDivisionError!\n");
+            case '/': {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+
+                if (val2 == 0) {
+                    printf("ZeroDivisionError!\n");
+                    *success = false;
+                    return 0;
+                }
+                return val1 / val2;
+            }
+                break;
+            
+            case TK_AND: {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 && val2;
+            }
+                break;
+            
+            case TK_EQ: {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 == val2;
+            }
+                break;
+            
+            case TK_NEQ: {
+                uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                uint64_t val2 = eval_expression(pos_op + 1, q, success);
+                return val1 != val2;
+            }
+                break;
+            
+            case TK_DEREF: {
+                uint64_t val = eval_expression(pos_op + 1, q, success);
+                if (!(val >= 0x80000000 && val <= 0x80000000 + 0x8000000)) {
+                    *success = false;
+                    printf("Out of memory range\n");
+                    return 0;
+                }
+                uint32_t derefer_val = vaddr_read(val, 4);  // 取该地址开始的连续四个字节内存数据
+                return derefer_val;
+            }
+                break;
+
+            default:
                 *success = false;
                 return 0;
-            }
-            return val1 / val2;
-        
-        case TK_AND:
-            return val1 && val2;
-        
-        case TK_EQ:
-            return val1 == val2;
-        
-        case TK_NEQ:
-            return val1 != val2;
-        
-        case TK_DEREF:
-            TODO();
-
-        default:
-            *success = false;
-            return 0;
         }
     }
     return 0;
