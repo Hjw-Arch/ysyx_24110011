@@ -51,7 +51,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 
     printf(ANSI_FG_RED "Error, no such reg\n" ANSI_NONE);
     printf("$%s\n", s);
-    printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, (uint32_t)strlen(s) - 1, "");
+    printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, (uint32_t)strlen(s), "");
 
 
     *success = false;
