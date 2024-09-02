@@ -392,7 +392,7 @@ uint64_t eval_expression(int p, int q, bool *success)
                 if (!(val >= 0x80000000 && val <= 0x80000000 + 0x8000000)) {
                     *success = false;
                     printf("Out of memory range\n");
-                    return 0;
+                    return -1;
                 }
                 uint32_t derefer_val = vaddr_read(val, 4);  // 取该地址开始的连续四个字节内存数据
                 return derefer_val;
