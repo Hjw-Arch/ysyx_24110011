@@ -165,7 +165,11 @@ static bool make_token(char *e)
                     {
                         printf("Number out of range\n");
                         printf("%-.*s\n", substr_len, substr_start);
-                        printf(ANSI_FG_RED "%*.s^\n" ANSI_NONE, substr_len - 1, "");
+                        printf(ANSI_FG_RED "^" ANSI_NONE);
+                        for (int i = 0; i < substr_len - 1; i++) {
+                            printf(ANSI_FG_RED "~" ANSI_NONE);
+                        }
+                        puts("");
                         return false;
                     }
                     break;
