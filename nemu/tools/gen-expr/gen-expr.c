@@ -64,31 +64,43 @@ static void gen_num() {
     pos_buf += rand_blank;
 }
 
-static void gen(const char str) {
-    sprintf(buf + pos_buf, "%c", str);
-    pos_buf++;
+static void gen(const char *str) {
+    sprintf(buf + pos_buf, "%s", str);
+    pos_buf += strlen(str);
     int rand_blank = choose(3);
     sprintf(buf+pos_buf, "%*s", rand_blank, "");
     pos_buf += rand_blank;
 }
 
 static void gen_rand_op() {
-    switch (choose(4))
+    switch (choose(7))
     {
     case 0:
-        gen('+');
+        gen("+");
         break;
     
     case 1:
-        gen('-');
+        gen("-");
         break;
 
     case 2:
-        gen('*');
+        gen("*");
         break;
 
     case 3:
-        gen('/');
+        gen("/");
+        break;
+    
+    case 4:
+        gen("==");
+        break;
+    
+    case 5:
+        gen("!=");
+        break;
+
+    case 6:
+        gen("&&");
         break;
 
     default:
@@ -111,9 +123,9 @@ static void gen_rand_expr(int n)
         break;
 
     case 1:
-        gen('(');
+        gen("(");
         gen_rand_expr(++n);
-        gen(')');
+        gen(")");
         break;
 
     default:

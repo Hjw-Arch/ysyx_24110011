@@ -237,7 +237,7 @@ bool check_parentheses(int p, int q)
 // 寻找主运算符     可检查括号匹配的错误
 int search_for_main_operator(int p, int q, bool *success)
 {
-    int temp_op = q;
+    int temp_op = q;        // priority_list[tokens[q].type] = 0, 否则是错误表达式，没有运算符处于表达式的最右边
 
     for (int i = q; i >= p; i--)
     { // 从右往左遍历
