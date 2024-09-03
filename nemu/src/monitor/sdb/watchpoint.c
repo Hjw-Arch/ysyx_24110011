@@ -118,7 +118,7 @@ void free_wp(int NO) {
     }
 
     printf("\nNo watchpoint number: %d\n", NO);
-    printf("%-23s^\n", "");
+    printf(ANSI_BG_RED "%-22s^\n" ANSI_NONE, "");
     return;
 }
 
