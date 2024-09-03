@@ -117,8 +117,8 @@ void free_wp(int NO) {
         wp = wp->next;
     }
 
-    printf("\nNo such watchpointer: %d\n", NO);
-    printf("%-23s^", "");
+    printf("\nNo watchpoint number: %d\n", NO);
+    printf("%-23s^\n", "");
     return;
 }
 
