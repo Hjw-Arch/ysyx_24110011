@@ -74,7 +74,7 @@ void new_wp(char *expression) {
     wp->next = head;
     head = wp;
 
-    printf("NO %d watchponit, %s\n", wp->NO, wp->expr_str);
+    printf("NO %d watchponit, %s = %d\n", wp->NO, wp->expr_str, result);
 }
 
 void free_wp(int NO) {
