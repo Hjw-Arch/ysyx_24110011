@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <memory/vaddr.h>
+#include <memory/paddr.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -107,7 +108,7 @@ typedef struct token
     char str[32];
 } Token;
 
-static Token tokens[10086] __attribute__((used)) = {};
+static Token tokens[64] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
@@ -360,7 +361,7 @@ uint64_t eval_expression(int p, int q, bool *success)
                 if (val2 == 0) {
                     printf("ZeroDivisionError!\n");
                     *success = false;
-                    return -1;
+                    return 0;
                 }
                 return val1 / val2;
             }
@@ -389,7 +390,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             
             case TK_DEREF: {
                 uint64_t val = eval_expression(pos_op + 1, q, success);
-                if (!(val >= 0x80000000 && val <= 0x80000000 + 0x8000000)) {
+                if (!(val >= PMEM_LEFT && val < PMEM_RIGHT)) {
                     *success = false;
                     printf("Out of memory range\n");
                     return 0;
