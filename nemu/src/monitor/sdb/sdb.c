@@ -140,6 +140,8 @@ static int cmd_d(char *args) {
     }
 
     int i = atoi(args);
+
+    printf("%d\n", i);
     if (i < 0 || i > 32) {
         printf("%s is out of range from 0 to 32\n", args);
         printf(ANSI_FG_RED "^\n" ANSI_NONE);
