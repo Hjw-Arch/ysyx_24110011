@@ -53,7 +53,7 @@ void new_wp(char *expression) {
     }
 
     // 计算表达式
-    bool is_success;
+    bool is_success = true;
     uint32_t result = expr(expression, &is_success);
     if (!is_success) {
         printf("Bad expression!\n");
