@@ -139,7 +139,14 @@ static int cmd_d(char *args) {
         return 0;
     }
 
-    free_wp(atoi(args));
+    int i = atoi(args);
+    if (i < 0 || i > 32) {
+        printf("%s is out of range from 0 to 32\n", args);
+        printf(ANSI_FG_RED "^\n" ANSI_NONE);
+        return 0;
+    }
+
+    free_wp(i);
 
     return 0;
 }
