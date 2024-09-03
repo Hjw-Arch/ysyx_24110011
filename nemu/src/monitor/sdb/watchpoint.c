@@ -78,6 +78,11 @@ void new_wp(char *expression) {
 }
 
 void free_wp(int NO) {
+    if (head == NULL) {
+        printf("No watchpoint exists yet\n");
+        return;
+    }
+
     if (head->NO == NO) {   // 如果head头节点即是需要的节点
         // 数据置空
         head->expr_str = NULL;
@@ -92,29 +97,28 @@ void free_wp(int NO) {
         return;
     }
 
-    WP *front_WP = head;
-    while(front_WP->next->NO != NO) {
-        front_WP = front_WP->next;
-        if (front_WP == NULL) {
-            printf("\nNo such watchpointer: %d\n", NO);
-            printf("%-23s^", "");
+    WP *front_wp = head, *wp = front_wp->next;
+    while(wp != NULL) {
+        if (wp->NO == NO) {
+            // 数据清0
+            wp->expr_str = NULL;
+            wp->result = 0;
+
+            // 断开链表
+            front_wp->next = wp->next;
+
+            // 连接到free链表
+            wp->next = free_;
+            free_ = wp;
             return;
         }
+        // 继续搜索下一个
+        front_wp = wp;
+        wp = wp->next;
     }
 
-    WP *wp = front_WP->next;
-
-    // 数据清0
-    wp->expr_str = NULL;
-    wp->result = 0;
-
-    // 断开链表
-    front_WP->next = wp->next;
-
-    // 连接到free链表
-    wp->next = free_;
-    free_ = wp;
-
+    printf("\nNo such watchpointer: %d\n", NO);
+    printf("%-23s^", "");
     return;
 }
 
