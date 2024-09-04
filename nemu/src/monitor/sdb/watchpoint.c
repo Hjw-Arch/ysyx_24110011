@@ -16,10 +16,11 @@
 #include "sdb.h"
 
 #define NR_WP 32
+#define LEN_WP_EXPR 128
 
 typedef struct watchpoint {
     int NO;
-    char *expr_str;
+    char expr_str[LEN_WP_EXPR];
     uint32_t result;
     struct watchpoint *next;
 
@@ -43,6 +44,12 @@ void init_wp_pool() {
 
 // 设置一个新的监视点
 void new_wp(char *expression) {
+
+    if (strlen(expression) > 100) {
+        printf("Expression is too long!\n");
+        return;
+    }
+
     if (free_ == NULL) {
         printf("No free watchpoint\n");
         Assert(0, "No free watchpoint");
@@ -58,7 +65,7 @@ void new_wp(char *expression) {
     }
 
     // 置入数据
-    free_->expr_str = expression;
+    strcpy(free_->expr_str, expression);
     free_->result = result;
 
     // 保存节点
@@ -83,7 +90,7 @@ void free_wp(int NO) {
 
     if (head->NO == NO) {   // 如果head头节点即是需要的节点
         // 数据置空
-        head->expr_str = NULL;
+        memset(head->expr_str, 0, sizeof(head->expr_str));
         head->result = 0;
 
         WP *wp = head;
@@ -99,7 +106,7 @@ void free_wp(int NO) {
     while(wp != NULL) {
         if (wp->NO == NO) {
             // 数据清0
-            wp->expr_str = NULL;
+            memset(wp->expr_str, 0, sizeof(wp->expr_str));
             wp->result = 0;
 
             // 断开链表
