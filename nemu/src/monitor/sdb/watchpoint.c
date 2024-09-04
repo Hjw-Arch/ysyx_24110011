@@ -32,11 +32,8 @@ static WP *head = NULL, *free_ = NULL;
 
 void init_wp_pool() {
     int i;
-    for (i = 0; i < NR_WP; i++)
-    {
+    for (i = 0; i < NR_WP; i++) {
         wp_pool[i].NO = i;
-        wp_pool[i].expr_str = NULL;
-        wp_pool[i].result = 0;
         wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
     }
 
@@ -121,6 +118,25 @@ void free_wp(int NO) {
     printf("\nNo watchpoint number: %d\n", NO);
     printf(ANSI_FG_RED "%-22s^\n" ANSI_NONE, "");
     return;
+}
+
+void view_wp() {
+    printf("\n\nHead\n");
+    for (WP *wp = head; wp != NULL; wp = wp->next) {
+        printf("NO: %d, expr: %s, result: %x\n", wp->NO, wp->expr_str, wp->result);
+    }
+
+    printf("\n\nFree\n");
+    for (WP *wp = free_; wp != NULL; wp = wp->next) {
+        printf("NO: %d, expr: %s, result: %x\n", wp->NO, wp->expr_str, wp->result);
+    }
+
+    printf("\n\nWP\n");
+    for (int i = 0; i < 32; i++) {
+        WP *wp = &wp_pool[i];
+        printf("NO: %d, expr: %s, result: %x\n", wp->NO, wp->expr_str, wp->result);
+    }
+    printf("\n");
 }
 
 /* TODO: Implement the functionality of watchpoint */

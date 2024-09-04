@@ -227,6 +227,13 @@ static int cmd_test_expr(char *args) {
     return 0;
 }
 
+void view_wp();
+
+static int wp_test(char *args) {
+    view_wp();
+    return 0;
+}
+
 static int cmd_p(char *args) {
     if (args == NULL) {
         printf("Missing parameter\n");
@@ -263,6 +270,7 @@ static struct {
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"test_expr", "test expr", cmd_test_expr},
+    {"test_wp", "test wp", wp_test},
     /* TODO: Add more commands */
 
 };
