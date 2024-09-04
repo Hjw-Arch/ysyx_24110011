@@ -79,7 +79,8 @@ void new_wp(char *expression) {
 
 void free_wp(int NO) {
     if (head == NULL) {
-        printf("No watchpoint exists yet\n");
+        printf("\nNo watchpoint number: %d\n", NO);
+        printf(ANSI_FG_RED "%-22s^\n" ANSI_NONE, "");
         return;
     }
 
