@@ -127,21 +127,42 @@ void free_wp(int NO) {
     return;
 }
 
+int diff_wp() {
+    int flag = 0;
+    for (WP *wp = head; wp != NULL; wp = wp->next) {
+        bool is_success = true;
+        uint32_t result = expr(wp->expr_str, &is_success);
+        if (!is_success) {
+            printf("Bad expression\n");
+            printf("%s\n", wp->expr_str);
+            for (int i = 0; i < strlen(wp->expr_str) - 1; i++) printf(ANSI_FG_RED "~" ANSI_NONE);
+            printf(ANSI_FG_RED "^\n" ANSI_NONE);
+            flag = 1;
+        }
+        if (result != wp->result) {
+            printf("Number: %d, Expr: %s\nold_result: 0x%x, new_result: 0x%x\n\n", wp->NO, wp->expr_str, wp->result, result);
+            wp->result = result;
+            flag = 1;
+        }
+    }
+    return flag;
+}
+
 void view_wp() {
     printf("\n\nHead\n");
     for (WP *wp = head; wp != NULL; wp = wp->next) {
-        printf("NO: %d, expr: %s, result: %x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
+        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
     }
 
     printf("\n\nFree\n");
     for (WP *wp = free_; wp != NULL; wp = wp->next) {
-        printf("NO: %d, expr: %s, result: %x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
+        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
     }
 
     printf("\n\nWP\n");
     for (int i = 0; i < 32; i++) {
         WP *wp = &wp_pool[i];
-        printf("NO: %d, expr: %s, result: %x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
+        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
     }
     printf("\n");
 }

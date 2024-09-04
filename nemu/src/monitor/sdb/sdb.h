@@ -23,5 +23,6 @@ word_t expr(char *e, bool *success);
 // watchpoint.c
 void new_wp(char *expression);
 void free_wp(int NO);
+int diff_wp();
 
 #endif
