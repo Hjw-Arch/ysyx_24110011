@@ -142,7 +142,7 @@ void cpu_exec(uint64_t n) {
         // fall through
     case NEMU_QUIT:
         statistic();
-    case NEMU_STOP:
-        break;
+    // case NEMU_STOP:
+    //     break;
     }
 }
