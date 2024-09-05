@@ -142,7 +142,7 @@ int diff_wp() {
             flag = 1;
         }
         if (result != wp->result) {
-            printf("Watchpoint %d: %s\nOld Value = %d\nNew Value = %d\n\n", wp->NO, wp->expr_str, wp->result, result);
+            printf("Watchpoint %d: %s\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, wp->result, result);
             wp->result = result;
             flag = 1;
         }
