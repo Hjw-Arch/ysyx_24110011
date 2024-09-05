@@ -149,8 +149,15 @@ int diff_wp() {
 }
 
 void view_wp() {
-    printf("Num\t\tType\t\t\tResult\t\t\tWhat\n");
-    // for (WP *wp = head; head)
+    if (head == NULL) {
+        printf("No watchpoints.\n");
+        return;
+    }
+    printf("Num\t\tType\t\t\tResult\t\tWhat\n");
+    for (WP *wp = head; wp != NULL; wp = wp->next) {
+        printf("%d\t\tWatchpoint\t\t0x%-10x%s\n", wp->NO, wp->result, wp->expr_str);
+    }
+    puts("");
 }
 
 /* TODO: Implement the functionality of watchpoint */
