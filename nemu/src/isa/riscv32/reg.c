@@ -49,6 +49,15 @@ word_t isa_reg_str2val(const char *s, bool *success) {
         }
     }
 
+    printf(ANSI_FG_RED "Error, no such reg\n" ANSI_NONE);
+    printf("$%s\n", s);
+    printf(ANSI_FG_RED "^" ANSI_NONE);
+    for (int i = 0; i < strlen(s); i++) {
+        printf(ANSI_FG_RED "~" ANSI_NONE);
+    }
+    puts("");
+
+
     *success = false;
     return -1;
 }
