@@ -42,6 +42,8 @@ void init_wp_pool() {
     free_ = wp_pool;
 }
 
+#ifdef CONFIG_WATCHPOINT
+
 // 设置一个新的监视点
 void new_wp(char *expression) {
 
@@ -159,5 +161,7 @@ void diaplay_wp() {
     }
     puts("");
 }
+
+#endif
 
 /* TODO: Implement the functionality of watchpoint */

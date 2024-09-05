@@ -84,7 +84,9 @@ static int cmd_info(char *args) {
     }
 
     if (*next_arg == 'w') {
+#ifdef CONFIG_WATCHPOINT
         diaplay_wp();
+#endif
         return 0;
     }
 
@@ -92,7 +94,6 @@ static int cmd_info(char *args) {
         printf("Error parameter\n");
         return 0;
     }
-
     
     return 0;
 }
@@ -133,17 +134,21 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_w(char *args) {
+#ifdef CONFIG_WATCHPOINT
     if (args == NULL) {
         printf("Missing parameter\n");
         return 0;
     }
 
     new_wp(args);
-    
+#else
+    printf("Function \"Watchpoint\" is not enabled\n");
+#endif
     return 0;
 }
 
 static int cmd_d(char *args) {
+#ifdef CONFIG_WATCHPOINT
     if (args == NULL) {
         printf("Missing parameter\n");
         return 0;
@@ -158,6 +163,9 @@ static int cmd_d(char *args) {
     }
 
     free_wp(i);
+#else
+    printf("Function \"Watchpoint\" is not enabled\n");
+#endif
 
     return 0;
 }
