@@ -78,12 +78,17 @@ static int cmd_info(char *args) {
         return 0;
     }
 
-    if (*next_arg != 'r') {
-        printf("Parameter error\n");
+    if (*next_arg == 'r') {
+        isa_reg_display();
         return 0;
     }
 
-    isa_reg_display();
+    if (*next_arg == 'w') {
+        
+        return 0;
+    }
+
+    
     return 0;
 }
 
@@ -264,7 +269,7 @@ static struct {
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "si [N] | Let the program step through N instructions, the default N is 1", cmd_si},
-    {"info", "info r | Print register status", cmd_info},
+    {"info", "info r/w | Print register/watchpoint status", cmd_info},
     {"x", "x N EXPR | Evaluate the expression EXPR and use the result as the starting memory, output N consecutive 4 bytes in hexadecimal form", cmd_x},
     {"p", "p EXPR | Evaluate the expression EXPR", cmd_p},
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
