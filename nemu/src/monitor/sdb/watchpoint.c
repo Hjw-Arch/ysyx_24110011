@@ -149,22 +149,8 @@ int diff_wp() {
 }
 
 void view_wp() {
-    printf("\n\nHead\n");
-    for (WP *wp = head; wp != NULL; wp = wp->next) {
-        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
-    }
-
-    printf("\n\nFree\n");
-    for (WP *wp = free_; wp != NULL; wp = wp->next) {
-        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
-    }
-
-    printf("\n\nWP\n");
-    for (int i = 0; i < 32; i++) {
-        WP *wp = &wp_pool[i];
-        printf("NO: %d, expr: %s, result: 0x%x\n", wp->NO, !wp->expr_str[0] ? "NULL" : wp->expr_str, wp->result);
-    }
-    printf("\n");
+    printf("Num\t\tType\t\t\tResult\t\t\tWhat\n");
+    // for (WP *wp = head; head)
 }
 
 /* TODO: Implement the functionality of watchpoint */
