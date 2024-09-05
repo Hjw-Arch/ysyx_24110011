@@ -141,6 +141,7 @@ int diff_wp() {
             printf(ANSI_FG_RED "^\n" ANSI_NONE);
             flag = 1;
         }
+        
         if (result != wp->result) {
             printf("Watchpoint %d: %s\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, wp->result, result);
             wp->result = result;
