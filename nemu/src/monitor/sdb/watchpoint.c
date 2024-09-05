@@ -153,9 +153,9 @@ void view_wp() {
         printf("No watchpoints.\n");
         return;
     }
-    printf("Num\t\tType\t\t\tResult\t\tWhat\n");
+    printf("Num\tType\t\tResult\tWhat\n");
     for (WP *wp = head; wp != NULL; wp = wp->next) {
-        printf("%d\t\tWatchpoint\t\t0x%-10x%s\n", wp->NO, wp->result, wp->expr_str);
+        printf("%d\tWatchpoint\t0x%-10x%s\n", wp->NO, wp->result, wp->expr_str);
     }
     puts("");
 }
