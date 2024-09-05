@@ -45,7 +45,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
     if (diff_wp()) {
-        nemu_state.state = NEMU_STOP;
+        if (nemu_state.state != NEMU_END)
+            nemu_state.state = NEMU_STOP;
         // TODO(); // 回到mainloop
     }
 }
