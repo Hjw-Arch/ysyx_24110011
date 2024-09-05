@@ -70,7 +70,7 @@ static int cmd_si(char *args) {
     return 0;
 }
 
-// 实现打印寄存器
+// 实现打印寄存器/监视点
 static int cmd_info(char *args) {
     char *next_arg = strtok(args, " ");
     if (next_arg == NULL) {
@@ -84,7 +84,7 @@ static int cmd_info(char *args) {
     }
 
     if (*next_arg == 'w') {
-        view_wp();
+        diaplay_wp();
         return 0;
     }
 
@@ -237,13 +237,6 @@ static int cmd_test_expr(char *args) {
     return 0;
 }
 
-void view_wp();
-
-static int wp_test(char *args) {
-    view_wp();
-    return 0;
-}
-
 static int cmd_p(char *args) {
     if (args == NULL) {
         printf("Missing parameter\n");
@@ -274,13 +267,12 @@ static struct {
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "si [N] | Let the program step through N instructions, the default N is 1", cmd_si},
-    {"info", "info r/w | Print register/watchpoint status", cmd_info},
+    {"info", "info r/w | Print registers/watchpoints status", cmd_info},
     {"x", "x N EXPR | Evaluate the expression EXPR and use the result as the starting memory, output N consecutive 4 bytes in hexadecimal form", cmd_x},
     {"p", "p EXPR | Evaluate the expression EXPR", cmd_p},
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"test_expr", "test expr", cmd_test_expr},
-    {"test_wp", "test wp", wp_test},
     /* TODO: Add more commands */
 
 };

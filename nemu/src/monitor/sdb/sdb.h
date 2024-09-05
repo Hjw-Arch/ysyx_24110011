@@ -24,6 +24,6 @@ word_t expr(char *e, bool *success);
 void new_wp(char *expression);
 void free_wp(int NO);
 int diff_wp();
-void view_wp();
+void diaplay_wp();
 
 #endif

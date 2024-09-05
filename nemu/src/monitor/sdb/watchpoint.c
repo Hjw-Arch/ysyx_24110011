@@ -148,7 +148,7 @@ int diff_wp() {
     return flag;
 }
 
-void view_wp() {
+void diaplay_wp() {
     if (head == NULL) {
         printf("No watchpoints.\n");
         return;
