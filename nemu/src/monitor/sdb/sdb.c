@@ -84,7 +84,12 @@ static int cmd_info(char *args) {
     }
 
     if (*next_arg == 'w') {
-        
+        view_wp();
+        return 0;
+    }
+
+    else {
+        printf("Error parameter\n");
         return 0;
     }
 
