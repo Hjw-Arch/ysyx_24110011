@@ -255,7 +255,8 @@ static int cmd_p(char *args) {
     char *expr_str = args;
     if ((*args == 'd' || *args == 'x') && (*(args + 1) == ' ')) {
         print_format = *args;
-        expr_str = args + 2;
+        strtok(NULL, " ");
+        expr_str = strtok(NULL, " ");
     }
 
     bool is_success = true;
