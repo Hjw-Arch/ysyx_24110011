@@ -256,7 +256,7 @@ static int cmd_p(char *args) {
     if ((*args == 'd' || *args == 'x' || *args == 'D' || *args == 'X')) {
         print_format = *args;
         strtok(NULL, " ");
-        expr_str = strtok(NULL, " ");
+        expr_str = strtok(NULL, "");
         if (expr_str == NULL) {
             printf("Missing parameter\n");
             return 0;
