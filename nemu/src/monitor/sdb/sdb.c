@@ -253,7 +253,7 @@ static int cmd_p(char *args) {
 
     uint32_t print_format = 0;
     char *expr_str = args;
-    if ((*args == 'd' || *args == 'x') && (*(args + 1) == ' ')) {
+    if ((*args == 'd' || *args == 'x')) {
         print_format = *args;
         strtok(NULL, " ");
         expr_str = strtok(NULL, " ");
