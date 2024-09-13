@@ -95,6 +95,14 @@
                 .imm10_1 = BITS(x, 30, 21)}; \
                 (int64_t)__x.n;})
 
+#define EXBT(x) ({union { int64_t n : 12; struct {uint64_t blank : 1, imm4_1 : 4, imm10_5 : 6, imm11 : 1, imm12 : 1;};} \
+                __x = { .blank = 0, \
+                .imm4_1 = BITS(x, 11, 8), \
+                .imm10_5 = BITS(x, 30, 25), \
+                .imm11 = BITS(x, 7, 7), \
+                .imm12 = BITS(x, 31, 31)}; \
+                (int64_t)__x.n;})
+
 #define ROUNDUP(a, sz)   ((((uintptr_t)a) + (sz) - 1) & ~((sz) - 1))
 #define ROUNDDOWN(a, sz) ((((uintptr_t)a)) & ~((sz) - 1))
 
