@@ -251,11 +251,18 @@ static int cmd_p(char *args) {
         return 0;
     }
 
+    uint32_t print_format = 0;
+    char *expr_str = args;
+    if ((*args == 'd' || *args == 'x') && (*(args + 1) == ' ')) {
+        print_format = *args;
+        expr_str = args + 2;
+    }
+
     bool is_success = true;
-    uint32_t result = expr(args, &is_success);
+    uint32_t result = expr(expr_str, &is_success);
 
     if (is_success) {
-        printf("%d\n", result);
+        print_format == 'x' ? printf("0x%x\n", result) : printf("%d\n", result);
     }
     else {
         printf("Bad expression\n");
@@ -277,7 +284,7 @@ static struct {
     {"si", "si [N] | Let the program step through N instructions, the default N is 1", cmd_si},
     {"info", "info r/w | Print registers/watchpoints status", cmd_info},
     {"x", "x N EXPR | Evaluate the expression EXPR and use the result as the starting memory, output N consecutive 4 bytes in hexadecimal form", cmd_x},
-    {"p", "p EXPR | Evaluate the expression EXPR", cmd_p},
+    {"p", "p [d/x] EXPR | Evaluate the expression EXPR", cmd_p},
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"test_expr", "test expr", cmd_test_expr},
