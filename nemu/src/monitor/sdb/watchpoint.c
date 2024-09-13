@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "sdb.h"
+#include "isa.h"
 
 #define NR_WP 32
 #define LEN_WP_EXPR 128
@@ -128,7 +129,7 @@ void free_wp(int NO) {
     printf(ANSI_FG_RED "%-22s^\n" ANSI_NONE, "");
     return;
 }
-
+extern CPU_state cpu;
 int diff_wp() {
     int flag = 0;
     for (WP *wp = head; wp != NULL; wp = wp->next) {
@@ -143,7 +144,7 @@ int diff_wp() {
         }
         
         if (result != wp->result) {
-            printf("Watchpoint %d: %s\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, wp->result, result);
+            printf("Watchpoint %d: %s  at: 0x%x\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, cpu.pc, wp->result, result);
             wp->result = result;
             flag = 1;
         }
