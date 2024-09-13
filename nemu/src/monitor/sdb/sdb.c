@@ -257,6 +257,10 @@ static int cmd_p(char *args) {
         print_format = *args;
         strtok(NULL, " ");
         expr_str = strtok(NULL, " ");
+        if (expr_str == NULL) {
+            printf("Missing parameter\n");
+            return 0;
+        }
     }
 
     bool is_success = true;
