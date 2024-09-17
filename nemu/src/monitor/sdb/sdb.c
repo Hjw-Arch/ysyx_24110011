@@ -267,7 +267,7 @@ static int cmd_p(char *args) {
     uint32_t result = expr(expr_str, &is_success);
 
     if (is_success) {
-        print_format == 'x' ? printf("0x%x\n", result) : printf("%d\n", result);
+        (print_format == 'x' || print_format == 'X') ? printf("0x%x\n", result) : printf("%d\n", result);
     }
     else {
         printf("Bad expression\n");
