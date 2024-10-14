@@ -1,52 +1,83 @@
+BUILD_DIR = ./build
+OBJ_DIR = $(BUILD_DIR)/obj_dir
+
+$(shell mkdir -p $(OBJ_DIR))
+
+TOP_NAME ?= simple_fsm
+
 VERILATOR = verilator
-VERILATOR_COVERAGE = verilator_coverage
 
-VERILATOR_FLAGS += --cc --exe --build
-VERILATOR_FLAGS += -Wall
-# VERILATOR_FLAGS += --trace
+# 常规参数 将verilog代码翻译为C++代码后直接生成可执行文件
+VERILATOR_FLAGS = -Mdir $(OBJ_DIR) -cc --exe --build --x-assign fast -Wall --top-module $(TOP_NAME) -y $(abspath, ./vsrc)
+# 是否开启trace
+TRACE_IS_ON ?= ON
+ifeq ($(TRACE_IS_ON),ON)
+	VERILATOR_FLAGS += --trace
+endif
 
-VERILATOR_INPUT = csrc/NVBoardTest.cpp vsrc/top.v
+vsrc ?= $(shell find $(abspath ./vsrc) -name "*.v")
+csrc ?= $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
-# NVBoard部分
-TOPNAME = top
-NXDC_FILES = constr/top.nxdc
+# 输入参数
+VERILATOR_INPUTS = $(abspath $(vsrc)) $(abspath $(csrc))
 
-SRC_AUTO_BIND = $(abspath ./auto_bind.cpp)
 
+default: run
+all: run
+
+run:
+	@echo
+	@echo "---------------- Verilator running -----------------"
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) -CFLAGS -O2 --Wno-UNUSEDSIGNAL --Wno-SELRANGE
+	@# 运行可执行程序
+	@echo
+	@echo "------------------- Simulation ---------------------"
+	@echo
+	@echo
+	$(OBJ_DIR)/V$(TOP_NAME)
+	@echo
+	@echo "-------------------- Finish -----------------------"
+
+# --------------------------- NVboard ----------------------------"
+#
+
+NXDC_FILES = constr/$(TOP_NAME).nxdc
+SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
+# 生成引脚绑定函数
 $(SRC_AUTO_BIND): $(NXDC_FILES)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
-VERILATOR_INPUT += ./auto_bind.cpp
+NVBOARD_INPUTS += $(SRC_AUTO_BIND)
 
+# nvboard的构建规则
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+CXXFLAGS += $(INCFLAGS)
 
-all:
+NVBOARD_INPUTS += $(NVBOARD_ARCHIVE)
 
-sim: $(SRC_AUTO_BIND) $(NVBOARD_ARCHIVE)
+sim: $(SRC_AUTO_BIND)
 	@echo
-	@echo "---------- verilator run ----------"
+	@echo "----------------------- Verilator running --------------------"
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) $(NVBOARD_INPUTS) $(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))
 	@echo
-
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) \
-		--top-module $(TOPNAME) $^ \
-		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))
-
-
+	@echo "----------------------- NVboard running ----------------------"
 	@echo
-	@echo "---------- RUN ----------"
-	obj_dir/Vtop
-
 	@echo
-	@echo "---------- DONE ----------"
+	$(OBJ_DIR)/V$(TOP_NAME)
+	@echo
+	@echo "--------------------------- Finish ---------------------------"
+
+clean:
+	rm -rf $(BUILD_DIR)
+
 
 #	$(call git_commit, "sim RTL")
 
-maintainer-copy::
-clean mostlyclean distclean maintainer-clean::
-	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat core
+# maintainer-copy::
+# clean mostlyclean distclean maintainer-clean::
+# 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat core
 
 
 # include ../Makefile
