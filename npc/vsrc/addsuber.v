@@ -5,7 +5,7 @@ module addsuber #(parameter BITWIDTH = 32) (
     input [BITWIDTH - 1 : 0] input2,
     input add_or_sub,
     output [BITWIDTH - 1 : 0] result,
-    output carry_flag, overflow_flag
+    output carry_flag, overflow_flag, zero_flag
 );
 
 wire cout;
@@ -30,6 +30,7 @@ assign overflow_flag = (input1[BITWIDTH - 1] & symbol_bit & ~result[BITWIDTH - 1
 // 判断规则，如果是加法，则进位位为1表示溢出，如果是减法，进位位为0表示溢出
 
 assign carry_flag = add_or_sub ^ cout;
+assign zero_flag = ~(|result);
 
 
 endmodule

@@ -17,7 +17,8 @@ addsuber #(WIDTH) _addsuber(
     .add_or_sub(ctrl[3] | ctrl[1]),     // sub slt stlu slti sltiu需要作减法
     .result(computeResult),
     .carry_flag(carry_flag),
-    .overflow_flag(overflow_flag)
+    .overflow_flag(overflow_flag),
+    .zero_flag(zero_flag)
 );
 
 // 移位操作
@@ -51,8 +52,6 @@ ALUMux11_1 #(WIDTH) muxForResult(
     .sel(ctrl),
     .result(result)
 );
-
-assign zero_flag = |result;
 
 
 endmodule

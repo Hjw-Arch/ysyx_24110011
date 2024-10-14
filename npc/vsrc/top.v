@@ -13,6 +13,7 @@ module top #(parameter WIDTH = 32)(
     wire [3 : 0] _ALUCtrl,
     wire _ALUASel, 
     wire [1 : 0] _ALUBSel,
+    wire [2 : 0] _branchWay,
 
     input clk, 
     input rst,
@@ -35,6 +36,7 @@ assign _pcBSel = pcAdderBSel;
 assign _ALUCtrl = ALUCtrl;
 assign _ALUASel = ALUASel;
 assign _ALUBSel = ALUBSel;
+assign _branchWay = branchWay;
 
 /***************************** 数据定义 *********************************/
 // 取值模块
