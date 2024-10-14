@@ -30,7 +30,13 @@ int main() {
         printf("ALUAsel = %d, ALUBSel = %d\n", dut._ALUASel, dut._ALUBSel);
         printf("branchWay = %x\n", dut._branchWay);
 
-        if (dut._inst == 0x00100073) return 0;
+        if (dut._inst == 0x00100073) {
+            if(dut._rf[0] == 0) {
+                printf("HIT GOOD TRAP at pc = 0x%08x\n", dut.pc);
+            } else {
+                printf("HIT BAD TRAP at pc = 0x%08x\n", dut.pc);
+            }
+        }
 
         dut_cycle();
 
