@@ -18,7 +18,7 @@ assign result = ({WIDTH{~sel[3] & ~sel[2] & ~sel[1] & ~sel[0]}} & inData[0]) |
                 ({WIDTH{~sel[3] & sel[2] & sel[1] & ~sel[0]}} & inData[5]) | 
                 ({WIDTH{~sel[3] & sel[2] & sel[1] & sel[0]}} & inData[6]) |
                 ({WIDTH{sel[3] & ~sel[2] & ~sel[1] & ~sel[0]}} & inData[0]) |
-                ({WIDTH{sel[3] & ~sel[2] & sel[1] & ~sel[0]}} & inData[7]) | 
+                ({WIDTH{sel[3] & ~sel[2] & sel[1] & sel[0]}} & inData[7]) | 
                 ({WIDTH{sel[3] & sel[2] & ~sel[1] & sel[0]}} & inData[1]);
 
 endmodule

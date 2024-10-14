@@ -1,6 +1,18 @@
 module top #(parameter WIDTH = 32)(
     // test
     output [31 : 0] rf [31 : 0],
+    wire [31 : 0] _imm,
+    wire [31 : 0] _inputA,
+    wire [31 : 0] _inputB,
+    wire [31 : 0] _aluresult,
+    wire [4 : 0] _rdaddr,
+    wire [31 : 0] _rddata,
+    wire _rdenable,
+    wire [2 : 0] _extOP,
+    wire _pcASel, _pcBSel,
+    wire [3 : 0] _ALUCtrl,
+    wire _ALUASel, 
+    wire [1 : 0] _ALUBSel,
 
     input clk, 
     input rst,
@@ -10,13 +22,19 @@ module top #(parameter WIDTH = 32)(
 
 // test
 assign _inst = inst;
-// assign _imm = imm;
-// assign _inputA = ALUAInput;
-// assign _inputB = ALUBInput;
-// assign _aluresult = ALUResult;
-// assign _rdaddr = rd_addr;
-// assign _rddata = rd_data;
-// assign _rdenable = rdEnable;
+assign _imm = imm;
+assign _inputA = ALUAInput;
+assign _inputB = ALUBInput;
+assign _aluresult = ALUResult;
+assign _rdaddr = rd_addr;
+assign _rddata = rd_data;
+assign _rdenable = rdEnable;
+assign _extOP = extOP;
+assign _pcASel = pcAdderASel;
+assign _pcBSel = pcAdderBSel;
+assign _ALUCtrl = ALUCtrl;
+assign _ALUASel = ALUASel;
+assign _ALUBSel = ALUBSel;
 
 /***************************** 数据定义 *********************************/
 // 取值模块
@@ -33,7 +51,7 @@ wire [2 : 0] funct3;
 wire [6 : 0] funct7;
 
 // 控制信号
-wire [2 : 0] extOP; // 指令的类型 I:000; U:001; B:010; J:011; S:100; 用于生成立即数
+wire [2 : 0] extOP; // 指令的类型 用于生成立即数 000: I  001: U  100: J   011: B   010: S
 wire readMemEnable;  // 是否需要读内存(将内存值写入rd寄存器，1即表示将内存值写入rd寄存器)
 wire writeMemEnable;    // 是否需要写内存(1时需要写回)
 wire rdEnable;      // 是否需要rd(是否需要写寄存器)

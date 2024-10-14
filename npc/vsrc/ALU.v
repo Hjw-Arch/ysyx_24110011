@@ -47,7 +47,7 @@ wire [WIDTH - 1 : 0] lessUnsignedResult = {31'b0, computeResult[WIDTH - 1]};
 wire [WIDTH - 1 : 0] copyResult = input2;
 
 ALUMux11_1 #(WIDTH) muxForResult(
-    .inData({lessUnsignedResult, andResult, orResult, xorResult, copyResult, lessSignedResult, shifterResult, computeResult}),
+    .inData({copyResult, andResult, orResult, xorResult, lessUnsignedResult, lessSignedResult, shifterResult, computeResult}),
     .sel(ctrl),
     .result(result)
 );

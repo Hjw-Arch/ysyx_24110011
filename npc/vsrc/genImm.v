@@ -15,10 +15,10 @@ wire [30 : 0] imm_B = {{19{immToGen[31]}}, immToGen[7], immToGen[30 : 25], immTo
 wire [30 : 0] imm_U = {immToGen[30 : 12], 12'b0};
 wire [30 : 0] imm_J = {{11{immToGen[31]}}, immToGen[19 : 12], immToGen[20], immToGen[30 : 21], 1'b0};
 
-assign imm[30 : 0] = ({31{extOP[2]}} & imm_S) | 
+assign imm[30 : 0] = ({31{extOP[2]}} & imm_J) | 
              ({31{~extOP[2] & ~extOP[1] & ~extOP[0]}} & imm_I) | 
              ({31{~extOP[2] & ~extOP[1] & extOP[0]}} & imm_U) | 
-             ({31{~extOP[2] & extOP[1] & ~extOP[0]}} & imm_B) | 
-             ({31{~extOP[2] & extOP[1] & extOP[0]}} & imm_J);
+             ({31{~extOP[2] & extOP[1] & ~extOP[0]}} & imm_S) | 
+             ({31{~extOP[2] & extOP[1] & extOP[0]}} & imm_B);
 
 endmodule

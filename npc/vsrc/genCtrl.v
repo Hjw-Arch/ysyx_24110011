@@ -31,9 +31,9 @@ assign rdEnable = ~(~opcode6_2[0] & ~opcode6_2[1] & ~opcode6_2[2] & opcode6_2[3]
 // ALUASel      0: rs1, 1: pc       // jump + auipc
 assign ALUASel = ~opcode6_2[4] & ~opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & opcode6_2[0] | opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & opcode6_2[0];
 
-// ALUBSel  00: imm  01: rs2  11: 4         ALUBSel[1] = ALUASel
+// ALUBSel  00: imm  01: rs2  10: imm   11: 4         ALUBSel[1] = ALUASel
 
-assign ALUBSel[0] = opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & opcode6_2[0];     // Jump指令
+assign ALUBSel[0] = opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & opcode6_2[0] | ~opcode6_2[4] & opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] | opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0];     // Jump指令
 assign ALUBSel[1] = ALUASel;
 
 // memOP
