@@ -15,7 +15,7 @@ ifeq ($(TRACE_IS_ON),ON)
 	VERILATOR_FLAGS += --trace
 endif
 
-vsrc ?= $(shell find $(abspath ./vsrc) -name "*.v")
+vsrc ?= $(shell find $(abspath ./vsrc) -name "*.v" -or -name "*.sv")
 csrc ?= $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 # 输入参数

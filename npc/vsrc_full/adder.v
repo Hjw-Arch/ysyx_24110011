@@ -6,7 +6,7 @@ module adder # (parameter BITWIDTH = 32) (
 );
 
 generate
-    genvar i;  
+    genvar i;
     wire [BITWIDTH / 4 : 0] c_wire;
     assign c_wire[0] = cin;
     for (i = 0; i < BITWIDTH / 4; i = i + 1) begin
