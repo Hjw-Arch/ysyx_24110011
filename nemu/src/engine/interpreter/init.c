@@ -14,6 +14,8 @@
 ***************************************************************************************/
 #include <cpu/cpu.h>
 
+#define CONFIG_TARGET_AM
+
 void sdb_mainloop();
 
 void engine_start() {
