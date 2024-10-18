@@ -13,7 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 #include <cpu/cpu.h>
-
+#define CONFIG_TARGET_AM
 void sdb_mainloop();
 
 void engine_start() {
