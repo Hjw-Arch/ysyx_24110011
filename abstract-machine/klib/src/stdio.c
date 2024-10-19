@@ -28,8 +28,13 @@ static int num2string(char **out, int num, int base) {
         num /= base;
     }
 
-    while(i > 0) {
-        *((*out)++) = (char)(a[--i] + '0');
+    while(i-- > 0) {
+        if (a[i] >= 10) {
+            *((*out)++) = (char)(a[i] - 10 + 'a');
+            ret++;
+        } else {
+            *((*out)++) = (char)(a[i] + '0');
+        }
         ret++;
     }
 
@@ -54,22 +59,25 @@ int sprintf(char *out, const char *fmt, ...) {
             ret++;
         }
         else {
-            switch (fmt[i + 1])
+            switch (fmt[++i])
             {
-            case 'd':
-                int num = va_arg(list, int);
-                ret += num2string(&out, num, 10);
-                break;
-            
-            case 's':
-                char *str = va_arg(list, char*);
-                while(*str != '\0') {
-                    *(out++) = *(str++);
-                    ret++;
+                case 'd': {
+                    int num = va_arg(list, int);
+                    ret += num2string(&out, num, 10);
+                    break;
                 }
-                break;
-            default:
-                break;
+
+                case 's': {
+                    char *str = va_arg(list, char*);
+                    while (*str != '\0') {
+                        *(out++) = *(str++);
+                        ret++;
+                    }
+                    break;
+                }
+
+                default:
+                    break;
             }
         }
     }
