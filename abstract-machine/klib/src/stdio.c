@@ -81,6 +81,7 @@ int sprintf(char *out, const char *fmt, ...) {
             }
         }
     }
+    *out = '\0';
     return ret;
 }
 
