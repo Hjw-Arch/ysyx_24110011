@@ -83,10 +83,10 @@ void iringbuf_display() {
 #endif
 
 
-        printf("%x ", (iringbuf.inst[index] & 0xff000000) >> 23);
-        printf("%x ", (iringbuf.inst[index] & 0x00ff0000) >> 15);
-        printf("%x ", (iringbuf.inst[index] & 0x0000ff00) >> 7);
-        printf("%x\n",  (uint8_t)iringbuf.inst[index]);
+        printf("%02x ", (iringbuf.inst[index] & 0xff000000) >> 23);
+        printf("%02x ", (iringbuf.inst[index] & 0x00ff0000) >> 15);
+        printf("%02x ", (iringbuf.inst[index] & 0x0000ff00) >> 7);
+        printf("%02x\n",  (uint8_t)iringbuf.inst[index]);
         
         if(index == end_index) break;
         index++;

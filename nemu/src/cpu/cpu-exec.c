@@ -39,7 +39,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
         log_write("%s\n", _this->logbuf);
     }
 #endif
-    iringbuf_display();
     if (g_print_step) {
         IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
     }
@@ -97,6 +96,7 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
+    isa_reg_display();      // iringbuf
     IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
     Log("host time spent = " NUMBERIC_FMT " us", g_timer);
@@ -108,7 +108,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
-    isa_reg_display();
+    iringbuf_display();
     statistic();
 }
 
