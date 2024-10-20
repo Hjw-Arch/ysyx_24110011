@@ -73,14 +73,14 @@ void iringbuf_display() {
 
         printf("0x%08x: ", iringbuf.addr[index]);
 
-#ifndef CONFIG_ISA_loongarch32r
-        char disasm_buf[64];
-        void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-        disassemble(disasm_buf, 64, iringbuf.addr[index], (uint8_t *)&iringbuf.inst[index], 4);
-        printf("%s   ", disasm_buf);
-#else
-        p[0] = '\0'; // the upstream llvm does not support loongarch32r
-#endif
+// #ifndef CONFIG_ISA_loongarch32r
+//         char disasm_buf[64];
+//         void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+//         disassemble(disasm_buf, 64, iringbuf.addr[index], (uint8_t *)&iringbuf.inst[index], 4);
+//         printf("%s   ", disasm_buf);
+// #else
+//         p[0] = '\0'; // the upstream llvm does not support loongarch32r
+// #endif
 
 
         printf("%02x ", (iringbuf.inst[index] & 0xff000000) >> 23);
