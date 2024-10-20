@@ -24,7 +24,7 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INST_TO_PRINT 0
+#define MAX_INST_TO_PRINT 10
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -59,6 +59,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
     int ilen = s->snpc - s->pc;
+    printf("testing ilen = %d\n", ilen);
     int i;
     uint8_t *inst = (uint8_t *)&s->isa.inst.val;
     for (i = ilen - 1; i >= 0; i--) {
