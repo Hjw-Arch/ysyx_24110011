@@ -59,8 +59,7 @@ int sprintf(char *out, const char *fmt, ...) {
             ret++;
         }
         else {
-            switch (fmt[++i])
-            {
+            switch (fmt[++i]) {
                 case 'd': {
                     int num = va_arg(list, int);
                     ret += num2string(&out, num, 10);

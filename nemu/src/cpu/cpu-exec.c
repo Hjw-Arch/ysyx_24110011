@@ -45,8 +45,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
     if (diff_wp(_this->snpc - 4)) {
-        if (nemu_state.state != NEMU_END)
-            nemu_state.state = NEMU_STOP;
+        if (nemu_state.state != NEMU_END) nemu_state.state = NEMU_STOP;
     }
 #endif
 }
@@ -115,12 +114,12 @@ void assert_fail_msg() {
 void cpu_exec(uint64_t n) {
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (nemu_state.state) {
-    case NEMU_END:
-    case NEMU_ABORT:
-        printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-        return;
-    default:
-        nemu_state.state = NEMU_RUNNING;
+        case NEMU_END:
+        case NEMU_ABORT:
+            printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+            return;
+        default:
+            nemu_state.state = NEMU_RUNNING;
     }
 
     uint64_t timer_start = get_time();
