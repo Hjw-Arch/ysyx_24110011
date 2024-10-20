@@ -44,6 +44,56 @@ static char *rl_gets() {
     return line_read;
 }
 
+// ringbuffer
+typedef struct _ringbuf
+{
+    MUXDEF(CONFIG_RV64, uint64_t addr[16], uint32_t addr[16]);
+    uint32_t inst[16];
+}ringbuf;
+static ringbuf iringbuf;
+static uint32_t iringbuf_index = 0;
+
+void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst) {
+    if (iringbuf_index > 15) iringbuf_index = 0;
+    iringbuf.addr[iringbuf_index] = addr;
+    iringbuf.inst[iringbuf_index++] = inst;
+}
+
+void iringbuf_display() {
+    uint32_t start_index = iringbuf_index;
+    uint32_t end_index = iringbuf_index - 1;
+    uint32_t index = start_index;
+    puts("\n");
+    while(1) {
+        if (index > 15) index = 0;
+        if (iringbuf.addr[index] == 0) {
+            index++;
+            continue;
+        }
+
+        printf("0x%08x: ", iringbuf.addr[index]);
+
+#ifndef CONFIG_ISA_loongarch32r
+        char disasm_buf[64];
+        void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+        disassemble(disasm_buf, 64, iringbuf.addr[index], (uint8_t *)&iringbuf.inst[index], 4);
+        printf("%s   ", disasm_buf);
+#else
+        p[0] = '\0'; // the upstream llvm does not support loongarch32r
+#endif
+
+
+        printf("%x ", (iringbuf.inst[index] & 0xff000000) >> 23);
+        printf("%x ", (iringbuf.inst[index] & 0x00ff0000) >> 15);
+        printf("%x ", (iringbuf.inst[index] & 0x0000ff00) >> 7);
+        printf("%x\n",  (uint8_t)iringbuf.inst[index]);
+        
+        if(index == end_index) break;
+        index++;
+    }
+    puts("\n");
+}
+
 static int cmd_c(char *args) {
     cpu_exec(-1);
     return 0;

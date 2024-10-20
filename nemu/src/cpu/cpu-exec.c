@@ -39,6 +39,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
         log_write("%s\n", _this->logbuf);
     }
 #endif
+    iringbuf_display();
     if (g_print_step) {
         IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
     }
@@ -56,10 +57,10 @@ static void exec_once(Decode *s, vaddr_t pc) {
     isa_exec_once(s);
     cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
+    iringbuf_load(s->pc, s->isa.inst.val);      // iringbuf
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-    int ilen = s->snpc - s->pc;
-    printf("testing ilen = %d\n", ilen);
+    int ilen = s->snpc - s->pc;     // 4
     int i;
     uint8_t *inst = (uint8_t *)&s->isa.inst.val;
     for (i = ilen - 1; i >= 0; i--) {

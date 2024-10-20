@@ -26,4 +26,8 @@ void free_wp(int NO);
 int diff_wp(vaddr_t front_pc);
 void diaplay_wp();
 
+// iringbuf
+void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst);
+void iringbuf_display();
+
 #endif

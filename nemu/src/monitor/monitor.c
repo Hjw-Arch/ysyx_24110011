@@ -46,23 +46,6 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
 
-// ringbuffer
-typedef struct _ringbuf
-{
-    MUXDEF(CONFIG_RV64, uint64_t addr[16], uint32_t addr[16]);
-    uint32_t inst[16];
-}ringbuf;
-static ringbuf iringbuf;
-static uint32_t iringbuf_index = 0;
-
-void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst) {
-    if (iringbuf_index > 15) iringbuf_index = 0;
-    iringbuf.addr[iringbuf_index] = addr;
-    iringbuf.inst[iringbuf_index++] = inst;
-}
-
-
-
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
