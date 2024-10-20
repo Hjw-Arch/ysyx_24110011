@@ -24,13 +24,21 @@ static uint8_t *pmem = NULL;
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
 
+#ifdef CONFIG_MTRACE
+
+// void mtrace_read(uint32_t start_addr, uint32_t end_addr, uint32_t len, uint32_t content) {
+//   if ()
+// }
+
+#endif
+
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE
-  printf("Guest machine read memory at pc = 0x%08x, %d byte%s content = 0x%08x\n", cpu.pc, len, len > 1 ? "s," : ",", ret);
+  if (cpu.pc != addr) printf("Guest machine read memory at pc = 0x%08x, %d byte%s content = 0x%08x\n", cpu.pc, len, len > 1 ? "s," : ",", ret);
 #endif
   return ret;
 }
