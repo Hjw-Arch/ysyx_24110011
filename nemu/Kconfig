@@ -152,10 +152,19 @@ config ITRACE_COND
   default "true"
 
 config MTRACE
- depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
- bool "Enable memory tracer"
- default y
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable memory tracer"
+  default y
 
+config MTRACE_START_ADDR
+  depends on MTRACE
+  hex "Determine where to start recording memory trace"
+  default 0x80000000
+
+config MTRACE_END_ADDR
+  depends on MTRACE
+  hex "Determine where to end recording memory trace"
+  default 0x87ffffff
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
