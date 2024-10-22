@@ -161,6 +161,8 @@ static void decode_elf() {
         printf("0x%08x  \n", symtabs[i].end_addr);
     }
 
+    free(str_buffer);
+    fclose(fp);
 }
 
 #endif
