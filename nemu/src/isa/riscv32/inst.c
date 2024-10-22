@@ -24,7 +24,7 @@
 
 #ifdef CONFIG_FTRACE
 #include "../../monitor/sdb/sdb.h"
-#define FTRACE_RECORD     if(s->isa.inst.val == 0x8067) {record_ftrace(s->pc, 1, s->dnpc);} else if ((s->isa.inst.val & 0x00000fff) == 0xef) {record_ftrace(s->pc, 0, s->dnpc);}
+#define FTRACE_RECORD     if(s->isa.inst.val == 0x8067) {record_ftrace(s->pc, 1, s->dnpc);} else {record_ftrace(s->pc, 0, s->dnpc);}
 #endif
 
 enum {

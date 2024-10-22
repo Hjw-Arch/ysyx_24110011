@@ -208,6 +208,16 @@ static uint32_t fring_index = 0;
 
 void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target) {
     if (elf_file == NULL) return;
+    if (!action) {
+        uint32_t flag = 0;
+        for (int j = 0; j < symtab_count; j++) {
+            if (symtabs[j].start_addr == pc_target) {
+                flag = 1;
+                break;
+            }
+        }
+        if (!flag) return;
+    }
     if (fring_index >= 64) fring_index = 0;
     fring_ftrace[fring_index].pc_now = pc_now;
     fring_ftrace[fring_index].action = action;
