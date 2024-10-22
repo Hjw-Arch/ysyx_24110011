@@ -238,9 +238,6 @@ void display_ftrace() {
             continue;
         }
 
-        if (!fring_ftrace[index].action) blank_num += 2;
-        else blank_num -= 2;
-
         char *func_name;
         for (int j = 0; j < symtab_count; j++) {
             if (symtabs[j].start_addr <= fring_ftrace[index].pc_target && symtabs[j].end_addr > fring_ftrace[index].pc_target) {
@@ -249,8 +246,8 @@ void display_ftrace() {
             }
         }
 
-        if (!fring_ftrace[index].action) printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num - 2, "", "call", func_name, fring_ftrace[index].pc_target);
-        else printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", "ret", func_name, fring_ftrace[index].pc_target);
+        if (!fring_ftrace[index].action) printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num++, "", "call", func_name, fring_ftrace[index].pc_target);
+        else printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num--, "", "ret", func_name, fring_ftrace[index].pc_target);
 
         if (index == end_index) break;
 
