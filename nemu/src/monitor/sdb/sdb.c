@@ -93,6 +93,155 @@ void iringbuf_display() {
     puts("\n");
 }
 
+#ifdef CONFIG_MTRACE
+void mtrace_read(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc) {
+    if (addr < CONFIG_MTRACE_START_ADDR || addr > CONFIG_MTRACE_END_ADDR) return;
+    if (!is_record_fetch_pc && cpu.pc == addr) return;
+    printf("Guest machine read memory at pc = 0x%08x, addr = 0x%08x, %d byte%s content = 0x%08x\n", cpu.pc, addr, len, len > 1 ? "s," : ", ", content);
+}
+
+void mtrace_write(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc) {
+    if (addr < CONFIG_MTRACE_START_ADDR || addr > CONFIG_MTRACE_END_ADDR) return;
+    printf("Guest machine write memory at pc = 0x%08x, addr = 0x%08x, %d byte%s content = 0x%08x\n", cpu.pc, addr, len, len > 1 ? "s," : ", ", content);
+}
+#endif
+
+//  ftrace
+#ifdef CONFIG_FTRACE
+#include <elf.h>
+extern char *elf_file;
+
+typedef struct _symtab{
+    char name[32];
+    uint32_t start_addr;
+    uint32_t end_addr;
+}symtab;
+
+static symtab symtabs[128];
+static uint32_t symtab_count = 0;
+
+void decode_elf() {
+    if (elf_file == NULL) {
+        Log("No elf file is given, ftrace function is not allowed to use.");
+        return;
+    }
+
+    FILE *fp = fopen(elf_file, "rb");
+    Assert(fp, "Can not open '%s'", elf_file);
+
+    rewind(fp);
+
+    Elf32_Ehdr ehdr;
+
+    int ret = fread(&ehdr, sizeof (Elf32_Ehdr), 1, fp);
+    assert(ret == 1);
+
+    if (ehdr.e_ident[EI_MAG0] != ELFMAG0 || ehdr.e_ident[EI_MAG1] != ELFMAG1 || ehdr.e_ident[EI_MAG2] != ELFMAG2 || ehdr.e_ident[EI_MAG3] != ELFMAG3) {
+        Assert(0, "Invalid ELF file.");
+    }
+
+    if (ehdr.e_ident[EI_CLASS] != ELFCLASS32) {
+        Assert(0, "Invalid ELF class, only 'ELF32' is supported now.");
+    }
+
+    if (ehdr.e_ident[ET_NUM] != ET_REL) {
+        Assert(0, "Invalid ELF type, only 'ET_REL' is supported now.");
+    }
+
+    Elf32_Sym sym;
+    Elf32_Shdr shdr;
+    char *str_buffer = NULL;
+
+    fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
+
+    for (int i = 0; i < ehdr.e_shnum; i++) {
+        if (i == ehdr.e_shstrndx) continue;
+        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
+        assert(ret == 1);
+        if (shdr.sh_type == SHT_STRTAB) {
+            str_buffer = (char *)malloc(shdr.sh_size);
+            if (str_buffer == NULL) {
+                Assert(0, "Malloc failed, can not use 'mtrace' function.\n");
+                return;
+            }
+            fseek(fp, (long)shdr.sh_offset, SEEK_SET);
+            ret = fread(str_buffer, shdr.sh_size, 1, fp);
+            assert(ret == 1);
+            break;
+        }
+    }
+
+    fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
+
+    for (int i = 0; i < ehdr.e_shnum; i++) {
+        if (i == ehdr.e_shstrndx) continue;
+        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
+        assert(ret == 1);
+        if (shdr.sh_type == SHT_SYMTAB) {
+            fseek(fp, (long)shdr.sh_offset, SEEK_SET);
+            for (int j = 0; j < shdr.sh_size / sizeof (Elf32_Sym); j++) {
+                ret = fread(&sym, sizeof (Elf32_Sym), 1, fp);
+                assert(ret == 1);
+                if(ELF32_ST_TYPE(sym.st_info) == STT_FUNC) {
+                    symtabs[symtab_count].start_addr = sym.st_value;
+                    symtabs[symtab_count].end_addr = sym.st_value + sym.st_size;
+                    strcpy(symtabs[symtab_count].name, (char *)(str_buffer + sym.st_name));
+                    symtab_count++;
+                }
+            }
+            break;
+        }
+    }
+
+    free(str_buffer);
+    fclose(fp);
+}
+
+typedef struct _ftrace{
+    uint32_t pc_now;
+    uint32_t action;        // 0: call;  1: ret
+    uint32_t pc_target;
+}ftrace;
+
+static ftrace fring_ftrace[64];
+static uint32_t fring_index = 0;
+
+void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target) {
+    if (fring_index >= 64) fring_index = 0;
+    fring_ftrace[fring_index].pc_now = pc_now;
+    fring_ftrace[fring_index].action = action;
+    fring_ftrace[fring_index++].pc_target = pc_target;
+}
+
+void display_ftrace() {
+    uint32_t blank_num = 0;
+    uint32_t start_index = fring_index;
+    uint32_t end_index = fring_index - 1;
+    uint32_t index = start_index;
+    while(1) {
+        if (index >= 64) index = 0;
+
+        if (fring_ftrace[index].action) blank_num -= 2;
+        else blank_num += 2;
+
+        char *func_name;
+        for (int j = 0; j < symtab_count; j++) {
+            if (symtabs[j].start_addr == fring_ftrace[index].pc_target) {
+                func_name = (char *)&symtabs[j].name;
+                break;
+            }
+        }
+
+        printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", fring_ftrace[index].action ? "ret" : "call", func_name, fring_ftrace[fring_index].pc_target);
+
+        if (index == end_index) break;
+
+        index++;
+    }
+}
+
+#endif
+
 static int cmd_c(char *args) {
     cpu_exec(-1);
     return 0;
@@ -426,4 +575,7 @@ void init_sdb()
 
     /* Initialize the watchpoint pool. */
     init_wp_pool();
+
+    /* decode elf file. */
+    IFDEF(CONFIG_FTRACE, decode_elf());
 }

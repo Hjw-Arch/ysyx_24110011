@@ -22,6 +22,12 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
+#ifdef CONFIG_FTRACE
+#include "../../monitor/sdb/sdb.h"
+#define FTRACE_RECORD     if(s->isa.inst.val == 0x8067) {record_ftrace(s->pc, 1, s->dnpc)} else if (s->isa.inst.val & 0x000080E7 == 0x000080E7 || )
+
+#endif
+
 enum {
   TYPE_R, TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_B,
   TYPE_N, // none

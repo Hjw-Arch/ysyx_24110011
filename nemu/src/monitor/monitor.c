@@ -44,8 +44,9 @@ void sdb_set_batch_mode();
 static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
-static char *elf_file = NULL;
 static int difftest_port = 1234;
+
+char *elf_file = NULL;
 
 static long load_img() {
   if (img_file == NULL) {
@@ -68,104 +69,6 @@ static long load_img() {
   fclose(fp);
   return size;
 }
-
-//  ftrace
-#ifdef CONFIG_FTRACE
-#include <elf.h>
-
-typedef struct _symtab{
-    char name[32];
-    uint32_t start_addr;
-    uint32_t end_addr;
-}symtab;
-
-symtab symtabs[128];
-uint32_t symtab_count = 0;
-
-static void decode_elf() {
-    if (elf_file == NULL) {
-        Log("No elf file is given, ftrace function is not allowed to use.");
-        return;
-    }
-
-    FILE *fp = fopen(elf_file, "rb");
-    Assert(fp, "Can not open '%s'", elf_file);
-
-    rewind(fp);
-
-    Elf32_Ehdr ehdr;
-
-    int ret = fread(&ehdr, sizeof (Elf32_Ehdr), 1, fp);
-    assert(ret == 1);
-
-    if (ehdr.e_ident[EI_MAG0] != ELFMAG0 || ehdr.e_ident[EI_MAG1] != ELFMAG1 || ehdr.e_ident[EI_MAG2] != ELFMAG2 || ehdr.e_ident[EI_MAG3] != ELFMAG3) {
-        Assert(0, "Invalid ELF file.");
-    }
-
-    if (ehdr.e_ident[EI_CLASS] != ELFCLASS32) {
-        Assert(0, "Invalid ELF class, only 'ELF32' is supported now.");
-    }
-
-    if (ehdr.e_ident[ET_NUM] != ET_REL) {
-        Assert(0, "Invalid ELF type, only 'ET_REL' is supported now.");
-    }
-
-    Elf32_Sym sym;
-    Elf32_Shdr shdr;
-    char *str_buffer = NULL;
-
-    fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
-
-    for (int i = 0; i < ehdr.e_shnum; i++) {
-        if (i == ehdr.e_shstrndx) continue;
-        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
-        assert(ret == 1);
-        if (shdr.sh_type == SHT_STRTAB) {
-            str_buffer = (char *)malloc(shdr.sh_size);
-            if (str_buffer == NULL) {
-                Assert(0, "Malloc failed, can not use 'mtrace' function.\n");
-                return;
-            }
-            fseek(fp, (long)shdr.sh_offset, SEEK_SET);
-            ret = fread(str_buffer, shdr.sh_size, 1, fp);
-            assert(ret == 1);
-            break;
-        }
-    }
-
-    fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
-
-    for (int i = 0; i < ehdr.e_shnum; i++) {
-        if (i == ehdr.e_shstrndx) continue;
-        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
-        assert(ret == 1);
-        if (shdr.sh_type == SHT_SYMTAB) {
-            fseek(fp, (long)shdr.sh_offset, SEEK_SET);
-            for (int j = 0; j < shdr.sh_size / sizeof (Elf32_Sym); j++) {
-                ret = fread(&sym, sizeof (Elf32_Sym), 1, fp);
-                assert(ret == 1);
-                if(ELF32_ST_TYPE(sym.st_info) == STT_FUNC) {
-                    symtabs[symtab_count].start_addr = sym.st_value;
-                    symtabs[symtab_count].end_addr = sym.st_value + sym.st_size;
-                    strcpy(symtabs[symtab_count].name, (char *)(str_buffer + sym.st_name));
-                    symtab_count++;
-                }
-            }
-            break;
-        }
-    }
-
-    for(int i = 0; i < symtab_count; i++) {
-        printf("%s  ", symtabs[i].name);
-        printf("0x%08x  ", symtabs[i].start_addr);
-        printf("0x%08x  \n", symtabs[i].end_addr);
-    }
-
-    free(str_buffer);
-    fclose(fp);
-}
-
-#endif
 
 static int parse_args(int argc, char *argv[]) {
     const struct option table[] = {
@@ -210,9 +113,6 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Open the log file. */
   init_log(log_file);
-
-  // test
-  decode_elf();
 
   /* Initialize memory. */
   init_mem();
