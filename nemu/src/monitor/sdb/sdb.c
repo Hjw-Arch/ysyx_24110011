@@ -207,6 +207,7 @@ static ftrace fring_ftrace[64];
 static uint32_t fring_index = 0;
 
 void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target) {
+    if (elf_file == NULL) return;
     if (fring_index >= 64) fring_index = 0;
     fring_ftrace[fring_index].pc_now = pc_now;
     fring_ftrace[fring_index].action = action;
@@ -214,6 +215,7 @@ void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target) {
 }
 
 void display_ftrace() {
+    if (elf_file == NULL) return;
     uint32_t blank_num = 0;
     uint32_t start_index = fring_index;
     uint32_t end_index = fring_index - 1;
@@ -474,6 +476,17 @@ static int cmd_p(char *args) {
     return 0;
 }
 
+static int cmd_ftrace(char *args) {
+    if (args != NULL) {
+        printf("Unknown command '%s'\n", args);
+        return 0;
+    }
+
+    display_ftrace();
+
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -490,6 +503,7 @@ static struct {
     {"p", "p [d/x] EXPR | Evaluate the expression EXPR", cmd_p},
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
+    {"ftrace", "View function trace", cmd_ftrace},
     {"test_expr", "test expr", cmd_test_expr},
     /* TODO: Add more commands */
 
