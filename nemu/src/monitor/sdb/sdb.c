@@ -233,7 +233,7 @@ void display_ftrace() {
 
         char *func_name;
         for (int j = 0; j < symtab_count; j++) {
-            if (symtabs[j].start_addr == fring_ftrace[index].pc_target) {
+            if (symtabs[j].start_addr <= fring_ftrace[index].pc_target && symtabs[j].end_addr > fring_ftrace[index].pc_target) {
                 func_name = (char *)&symtabs[j].name;
                 break;
             }
