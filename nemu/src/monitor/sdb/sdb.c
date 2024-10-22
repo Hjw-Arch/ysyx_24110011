@@ -498,7 +498,7 @@ static int cmd_ftrace(char *args) {
         return 0;
     }
 
-    display_ftrace();
+    IFDEF(CONFIG_FTRACE, display_ftrace());
 
     return 0;
 }
