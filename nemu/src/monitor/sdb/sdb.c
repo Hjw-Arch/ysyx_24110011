@@ -228,8 +228,8 @@ void display_ftrace() {
             continue;
         }
 
-        if (fring_ftrace[index].action) blank_num -= 2;
-        else blank_num += 2;
+        if (!fring_ftrace[index].action) blank_num += 2;
+        else blank_num -= 2;
 
         char *func_name;
         for (int j = 0; j < symtab_count; j++) {
