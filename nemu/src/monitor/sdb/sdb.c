@@ -223,6 +223,11 @@ void display_ftrace() {
     while(1) {
         if (index >= 64) index = 0;
 
+        if (fring_ftrace[index].pc_now == 0) {
+            index++;
+            continue;
+        }
+
         if (fring_ftrace[index].action) blank_num -= 2;
         else blank_num += 2;
 
