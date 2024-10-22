@@ -239,7 +239,7 @@ void display_ftrace() {
             }
         }
 
-        printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", fring_ftrace[index].action ? "ret" : "call", func_name, fring_ftrace[index].pc_target);
+        printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num - 2, "", fring_ftrace[index].action ? "ret" : "call", func_name, fring_ftrace[index].pc_target);
 
         if (index == end_index) break;
 
