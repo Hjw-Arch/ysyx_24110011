@@ -251,9 +251,9 @@ void display_ftrace() {
             blank_num += 2;
         }
         else {
-            printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", "ret", func_name, fring_ftrace[index].pc_target);
             blank_num -= 2;
             if (blank_num < 0) blank_num = 0;
+            printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", "ret", func_name, fring_ftrace[index].pc_target);
         }
 
         if (index == end_index) break;
