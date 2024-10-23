@@ -88,10 +88,10 @@ void pmem_write(int addr, int data, int len) {
 
 void halt() {
     if (dut.rf[1] != 0) {
-        printf(ANSI_FG_RED "Hit bad trap" ANSI_NONE " at pc = 0x%08x", dut.pc);
+        printf(ANSI_FG_RED "Hit bad trap" ANSI_NONE " at pc = 0x%08x\n", dut.pc);
         exit(-1);
     } else {
-        printf(ANSI_FG_BLUE "Hit good trap" ANSI_NONE " at pc = 0x%08x", dut.pc);
+        printf(ANSI_FG_BLUE "Hit good trap" ANSI_NONE " at pc = 0x%08x\n", dut.pc);
         exit(0);
     }
 }
