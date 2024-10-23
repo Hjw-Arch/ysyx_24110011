@@ -107,7 +107,7 @@ int fetch_inst(int pc) {
     if (inst == 0x00100073) {
 
         for (int i = 0; i < 32; i++) {
-            printf("R%d = 0x%08x\n", i, dut.rf[i]);
+            printf("R%d = 0x%x\n", i, dut.rf[i]);
         }
 
         Log("Get 'ebreak' instruction, program over.");

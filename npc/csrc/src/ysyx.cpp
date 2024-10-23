@@ -19,7 +19,7 @@ void rst() {
 
 void display_npc() {
     for (int i = 0; i < 32; i++) {
-        printf("R%d = 0x%08x\n", i, dut.rf[i]);
+        printf("R%d = 0x%x\n", i, dut.rf[i]);
     }
 }
 
