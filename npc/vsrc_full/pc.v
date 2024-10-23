@@ -38,7 +38,6 @@ adder #(32) _adder(.augend(adderAInput),
 );
 
 always @(posedge clk) begin
-    $display("input1 = 0x%x, input2 = 0x%x, sum = 0x%x", adderAInput, adderBInput, sum);
     if(rst) PC <= RST_VALUE;
     else PC <= sum;
 end

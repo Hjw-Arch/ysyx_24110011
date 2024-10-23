@@ -225,6 +225,8 @@ ram _RAM(.clk(clk),
 );
 
 
+
+
 assign memResult = {_memResult[31 : 16] | {16{(~(|memOP) & _memResult[7]) | (~memOP[2] & ~memOP[1] & memOP[0] & _memResult[15])}}, _memResult[15 : 8] | {8{(~(|memOP) & _memResult[7])}}, _memResult[7 : 0]};
 
 
