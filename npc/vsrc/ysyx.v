@@ -89,7 +89,7 @@ registerFile #(32, 5) _registerFile(
 wire [WIDTH - 1 : 0] aluA_input, aluB_input;
 
 // 控制信号
-wire aluASel = ~opcode[5] & opcode[2];   // 控制aluA的输入选择
+wire aluASel = opcode[2];   // 控制aluA的输入选择
 wire aluBSel = opcode[6] & opcode[2];   // 控制aluA的输入选择, 目前jump指令需要选择4
 
 mux32_2_1 _mux_aluA(
