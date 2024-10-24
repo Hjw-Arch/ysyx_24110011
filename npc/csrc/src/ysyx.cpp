@@ -34,9 +34,11 @@ int main(int argc, char *argv[]) {
     rst();
     printf("111\n");
     int i = 0;
-    while(i++<10) {
+    while(i++<5) {
         printf("A = %x, B = %x\n", dut._pc_adderA_sel, dut._pc_adderB_sel);
         printf("PC = 0x%08x, instruction = 0x%08x\n", dut.PC, dut._inst);
+        printf("imm = 0x%x\n", dut._imm);
+        printf("aluAsel = %x, aluBsel = %x\n", dut._aluA_input, dut._aluB_input);
         // printf("ALUCTRL = %x\n", dut._ALUCtrl);
         cycle();
         display_npc();

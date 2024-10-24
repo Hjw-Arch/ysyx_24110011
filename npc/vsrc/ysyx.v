@@ -4,6 +4,9 @@ module ysyx #(parameter WIDTH = 32)(
     output [31 : 0] _inst,
     output _pc_adderA_sel,
     output _pc_adderB_sel,
+    output [31 : 0] _imm,
+    output [31 : 0] _aluA_input,
+    output [31 : 0] _aluB_input,
     // above variable is for test
 
     input clk,
@@ -12,6 +15,9 @@ module ysyx #(parameter WIDTH = 32)(
 
 assign _pc_adderA_sel = pc_adderA_sel;
 assign _pc_adderB_sel = pc_adderB_sel;
+assign _imm = imm;
+assign _aluA_input = aluA_input;
+assign _aluB_input = aluB_input;
 
 import "DPI-C" function int fetch_inst(input int pc);
 
@@ -96,7 +102,7 @@ mux32_2_1 _mux_aluA(
 mux32_2_1 _mux_aluB(
     .input1(imm),
     .input2(4),
-    .s(aluASel), // TODO
+    .s(aluBSel), // TODO
     .result(aluB_input)
 );
 
