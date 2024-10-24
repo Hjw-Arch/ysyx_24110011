@@ -52,7 +52,7 @@ assign branchOP[2] = opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & ~opcode6_2[1]
 // ALUCtrl
 // 一级与门的整体是可以复用的（用来参与二级或运算），但是一级与门的部分是不可以复用的，否则会带来一级门电路的延迟
 assign ALUCtrl[0] = ~opcode6_2[4] & opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & opcode6_2[0] |
-                    ~opcode6_2[4] & ~opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct3[0];
+                    ~opcode6_2[4] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct3[0];
 
 assign ALUCtrl[1] = ~opcode6_2[4] & opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & opcode6_2[0] | 
                     ~opcode6_2[4] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct3[1] | 

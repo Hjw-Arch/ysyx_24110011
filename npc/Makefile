@@ -3,7 +3,7 @@ OBJ_DIR = $(BUILD_DIR)/obj_dir
 
 $(shell mkdir -p $(OBJ_DIR))
 
-TOP_NAME ?= top
+TOP_NAME ?= ysyx
 IMG ?= 
 
 VERILATOR = verilator
@@ -17,7 +17,7 @@ ifeq ($(TRACE_IS_ON),ON)
 	VERILATOR_FLAGS += --trace
 endif
 
-vsrc ?= $(shell find $(abspath ./vsrc_full) -name "*.v" -or -name "*.sv")
+vsrc ?= $(shell find $(abspath ./vsrc) -name "*.v" -or -name "*.sv")
 csrc ?= $(shell find $(abspath ./csrc/src) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 # 输入参数
@@ -30,7 +30,7 @@ all: run
 run:
 	@echo
 	@echo "---------------- Verilator running -----------------"
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) -CFLAGS -O2 -CFLAGS -I./csrc/Include --Wno-UNUSEDSIGNAL --Wno-SELRANGE --Wno-WIDTHEXPAND
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) -CFLAGS -O2 -CFLAGS -I./csrc/Include --Wno-UNUSEDSIGNAL
 	@# 运行可执行程序
 	@echo
 	@echo "------------------- Simulation ---------------------"

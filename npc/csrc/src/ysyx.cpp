@@ -1,8 +1,8 @@
 #include "../Include/ram.h"
 #include "../Include/log.h"
-#include "Vtop.h"
+#include "Vysyx.h"
 
-Vtop dut;
+Vysyx dut;
 
 void cycle() {
     dut.clk = 0;
@@ -34,8 +34,10 @@ int main(int argc, char *argv[]) {
     rst();
     printf("111\n");
     int i = 0;
-    while(1) {
-        printf("PC = 0x%08x, instruction = 0x%08x\n", dut.pc, dut._inst);
+    while(i++<10) {
+        printf("A = %x, B = %x\n", dut._pc_adderA_sel, dut._pc_adderB_sel);
+        printf("PC = 0x%08x, instruction = 0x%08x\n", dut.PC, dut._inst);
+        // printf("ALUCTRL = %x\n", dut._ALUCtrl);
         cycle();
         display_npc();
         puts("\n");

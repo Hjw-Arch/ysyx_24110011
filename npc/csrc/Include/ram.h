@@ -5,7 +5,7 @@
 #include "config.h"
 #include "macro.h"
 #include <stdint.h>
-#include "Vtop__Dpi.h"
+#include "Vysyx__Dpi.h"
 
 #define RAM_START_ADDR  0x80000000
 #define RAM_SIZE        0x8000000
