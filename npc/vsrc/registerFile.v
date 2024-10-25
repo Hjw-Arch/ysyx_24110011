@@ -1,7 +1,4 @@
 module registerFile #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 5) (
-    output [31 : 0] rf [31 : 0],
-
-    // above is for test
     input clk,
 
     input [ADDR_WIDTH - 1 : 0] rd_addr,
@@ -24,8 +21,5 @@ always @(posedge clk)
 
 // read registers, combinational circuit
 assign rs1_data = registerFile[rs1_addr];
-
-// for test
-assign rf = registerFile;
 
 endmodule
