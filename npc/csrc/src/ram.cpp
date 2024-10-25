@@ -2,6 +2,7 @@
 #include "../Include/log.h"
 #include "../Include/sdb.h"
 #include "../Include/cpu_exec.h"
+#include "Vysyx___024root.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,9 +15,8 @@ void *guset_to_host(uint32_t addr) {
     return ((uint8_t *)pmem + addr - RAM_START_ADDR);
 }
 
-int flag_read = 1;
+
 int pmem_read(int addr, int len) {
-    if (addr < RAM_START_ADDR || addr > RAM_END_ADDR) return 0;
     uint32_t ret = 0;
     switch (len) {
         case 0:  // 1
@@ -37,18 +37,13 @@ int pmem_read(int addr, int len) {
             return 0;
     }
 
-    IFDEF(CONFIG_MTRACE, mtrace_read(cpu.pc, len == 0 ? 1 : (len == 1 ? 2 : 4), ret, 1));
+    IFDEF(CONFIG_MTRACE, mtrace_read(dut.rootp->ysyx__DOT__pc, len == 0 ? 1 : (len == 1 ? 2 : 4), ret, 0));
 
     return ret;
 }
 
-int flag_write = 1;
-void pmem_write(int addr, int data, int len) {
-    if (flag_write == 1) {
-        flag_write = 0;
-        return;
-    }
 
+void pmem_write(int addr, int data, int len) {
     Assert((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR), "Addr 0x%08x transbordered the boundary.", addr);
     IFDEF(CONFIG_MTRACE, mtrace_write(cpu.pc, len == 0 ? 1 : len == 1 ? 2 : 4, data, 0));
 

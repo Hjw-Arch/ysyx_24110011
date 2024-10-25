@@ -9,6 +9,8 @@
 
 #define min_num_to_disasm   10
 
+#define FTRACE_RECORD     record_ftrace(now_pc, now_inst == 0x8067 ? 1 : 0, cpu.pc)
+
 cpu_t cpu;
 
 enum {
@@ -30,7 +32,16 @@ void halt() {
 }
 
 void cpu_exec_one() {
+#ifdef CONFIG_FTRACE
+    vaddr_t now_pc = cpu.pc;
+    word_t now_inst = dut.rootp->ysyx__DOT__inst;
+#endif
+
     cycle;
+
+    IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
+
+    diff_wp(cpu.pc);
 }
 
 void cpu_exec(uint32_t n) {
@@ -51,10 +62,10 @@ void cpu_exec(uint32_t n) {
             printf("        %s\n", p);
         }
 
-        iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst);
-
         // 执行一次
         cpu_exec_one();
+
+        iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst);
 
         if (dut.rootp->ysyx__DOT__inst == ebreak) {
             Log("Get 'ebreak' instruction, program over.");
