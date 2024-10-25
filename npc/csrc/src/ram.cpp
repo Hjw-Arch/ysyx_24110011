@@ -1,5 +1,7 @@
 #include "../Include/ram.h"
 #include "../Include/log.h"
+#include "../Include/sdb.h"
+#include "../Include/cpu_exec.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,18 +17,29 @@ void *guset_to_host(uint32_t addr) {
 int flag_read = 1;
 int pmem_read(int addr, int len) {
     if (addr < RAM_START_ADDR || addr > RAM_END_ADDR) return 0;
+    uint32_t ret = 0;
     switch (len) {
-        case 0: // 1
-            return *(uint8_t *)guset_to_host(addr);
-        case 1: // 2
-            return *(uint16_t *)guset_to_host(addr);
+        case 0:  // 1
+            ret = *(uint8_t *)guset_to_host(addr);
+            break;
+
+        case 1:  // 2
+            ret = *(uint16_t *)guset_to_host(addr);
+            break;
+
         case 4:
-        case 2: // 4
-            return *(uint32_t *)guset_to_host(addr);
-        
+        case 2: 
+            ret = *(uint32_t *)guset_to_host(addr);
+            break;
+
         default:
+            Assert(0, "Error len: %d", len);
             return 0;
     }
+
+    IFDEF(CONFIG_MTRACE, mtrace_read(cpu.pc, len == 0 ? 1 : (len == 1 ? 2 : 4), ret, 1));
+
+    return ret;
 }
 
 int flag_write = 1;
@@ -35,7 +48,10 @@ void pmem_write(int addr, int data, int len) {
         flag_write = 0;
         return;
     }
+
     Assert((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR), "Addr 0x%08x transbordered the boundary.", addr);
+    IFDEF(CONFIG_MTRACE, mtrace_write(cpu.pc, len == 0 ? 1 : len == 1 ? 2 : 4, data, 0));
+
     switch (len) {
         case 0: // 1
             *(uint8_t *)guset_to_host(addr) = data;

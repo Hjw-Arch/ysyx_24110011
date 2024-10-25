@@ -72,13 +72,13 @@ static int parse_args(int argc, char *argv[]) {
         {0          , 0                , NULL,  0 },
     };
     int o;
-    while ( (o = getopt_long(argc, argv, "bhd:p:e:", table, NULL)) != -1) {
+    while ( (o = getopt_long(argc, argv, "-bhd:p:e:", table, NULL)) != -1) {
         switch (o) {
             case 'b': sdb_set_batch_mode(); break;
             case 'p': sscanf(optarg, "%d", &difftest_port); break;
             case 'd': diff_so_file = optarg; break;
             case 'e': elf_file = optarg; break;
-            case 1: img_file = optarg; printf("111\n"); return 0;
+            case 1: img_file = optarg; return 0;
         default:
             printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
             printf("\t-b, --batch              run with batch mode\n");
@@ -93,7 +93,7 @@ static int parse_args(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
     parse_args(argc, argv);
-    init_disasm("riscv32-pc-linux-gnu");
+    init_disasm("riscv32" "-pc-linux-gnu");
     load_img();
     if (batch_mode_flag) {
         cpu_exec(-1);
@@ -102,7 +102,6 @@ int main(int argc, char *argv[]) {
     init_sdb();
     IFDEF(CONFIG_FTRACE, decode_elf());
     welcome();
-    cpu_rst;
     sdb_cli_loop();
 }
 

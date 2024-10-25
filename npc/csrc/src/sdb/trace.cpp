@@ -24,12 +24,14 @@ void iringbuf_display() {
     uint32_t end_index = iringbuf_index - 1;
     uint32_t index = start_index;
     puts("\n");
+    puts("Instruction ring log:");
     while(1) {
         if (index > 15) index = 0;
         if (iringbuf.addr[index] == 0) {
             index++;
             continue;
         }
+
 
         printf("0x%08x: ", iringbuf.addr[index]);
 
