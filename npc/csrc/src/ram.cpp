@@ -11,7 +11,7 @@ uint8_t pmem[RAM_SIZE];
 
 extern Vysyx dut;
 
-void *guset_to_host(uint32_t addr) {
+void *guest_to_host(uint32_t addr) {
     return ((uint8_t *)pmem + addr - RAM_START_ADDR);
 }
 
@@ -20,16 +20,16 @@ int pmem_read(int addr, int len) {
     uint32_t ret = 0;
     switch (len) {
         case 0:  // 1
-            ret = *(uint8_t *)guset_to_host(addr);
+            ret = *(uint8_t *)guest_to_host(addr);
             break;
 
         case 1:  // 2
-            ret = *(uint16_t *)guset_to_host(addr);
+            ret = *(uint16_t *)guest_to_host(addr);
             break;
 
         case 4:
         case 2: 
-            ret = *(uint32_t *)guset_to_host(addr);
+            ret = *(uint32_t *)guest_to_host(addr);
             break;
 
         default:
@@ -49,13 +49,13 @@ void pmem_write(int addr, int data, int len) {
 
     switch (len) {
         case 0: // 1
-            *(uint8_t *)guset_to_host(addr) = data;
+            *(uint8_t *)guest_to_host(addr) = data;
             return;
         case 1: // 2
-            *(uint16_t *)guset_to_host(addr) = data;
+            *(uint16_t *)guest_to_host(addr) = data;
             return;
         case 2: // 4
-            *(uint32_t *)guset_to_host(addr) = data;
+            *(uint32_t *)guest_to_host(addr) = data;
             return;
         
         default:

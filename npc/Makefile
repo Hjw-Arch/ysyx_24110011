@@ -18,6 +18,9 @@ LLVMFLAGS = $(echo $LLVMFLAGS | sed 's/ -D__STDC_FORMAT_MACROS//')  # 去掉D__S
 LLVMLIBS = $(shell llvm-config --libs)
 LLVMLIBS += -lreadline
 
+LDFLAGS += $(shell llvm-config --libs) -lreadline -L/home/hjw/ysyx-workbench/npc/ -lnemu
+CFLAGS += -O2 $(INC_FLAGS) $(LLVMFLAGS)
+
 # 是否开启trace
 TRACE_IS_ON ?= ON
 ifeq ($(TRACE_IS_ON),ON)
@@ -37,8 +40,8 @@ all: run
 run:
 	@echo
 	# @echo "---------------- Verilator running -----------------"
-	@$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) -CFLAGS -O2 \
-		$(addprefix -CFLAGS , $(INC_FLAGS)) $(addprefix -CFLAGS , $(LLVMFLAGS)) $(addprefix -LDFLAGS , $(LLVMLIBS))\
+	@$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) \
+		$(addprefix -CFLAGS , $(CFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))\
 		--Wno-UNUSEDSIGNAL
 	@# 运行可执行程序
 	@echo

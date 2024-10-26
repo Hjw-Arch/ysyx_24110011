@@ -4,19 +4,15 @@
 #include "../Include/log.h"
 #include "../Include/common.h"
 #include "Vysyx___024root.h"
+#include "../Include/difftest.h"
 
 #define ebreak      0x00100073
 
 #define min_num_to_disasm   10
 
-#define FTRACE_RECORD     record_ftrace(now_pc, now_inst == 0x8067 ? 1 : 0, cpu.pc)
+#define FTRACE_RECORD     record_ftrace(old_pc, old_inst == 0x8067 ? 1 : 0, cpu.pc)
 
 cpu_t cpu;
-
-enum {
-    RUNNING = 0,
-    IDLE,
-};
 
 uint32_t cpu_state = IDLE;
 
@@ -32,16 +28,12 @@ void halt() {
 }
 
 void cpu_exec_one() {
-#ifdef CONFIG_FTRACE
-    vaddr_t now_pc = cpu.pc;
-    word_t now_inst = dut.rootp->ysyx__DOT__inst;
-#endif
-
     cycle;
 
-    IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
-
-    diff_wp(cpu.pc);
+    if (dut.rootp->ysyx__DOT__inst == ebreak) {
+        Log("Get 'ebreak' instruction, program over.");
+        halt();
+    }
 }
 
 void cpu_exec(uint32_t n) {
@@ -51,6 +43,11 @@ void cpu_exec(uint32_t n) {
     }
 
     for (int i = 0; i < n; ++i) {
+
+#if defined(CONFIG_FTRACE) || defined(CONFIG_WATCHPOINT) || defined(CONFIG_DIFFTEST)
+        vaddr_t old_pc = cpu.pc;
+        word_t old_inst = dut.rootp->ysyx__DOT__inst;
+#endif
         
         if (n < min_num_to_disasm) {
             char p[64];
@@ -67,10 +64,18 @@ void cpu_exec(uint32_t n) {
 
         iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst);
 
-        if (dut.rootp->ysyx__DOT__inst == ebreak) {
-            Log("Get 'ebreak' instruction, program over.");
-            halt();
-            iringbuf_display();
+        IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
+        IFDEF(CONFIG_WATCHPOINT, cpu_state = diff_wp(old_pc));
+        IFDEF(CONFIG_DIFFTEST, difftest_step(old_pc));
+
+        if (cpu_state != RUNNING) {
+            switch (cpu_state) {
+                case IDLE:
+                    iringbuf_display();
+                    break;
+                case STOPPED:
+                    break;
+            }
             break;
         }
 

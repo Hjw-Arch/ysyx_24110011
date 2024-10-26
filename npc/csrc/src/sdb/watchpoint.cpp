@@ -137,7 +137,7 @@ int diff_wp(vaddr_t front_pc) {
     for (WP *wp = head; wp != NULL; wp = wp->next) {
         bool is_success = true;
         uint32_t result = expr(wp->expr_str, &is_success);
-        if (!is_success) {
+        if (!is_success) {  // 几乎不可能
             printf("Bad expression\n");
             printf("%s\n", wp->expr_str);
             for (int i = 0; i < strlen(wp->expr_str) - 1; i++) printf(ANSI_FG_RED "~" ANSI_NONE);

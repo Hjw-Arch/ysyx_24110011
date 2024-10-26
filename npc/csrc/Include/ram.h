@@ -17,7 +17,7 @@
 typedef word_t  vaddr_t;
 typedef uint64_t  paddr_t;
 
-void *guset_to_host(uint32_t addr);
+void *guest_to_host(uint32_t addr);
 int pmem_read(int addr, int len);
 void pmem_write(int addr, int data, int len);
 

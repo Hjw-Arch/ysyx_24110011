@@ -5,6 +5,7 @@
 #include "../Include/sdb.h"
 #include "../Include/cpu_exec.h"
 #include "../Include/config.h"
+#include "../Include/difftest.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <getopt.h>
@@ -25,11 +26,11 @@ static uint8_t test_img[] = {
     0x73, 0x00, 0x10, 0x00
 };
 
-void load_img() {
+long load_img() {
     if (img_file == NULL) {
         Log("No image is given. Use default image.");
-        memcpy(guset_to_host(RESET_VECTOR), test_img, sizeof(test_img));
-        return;
+        memcpy(guest_to_host(RESET_VECTOR), test_img, sizeof(test_img));
+        return 20;
     }
 
     FILE *fp = fopen(img_file, "rb");
@@ -43,10 +44,12 @@ void load_img() {
 
     rewind(fp);
 
-    int ret = fread((uint8_t *)guset_to_host(RESET_VECTOR), size, 1, fp);
+    int ret = fread((uint8_t *)guest_to_host(RESET_VECTOR), size, 1, fp);
     Assert(ret == 1, "Read image file failed.");
 
     fclose(fp);
+
+    return size;
 }
 
 static void welcome() {
@@ -94,13 +97,14 @@ static int parse_args(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     parse_args(argc, argv);
     init_disasm("riscv32" "-pc-linux-gnu");
-    load_img();
+    long img_size = load_img();
     if (batch_mode_flag) {
         cpu_exec(-1);
         return 0;
     }
     init_sdb();
     IFDEF(CONFIG_FTRACE, decode_elf());
+    IFDEF(CONFIG_DIFFTEST, init_difftest(diff_so_file, img_size, difftest_port));
     welcome();
     sdb_cli_loop();
 }

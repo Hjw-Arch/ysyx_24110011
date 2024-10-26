@@ -185,6 +185,17 @@ static int cmd_ftrace(char *args) {
     return 0;
 }
 
+static int cmd_itrace(char *args) {
+    if (args != NULL) {
+        printf("Unknown command '%s'\n", args);
+        return 0;
+    }
+
+    iringbuf_display();
+
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -201,6 +212,7 @@ static struct {
     {"p", "p [d/x] EXPR | Evaluate the expression EXPR", cmd_p},
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
+    {"itrace", "View lastest 16 instructions", cmd_itrace},
     {"ftrace", "View function trace", cmd_ftrace},
     /* TODO: Add more commands */
 

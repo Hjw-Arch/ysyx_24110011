@@ -13,6 +13,14 @@ typedef struct _cpu
 
 extern cpu_t cpu;   // CPU Info
 
+extern uint32_t cpu_state;
+
+enum {
+    RUNNING = 0,
+    STOPPED,
+    IDLE,
+};
+
 void cpu_exec(uint32_t n);
 
 
