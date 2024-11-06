@@ -151,6 +151,9 @@ int diff_wp(vaddr_t front_pc) {
             flag = 1;
         }
     }
+
+    #include "../Include/cpu_exec.h"
+    if(flag) cpu_state = IDLE;
     return flag;
 }
 

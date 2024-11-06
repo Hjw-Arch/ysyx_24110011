@@ -12,14 +12,14 @@ wire [31 : 0] addrA_input, addrB_input;
 mux32_2_1 _adderAMux(
     .input1(pc),
     .input2(rs1_data),
-    .s(sel[0]),  // TODO
+    .s(sel[1]),  // TODO
     .result(addrA_input)
 );
 
 mux32_2_1 _adderBMux(
     .input1(4),
     .input2(imm),
-    .s(sel[1]),  // TODO
+    .s(sel[0]),  // TODO
     .result(addrB_input)
 );
 

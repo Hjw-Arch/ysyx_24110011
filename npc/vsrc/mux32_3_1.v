@@ -8,6 +8,6 @@ module mux32_3_1 (
     output [31 : 0] result
 );
 // 三级门电路延迟，可优化为两级，代价不大多32*2*4个晶体管
-assign result = ({32{~s[0] & ~s[1]}} & input1) | ({32{s[0] & ~s[1]}} & input2) | ({32{s[0] & s[1]}} & input3) | ({32{~s[0] & s[1]}} & input1);
+assign result = ({32{~s[1] & ~s[0]}} & input1) | ({32{~s[1] & s[0]}} & input2) | ({32{s[1] & ~s[0]}} & input3) | ({32{s[1] & s[0]}} & input2);
 
 endmodule

@@ -14,7 +14,7 @@
 
 cpu_t cpu;
 
-uint32_t cpu_state = IDLE;
+uint32_t cpu_state = RUNNING;
 
 void halt() {
     cpu_state = IDLE;
@@ -38,8 +38,8 @@ void cpu_exec_one() {
 
 void cpu_exec(uint32_t n) {
     if (cpu_state == IDLE) {
-        cpu_rst;
-        cpu_state = RUNNING;
+        Log("Program has over, if you want to restart, please enter 'q' and then restart again.");
+        return;
     }
 
     for (int i = 0; i < n; ++i) {
@@ -62,10 +62,11 @@ void cpu_exec(uint32_t n) {
         // 执行一次
         cpu_exec_one();
 
+
         iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst);
 
         IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
-        IFDEF(CONFIG_WATCHPOINT, cpu_state = diff_wp(old_pc));
+        IFDEF(CONFIG_WATCHPOINT, diff_wp(old_pc));
         IFDEF(CONFIG_DIFFTEST, difftest_step(old_pc));
 
         if (cpu_state != RUNNING) {
@@ -76,8 +77,7 @@ void cpu_exec(uint32_t n) {
                 case STOPPED:
                     break;
             }
-            break;
+            return;
         }
-
     }
 }

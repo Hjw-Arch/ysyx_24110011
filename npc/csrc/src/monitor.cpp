@@ -17,6 +17,7 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
 char *elf_file = NULL;
+long img_size = 0;
 
 static uint8_t test_img[] = {
     0x13, 0x00, 0xf0, 0xff,
@@ -97,14 +98,15 @@ static int parse_args(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     parse_args(argc, argv);
     init_disasm("riscv32" "-pc-linux-gnu");
-    long img_size = load_img();
+    img_size = load_img();
+    init_sdb();
+    cpu_rst;
+    IFDEF(CONFIG_FTRACE, decode_elf());
+    IFDEF(CONFIG_DIFFTEST, init_difftest(diff_so_file, img_size, difftest_port));
     if (batch_mode_flag) {
         cpu_exec(-1);
         return 0;
     }
-    init_sdb();
-    IFDEF(CONFIG_FTRACE, decode_elf());
-    IFDEF(CONFIG_DIFFTEST, init_difftest(diff_so_file, img_size, difftest_port));
     welcome();
     sdb_cli_loop();
 }

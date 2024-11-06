@@ -11,6 +11,7 @@ void (*difftest_memcpy)(vaddr_t addr, void *buf, size_t n, bool direction) = NUL
 void (*difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*difftest_exec)(uint64_t n) = NULL;
 void (*difftest_raise_intr)(uint64_t NO) = NULL;
+void (*difftest_init)(int) = NULL;
 
 void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_so_file != NULL);
@@ -31,7 +32,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   difftest_raise_intr = (void (*)(uint64_t NO))dlsym(handle, "difftest_raise_intr");
   assert(difftest_raise_intr);
 
-  void (*difftest_init)(int) = (void (*)(int))dlsym(handle, "difftest_init");
+  difftest_init = (void (*)(int))dlsym(handle, "difftest_init");
   assert(difftest_init);
 
   Log("Differential testing: %s", ANSI_FMT("ON", ANSI_FG_GREEN));
@@ -42,6 +43,12 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   difftest_init(port);
   difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
   difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+}
+
+void defftest_reset() {
+    difftest_init(1234);
+    difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+    difftest_regcpy(&cpu, DIFFTEST_TO_REF);
 }
 
 static bool difftest_checkregs(cpu_t *ref) {

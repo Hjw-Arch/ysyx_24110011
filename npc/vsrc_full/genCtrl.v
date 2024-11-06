@@ -62,6 +62,7 @@ assign ALUCtrl[2] = ~opcode6_2[4] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0]
 
 assign ALUCtrl[3] = ~opcode6_2[4] & opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & opcode6_2[0] | 
                     ~opcode6_2[4] & opcode6_2[3] & opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct7_5 | 
-                    opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct3[2] & funct3[1];
+                    opcode6_2[4] & opcode6_2[3] & ~opcode6_2[2] & ~opcode6_2[1] & ~opcode6_2[0] & funct3[2] & funct3[1] |
+                    ~opcode[3] & opcode[2] & ~opcode[0] & funct3[2] & ~funct3[1] & funct3[0] & funct7_5;
 
 endmodule

@@ -15,10 +15,9 @@ INC_FLAGS = $(addprefix -I, $(abspath ./csrc/Include))
 # 需要llvm
 LLVMFLAGS = $(shell llvm-config --cxxflags) -fPIE
 LLVMFLAGS = $(echo $LLVMFLAGS | sed 's/ -D__STDC_FORMAT_MACROS//')  # 去掉D__STDC_FORMAT_MACROS
-LLVMLIBS = $(shell llvm-config --libs)
-LLVMLIBS += -lreadline
 
-LDFLAGS += $(shell llvm-config --libs) -lreadline -L/home/hjw/ysyx-workbench/npc/ -lnemu
+
+LDFLAGS += $(shell llvm-config --libs) -lreadline -L/home/hjw-arch/ysyx-workbench/npc/ -lnemu
 CFLAGS += -O2 $(INC_FLAGS) $(LLVMFLAGS)
 
 # 是否开启trace
@@ -33,6 +32,7 @@ csrc ?= $(shell find $(abspath ./csrc/src) -name "*.c" -or -name "*.cc" -or -nam
 # 输入参数
 VERILATOR_INPUTS = $(abspath $(vsrc)) $(abspath $(csrc))
 
+export ASAN_OPTIONS = verify_asan_link_order=0
 
 default: run
 all: run
@@ -42,7 +42,7 @@ run:
 	# @echo "---------------- Verilator running -----------------"
 	@$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) \
 		$(addprefix -CFLAGS , $(CFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))\
-		--Wno-UNUSEDSIGNAL
+		--Wno-UNUSEDSIGNAL -Wno-WIDTHEXPAND
 	@# 运行可执行程序
 	@echo
 	@echo "------------------- Simulation ---------------------"

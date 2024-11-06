@@ -42,7 +42,7 @@ wire [WIDTH - 1 : 0] xorResult = input1 ^ input2;
 // wire lessSignedResult = computeResult[WIDTH - 1] ^ (overflow_flag & ~ctrl[3]);
 
 wire [WIDTH - 1 : 0] lessSignedResult = {31'b0, computeResult[WIDTH - 1] ^ overflow_flag};
-wire [WIDTH - 1 : 0] lessUnsignedResult = {31'b0, computeResult[WIDTH - 1]};
+wire [WIDTH - 1 : 0] lessUnsignedResult = {31'b0, carry_flag};
 
 // 拷贝立即数
 wire [WIDTH - 1 : 0] copyResult = input2;

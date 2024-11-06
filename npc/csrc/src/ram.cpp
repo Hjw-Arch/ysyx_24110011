@@ -17,6 +17,7 @@ void *guest_to_host(uint32_t addr) {
 
 
 int pmem_read(int addr, int len) {
+    if (addr < RAM_START_ADDR || addr > RAM_END_ADDR) return 0;
     uint32_t ret = 0;
     switch (len) {
         case 0:  // 1
@@ -33,7 +34,6 @@ int pmem_read(int addr, int len) {
             break;
 
         default:
-            Assert(0, "Error len: %d", len);
             return 0;
     }
 
@@ -45,16 +45,17 @@ int pmem_read(int addr, int len) {
 
 void pmem_write(int addr, int data, int len) {
     Assert((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR), "Addr 0x%08x transbordered the boundary.", addr);
-    IFDEF(CONFIG_MTRACE, mtrace_write(cpu.pc, len == 0 ? 1 : len == 1 ? 2 : 4, data, 0));
-
+    IFDEF(CONFIG_MTRACE, mtrace_write(addr, len == 0 ? 1 : len == 1 ? 2 : 4, data, 0));
     switch (len) {
-        case 0: // 1
+        case 0:  // 1
             *(uint8_t *)guest_to_host(addr) = data;
             return;
-        case 1: // 2
+        
+        case 1:  // 2
             *(uint16_t *)guest_to_host(addr) = data;
             return;
-        case 2: // 4
+        
+        case 2:  // 4
             *(uint32_t *)guest_to_host(addr) = data;
             return;
         

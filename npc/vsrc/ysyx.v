@@ -7,11 +7,6 @@ import "DPI-C" function int fetch_inst(input int pc);
 
 /*************************************** IFU ***************************************/
 
-// 控制信号
-wire pc_adderA_sel, pc_adderB_sel;
-assign pc_adderA_sel = ~opcode[4] & ~opcode[3] & opcode[2];
-assign pc_adderB_sel = opcode[6] & opcode[2];
-
 // PC
 wire [WIDTH - 1 : 0] pc;
 pc #(WIDTH, 32'h80000000) _pc (
@@ -19,7 +14,7 @@ pc #(WIDTH, 32'h80000000) _pc (
     .rst(rst),
     .rs1_data(rs1_data),
     .imm(imm),
-    .sel({pc_adderB_sel, pc_adderA_sel}),
+    .sel({pcAdderASel, pcAdderBSel}),
     .pc(pc)
 );
 
@@ -32,12 +27,13 @@ wire [6 : 0] opcode;
 wire [2 : 0] func3;
 wire [6 : 0] func7;
 
-wire [31 : 0] imm;
-wire [4 : 0] rd_addr;
+wire [31 : 0] imm;          // immediate
+wire [4 : 0] rd_addr;       
 wire [31 : 0] rd_data;
 wire [4 : 0] rs1_addr;
 wire [31 : 0] rs1_data;
-// wire [4 : 0] rs2_addr;
+wire [4 : 0] rs2_addr;
+wire [31 : 0] rs2_data;
 
 // 模块交互数据
 wire [WIDTH - 1 : 0] aluA_input, aluB_input;
@@ -46,7 +42,17 @@ wire [WIDTH - 1 : 0] alu_result;
 // 控制信号
 wire aluASel;   // 控制aluA的输入选择
 wire aluBSel;   // 控制aluA的输入选择, 目前jump指令需要选择4
-wire aluOP;     // 控制alu动作
+wire [3 : 0] aluOP;     // 控制alu动作
+wire rdWriteEnable;
+wire memWriteEnable;
+wire rdInputSel;
+wire [2 : 0] memOP;
+wire [2 : 0] branchWay;
+wire pcAdderASel;
+wire pcAdderBSel;
+
+wire zero_flag;
+wire [31 : 0] mem_result;
 
 assign opcode = inst[6 : 0];
 assign func3 = inst[14 : 12];
@@ -54,7 +60,7 @@ assign func7 = inst[31 : 25];
 
 assign rd_addr = inst[11 : 7];
 assign rs1_addr = inst[19 : 15];
-// assign rs2_data = inst[24 : 20];
+assign rs2_addr = inst[24 : 20];
 
 ctrl_gen _ctrl_gen(
     .opcode(opcode[6 : 2]),
@@ -62,9 +68,23 @@ ctrl_gen _ctrl_gen(
     .func7(func7[5]),
     .aluASel(aluASel),
     .aluBSel(aluBSel),
-    .aluOP(aluOP)
+    .aluOP(aluOP),
+    .pcAdderASel(pcAdderASel),
+    .rdWriteEnable(rdWriteEnable),
+    .memWriteEnable(memWriteEnable),
+    .rdInputSel(rdInputSel),
+    .memOP(memOP),
+    .branchWay(branchWay)
 );
 
+// pcAdderBSel三级延迟，整个控制信号产生阶段需要四级延迟
+assign pcAdderBSel = opcode[6] & opcode[2] |        // jump指令
+                     ~branchWay[2] & branchWay[1] & ~branchWay[0] & zero_flag |
+                     ~branchWay[2] & branchWay[1] & branchWay[0] & ~zero_flag |
+                     branchWay[2] & branchWay[1] & ~branchWay[0] & alu_result[0] |
+                     branchWay[2] & branchWay[1] & branchWay[0] & ~alu_result[0];
+
+// 3~4级延迟
 // generate imm
 imm_gen _imm_gen(
     .opcode(opcode[6 : 2]),
@@ -72,13 +92,23 @@ imm_gen _imm_gen(
     .imm(imm)
 );
 
+mux32_2_1 _mux_rd(
+    .input1(alu_result),
+    .input2(mem_result),
+    .s(rdInputSel), 
+    .result(rd_data)
+);
+
 // registerfile, get data required by IDU
 registerFile #(32, 5) _registerFile(
     .clk(clk),
+    .writeEnable(rdWriteEnable),
     .rd_addr(rd_addr),
     .rd_data(rd_data),
     .rs1_addr(rs1_addr),
-    .rs1_data(rs1_data)
+    .rs1_data(rs1_data),
+    .rs2_addr(rs2_addr),
+    .rs2_data(rs2_data)
 );
 
 
@@ -87,14 +117,15 @@ registerFile #(32, 5) _registerFile(
 mux32_2_1 _mux_aluA(
     .input1(rs1_data),
     .input2(pc),
-    .s(aluASel), // TODO
+    .s(aluASel), 
     .result(aluA_input)
 );
 
-mux32_2_1 _mux_aluB(
-    .input1(imm),
-    .input2(4),
-    .s(aluBSel), // TODO
+mux32_3_1 _mux_aluB(
+    .input1(rs2_data),
+    .input2(imm),
+    .input3(32'h4),
+    .s({aluASel, aluBSel}), // TODO
     .result(aluB_input)
 );
 
@@ -102,13 +133,24 @@ mux32_2_1 _mux_aluB(
 alu #(32) _alu(
     .inputA(aluA_input),
     .inputB(aluB_input),
-    .ctrl(aluOP),
-    .result(alu_result)
+    .aluOP(aluOP),
+    .result(alu_result),
+    .zero_flag(zero_flag)
 );
 
 /*************************************** WB ***************************************/
-// now only alu's result need to be writed to register rd
-assign rd_data = alu_result;
+wire [31 : 0] mem_data;
+ram _ram(
+    .clk(clk),
+    .memWriteEnable(memWriteEnable),
+    .aluOP(memOP[1 : 0]),
+    .writeAddr(alu_result),
+    .writeData(rs2_data),
+    .readAddr(alu_result),
+    .readData(mem_data)
+);
+
+assign mem_result = {mem_data[31 : 16] | {16{(~(|memOP) & mem_data[7]) | (~memOP[2] & ~memOP[1] & memOP[0] & mem_data[15])}}, mem_data[15 : 8] | {8{(~(|memOP) & mem_data[7])}}, mem_data[7 : 0]};
 
 
 endmodule
