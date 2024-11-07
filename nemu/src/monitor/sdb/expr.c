@@ -126,7 +126,7 @@ static bool make_token(char *e)
         {
             if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0)
             {
-                if (nr_token >= 64) {
+                if (nr_token >= 256) {
                     printf("Expression is too long!\n");
                     return false;
                 }
