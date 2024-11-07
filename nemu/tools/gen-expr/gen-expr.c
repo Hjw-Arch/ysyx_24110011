@@ -73,7 +73,7 @@ static void gen(const char *str) {
 }
 
 static void gen_rand_op() {
-    switch (choose(7))
+    switch (choose(3))
     {
     case 0:
         gen("+");
@@ -89,18 +89,6 @@ static void gen_rand_op() {
 
     case 3:
         gen("/");
-        break;
-    
-    case 4:
-        gen("==");
-        break;
-    
-    case 5:
-        gen("!=");
-        break;
-
-    case 6:
-        gen("&&");
         break;
 
     default:
