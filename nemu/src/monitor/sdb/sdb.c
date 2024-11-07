@@ -391,10 +391,6 @@ static int cmd_d(char *args) {
 char buf[100010];
 
 static int cmd_test_expr(char *args) {
-    if (args == NULL) {
-        printf("Missing parameter\n");
-        return 0;
-    }
 
     FILE *fp = fopen("/home/hjw-arch/input.txt", "r");
     if (fp == NULL) {
@@ -420,10 +416,10 @@ static int cmd_test_expr(char *args) {
             printf("test error!\n");
             count++;
             printf("result:%s ", result_str);
-            printf("result of turn: %u", result);
+            printf("result of true: %u", result);
             printf("  result of sdb: %u", result_test);
             printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
-            FILE *fp = fopen("/home/hjw-arch/output1.txt", "a");
+            FILE *fp = fopen("/home/hjw-arch/output.txt", "a");
             if (fp == NULL) {
                 assert(0);
             }
@@ -456,7 +452,7 @@ static int cmd_test_expr(char *args) {
     //         printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
     //         count++;
     //     }
-    
+
     }
 
     printf("error times: %d\n", count);
