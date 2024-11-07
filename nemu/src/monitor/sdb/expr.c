@@ -108,7 +108,7 @@ typedef struct token
     char str[32];
 } Token;
 
-static Token tokens[256] __attribute__((used)) = {};
+static Token tokens[1024] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
@@ -126,7 +126,7 @@ static bool make_token(char *e)
         {
             if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0)
             {
-                if (nr_token >= 256) {
+                if (nr_token >= 1024) {
                     printf("Expression is too long!\n");
                     return false;
                 }
