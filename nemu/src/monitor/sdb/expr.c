@@ -374,6 +374,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             
             case TK_AND: {
                 uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                if (val1 == 0) return 0;
                 uint64_t val2 = eval_expression(pos_op + 1, q, success);
                 return val1 && val2;
             }
