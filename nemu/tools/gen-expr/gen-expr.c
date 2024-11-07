@@ -169,8 +169,7 @@ int main(int argc, char *argv[])
 
         uint64_t result;
         ret = fscanf(fp, "%lu", &result);
-//        uint64_t result_ll;
-//        fscanf(fp, "%llu", &result_ll);
+
         int status = pclose(fp);
 
         if (result > 4294967296) {
