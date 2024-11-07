@@ -341,9 +341,9 @@ static int cmd_x(char *args) {
     }
 
     for (int i = 0; i < atoi(N); i++) {
-        printf("0x%08x   ", vaddr_read(expr_result, 4));
-        if ((i + 1) % 5 == 0)
-            printf("\n");
+        printf("Addr = 0x%08x: 0x%08x\n", expr_result, vaddr_read(expr_result, 4));
+        // if ((i + 1) % 5 == 0)
+        //     printf("\n");
         expr_result += 4;
         if (expr_result > PMEM_RIGHT)
             return 0;
