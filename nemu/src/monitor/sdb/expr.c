@@ -108,7 +108,7 @@ typedef struct token
     char str[32];
 } Token;
 
-static Token tokens[64] __attribute__((used)) = {};
+static Token tokens[2048] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e)
@@ -126,7 +126,7 @@ static bool make_token(char *e)
         {
             if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0)
             {
-                if (nr_token >= 64) {
+                if (nr_token >= 2048) {
                     printf("Expression is too long!\n");
                     return false;
                 }
@@ -374,6 +374,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             
             case TK_AND: {
                 uint64_t val1 = eval_expression(p, pos_op - 1, success);
+                if (val1 == 0) return 0;    // 短路原则，如果val2有除零行为，gcc也不检测，这里需要与gcc保持一致，否则过不了测试
                 uint64_t val2 = eval_expression(pos_op + 1, q, success);
                 return val1 && val2;
             }

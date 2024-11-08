@@ -86,6 +86,22 @@
 #define BITMASK(bits) ((1ull << (bits)) - 1)
 #define BITS(x, hi, lo) (((x) >> (lo)) & BITMASK((hi) - (lo) + 1)) // similar to x[hi:lo] in verilog
 #define SEXT(x, len) ({ struct { int64_t n : len; } __x = { .n = x }; (uint64_t)__x.n; })
+// EXJT 用于提取J type的imm
+#define EXJT(x) ({union { int64_t n : 21; struct {uint64_t blank : 1, imm10_1 : 10, imm11 : 1, imm19_12 : 8, imm20 : 1;};}\
+                __x = {.blank = 0, \
+                .imm20 = BITS(x, 31, 31), \
+                .imm19_12 = BITS(x, 19, 12), \
+                .imm11 = BITS(x, 20, 20), \
+                .imm10_1 = BITS(x, 30, 21)}; \
+                (int64_t)__x.n;})
+
+#define EXBT(x) ({union { int64_t n : 12; struct {uint64_t blank : 1, imm4_1 : 4, imm10_5 : 6, imm11 : 1, imm12 : 1;};} \
+                __x = { .blank = 0, \
+                .imm4_1 = BITS(x, 11, 8), \
+                .imm10_5 = BITS(x, 30, 25), \
+                .imm11 = BITS(x, 7, 7), \
+                .imm12 = BITS(x, 31, 31)}; \
+                (int64_t)__x.n;})
 
 #define ROUNDUP(a, sz)   ((((uintptr_t)a) + (sz) - 1) & ~((sz) - 1))
 #define ROUNDDOWN(a, sz) ((((uintptr_t)a)) & ~((sz) - 1))

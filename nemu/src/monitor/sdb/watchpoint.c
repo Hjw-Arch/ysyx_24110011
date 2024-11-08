@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "sdb.h"
+#include "isa.h"
 
 #define NR_WP 32
 #define LEN_WP_EXPR 128
@@ -80,7 +81,7 @@ void new_wp(char *expression) {
     wp->next = head;
     head = wp;
 
-    printf("NO %d watchponit, %s = 0x%x\n", wp->NO, wp->expr_str, result);
+    printf("NO %d watchponit, '%s' = 0x%x\n", wp->NO, wp->expr_str, result);
 }
 
 void free_wp(int NO) {
@@ -129,7 +130,7 @@ void free_wp(int NO) {
     return;
 }
 
-int diff_wp() {
+int diff_wp(vaddr_t front_pc) {
     int flag = 0;
     for (WP *wp = head; wp != NULL; wp = wp->next) {
         bool is_success = true;
@@ -143,7 +144,7 @@ int diff_wp() {
         }
         
         if (result != wp->result) {
-            printf("Watchpoint %d: %s\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, wp->result, result);
+            printf("Watchpoint %d: %s  at: 0x%x\nOld Value = 0x%x\nNew Value = 0x%x\n\n", wp->NO, wp->expr_str, front_pc, wp->result, result);
             wp->result = result;
             flag = 1;
         }

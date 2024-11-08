@@ -44,9 +44,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     }
     IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 #ifdef CONFIG_WATCHPOINT
-    if (diff_wp()) {
-        if (nemu_state.state != NEMU_END)
-            nemu_state.state = NEMU_STOP;
+    if (diff_wp(_this->pc)) {
+        if (nemu_state.state != NEMU_END) nemu_state.state = NEMU_STOP;
     }
 #endif
 }
@@ -57,9 +56,10 @@ static void exec_once(Decode *s, vaddr_t pc) {
     isa_exec_once(s);
     cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
+    iringbuf_load(s->pc, s->isa.inst.val);      // iringbuf
     char *p = s->logbuf;
     p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-    int ilen = s->snpc - s->pc;
+    int ilen = s->snpc - s->pc;     // 4
     int i;
     uint8_t *inst = (uint8_t *)&s->isa.inst.val;
     for (i = ilen - 1; i >= 0; i--) {
@@ -96,6 +96,7 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
+    iringbuf_display();      // iringbuf
     IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
     Log("host time spent = " NUMBERIC_FMT " us", g_timer);
@@ -115,12 +116,12 @@ void assert_fail_msg() {
 void cpu_exec(uint64_t n) {
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (nemu_state.state) {
-    case NEMU_END:
-    case NEMU_ABORT:
-        printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-        return;
-    default:
-        nemu_state.state = NEMU_RUNNING;
+        case NEMU_END:
+        case NEMU_ABORT:
+            printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+            return;
+        default:
+            nemu_state.state = NEMU_RUNNING;
     }
 
     uint64_t timer_start = get_time();

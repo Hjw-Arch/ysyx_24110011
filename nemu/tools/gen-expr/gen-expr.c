@@ -90,7 +90,7 @@ static void gen_rand_op() {
     case 3:
         gen("/");
         break;
-    
+
     case 4:
         gen("==");
         break;
@@ -111,7 +111,7 @@ static void gen_rand_op() {
 
 static void gen_rand_expr(int n)
 {
-    if (n >= 100) {
+    if (n >= 60) {
         gen_num();
         return;
     }
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
         fputs(code_buf, fp);
         fclose(fp);
 
-        int ret = system("gcc -w /tmp/.code.c -o /tmp/.expr");
+        int ret = system("gcc -Wall -Wextra -Werror -fsanitize=undefined /tmp/.code.c -o /tmp/.expr");
         if (ret != 0)
             continue;
 
@@ -169,8 +169,7 @@ int main(int argc, char *argv[])
 
         uint64_t result;
         ret = fscanf(fp, "%lu", &result);
-//        uint64_t result_ll;
-//        fscanf(fp, "%llu", &result_ll);
+
         int status = pclose(fp);
 
         if (result > 4294967296) {

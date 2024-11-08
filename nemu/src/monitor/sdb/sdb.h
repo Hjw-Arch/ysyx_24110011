@@ -23,7 +23,18 @@ word_t expr(char *e, bool *success);
 // watchpoint.c
 void new_wp(char *expression);
 void free_wp(int NO);
-int diff_wp();
+int diff_wp(vaddr_t front_pc);
 void diaplay_wp();
+
+// iringbuf
+void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst);
+void iringbuf_display();
+
+void mtrace_read(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc);
+void mtrace_write(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc);
+
+void decode_elf();
+void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target);
+void display_ftrace();
 
 #endif
