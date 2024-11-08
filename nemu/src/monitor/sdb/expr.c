@@ -374,7 +374,7 @@ uint64_t eval_expression(int p, int q, bool *success)
             
             case TK_AND: {
                 uint64_t val1 = eval_expression(p, pos_op - 1, success);
-                if (val1 == 0) return 0;
+                if (val1 == 0) return 0;    // 短路原则，如果val2有除零行为，gcc也不检测，这里需要与gcc保持一致，否则过不了测试
                 uint64_t val2 = eval_expression(pos_op + 1, q, success);
                 return val1 && val2;
             }
