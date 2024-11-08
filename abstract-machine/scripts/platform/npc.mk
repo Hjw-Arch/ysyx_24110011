@@ -15,7 +15,12 @@ LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
 .PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
 
+NPCARGS = -b -e $(IMAGE).elf -d ./libnemu.so
+
 image: $(IMAGE).elf
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
 	@echo + OBJCOPY "->" $(IMAGE_REL).bin
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
+
+run: image
+	$(MAKE) -C $(NPC_HOME) NPCARGS="$(NPCARGS)" run IMG=$(IMAGE).bin
