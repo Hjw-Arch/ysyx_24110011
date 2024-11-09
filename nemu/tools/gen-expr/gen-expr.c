@@ -111,7 +111,7 @@ static void gen_rand_op() {
 
 static void gen_rand_expr(int n)
 {
-    if (n >= 60) {
+    if (n >= 10) {
         gen_num();
         return;
     }

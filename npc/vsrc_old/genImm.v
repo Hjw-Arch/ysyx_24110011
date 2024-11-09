@@ -5,7 +5,6 @@ module genImm(
     output [31 : 0] imm
 );
 
-// 比直接判断少5个与门，一个或门
 assign imm[31] = immToGen[31];
 
 wire [30 : 0] imm_I = {{19{immToGen[31]}}, immToGen[31 : 20]};

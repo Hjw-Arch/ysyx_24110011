@@ -452,7 +452,6 @@ static int cmd_test_expr(char *args) {
             printf("\n\nexpr:\n%s\n\n\n\n\n\n\n\n", expr_str);
             count++;
         }
-
     }
 
     printf("error times: %d\n", count);
