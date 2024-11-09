@@ -42,7 +42,15 @@ static int num2string(char **out, int num, int base) {
 }
 
 int printf(const char *fmt, ...) {
-    panic("Not implemented");
+    va_list list;
+    va_start(list, fmt);
+    char out[1024];
+    sprintf(out, fmt, list);
+    int i;
+    for (i = 0; i < strlen(out); i++) {
+        putch(out[i]);
+    }
+    return i;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
