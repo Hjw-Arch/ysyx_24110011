@@ -48,6 +48,7 @@ int printf(const char *fmt, ...) {
     sprintf(out, fmt, list);
     int i;
     for (i = 0; i < strlen(out); i++) {
+        assert(i != 2);
         putch(out[i]);
     }
     return i;
