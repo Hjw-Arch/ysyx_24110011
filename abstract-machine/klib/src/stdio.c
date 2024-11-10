@@ -45,9 +45,9 @@ int printf(const char *fmt, ...) {
     va_list list;
     va_start(list, fmt);
     char out[1024];
-    sprintf(out, fmt, list);
+    int len = sprintf(out, fmt, list);
     int i;
-    for (i = 0; i < strlen(out); i++) {
+    for (i = 0; i < len; i++) {
         putch(out[i]);
     }
     return i;
