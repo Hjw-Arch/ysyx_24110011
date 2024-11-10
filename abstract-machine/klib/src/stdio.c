@@ -45,7 +45,7 @@ int printf(const char *fmt, ...) {
     va_list list;
     va_start(list, fmt);
     char out[1024];
-    int len = sprintf(out, fmt, list);
+    int len = vsprintf(out, fmt, list);
     int i;
     for (i = 0; i < len; i++) {
         putch(out[i]);
@@ -55,12 +55,6 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-    panic("Not implemented");
-}
-
-int sprintf(char *out, const char *fmt, ...) {
-    va_list list;
-    va_start(list, fmt);
     int ret = 0;
     for (int i = 0; i < strlen(fmt); ++i) {
         if (fmt[i] != '%') {
@@ -70,13 +64,13 @@ int sprintf(char *out, const char *fmt, ...) {
         else {
             switch (fmt[++i]) {
                 case 'd': {
-                    int num = va_arg(list, int);
+                    int num = va_arg(ap, int);
                     ret += num2string(&out, num, 10);
                     break;
                 }
 
                 case 's': {
-                    char *str = va_arg(list, char*);
+                    char *str = va_arg(ap, char*);
                     while (*str != '\0') {
                         *(out++) = *(str++);
                         ret++;
@@ -89,8 +83,17 @@ int sprintf(char *out, const char *fmt, ...) {
             }
         }
     }
-    va_end(list);
     *out = '\0';
+    return ret;
+}
+
+int sprintf(char *out, const char *fmt, ...) {
+    va_list list;
+    va_start(list, fmt);
+    
+    int ret = vsprintf(out, fmt, list);
+
+    va_end(list);
     return ret;
 }
 
