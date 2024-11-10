@@ -50,6 +50,7 @@ int printf(const char *fmt, ...) {
     for (i = 0; i < len; i++) {
         putch(out[i]);
     }
+    va_end(list);
     return i;
 }
 
@@ -88,6 +89,7 @@ int sprintf(char *out, const char *fmt, ...) {
             }
         }
     }
+    va_end(list);
     *out = '\0';
     return ret;
 }
