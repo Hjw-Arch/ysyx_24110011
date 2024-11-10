@@ -215,7 +215,7 @@ br:             break;
                     bool isRequiredWidth = false;
 
                     if (width > len) {
-                        if (leftAlign || paddingCharZero) {
+                        if (!leftAlign || paddingCharZero) {
                             for (j = 0; j < width - len; j++) {
                                 *(out++) = (paddingCharZero ? '0' : ' ');
                             }
