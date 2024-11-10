@@ -137,8 +137,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                     }
 
                     case ' ': {
+                        i++;
                         if (showSymbol) {
-                            i++;
                             break;
                         }
 
@@ -150,19 +150,19 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                     default:
                         goto br;
                 }
-
-                br: break;
+br:             break;
             }
 
             // width
             int j;
-            for (j = 0; fmt[i + j] <= '9' || fmt[i + j] >= '0'; j++) ;
+            for (j = 0; fmt[i + j] <= '9' && fmt[i + j] >= '0'; j++) ;
             string2num(&width, &fmt[i], j);
             i += j;
 
             // precision
             if (fmt[i] == '.') {
-                for (j = 0; fmt[i + j] <= '9' || fmt[i + j] >= '0'; j++) ;
+                i++;
+                for (j = 0; fmt[i + j] <= '9' && fmt[i + j] >= '0'; j++) ;
                 string2num(&precision, &fmt[i], j);
                 i += j;
             }
