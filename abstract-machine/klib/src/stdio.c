@@ -98,12 +98,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
             bool leftAlign = false;
             bool showSymbol = false;
-            bool replaceFormat = false;
+            bool replaceFormat = false;     // TODO
             bool blankBeforePostiveNum = false;
             bool paddingCharZero = false;
             int width = 0;
-            int precision = -1;
-            int length = normal;
+            int precision = -1;         // TODO
+            int length = normal;        // TODO
 
             width = length - 1 + length + 1;    // 消除警告
             width = replaceFormat;
@@ -130,7 +130,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                         break;
                     }
 
-                    case '#': {
+                    case '#': {     // TODO
                         replaceFormat = true;
                         i++;
                         break;
