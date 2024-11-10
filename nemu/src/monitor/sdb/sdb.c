@@ -44,6 +44,7 @@ static char *rl_gets() {
     return line_read;
 }
 
+#ifdef CONFIG_ITRACE
 // ringbuffer
 typedef struct _ringbuf
 {
@@ -92,6 +93,8 @@ void iringbuf_display() {
     }
     puts("\n");
 }
+
+#endif
 
 #ifdef CONFIG_MTRACE
 void mtrace_read(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc) {
