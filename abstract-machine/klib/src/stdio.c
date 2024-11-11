@@ -308,7 +308,7 @@ br:             break;
             }
         }
     }
-    *out = '\0';
+    out[ret] = '\0';
     return ret;
 }
 
