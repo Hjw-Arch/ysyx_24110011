@@ -29,8 +29,8 @@ int atoi(const char* nptr) {
     return x;
 }
 
-extern char _heap_start;
-static void *pos = &_heap_start;
+extern Area heap; 
+static void **pos = &heap.start;
 void *malloc(size_t size) {
     // On native, malloc() will be called during initializaion of C runtime.
     // Therefore do not call panic() here, else it will yield a dead recursion:
@@ -39,8 +39,8 @@ void *malloc(size_t size) {
 //     panic("Not implemented");
 // #endif
     
-    void *ret = pos;
-    pos += size;
+    void *ret = *pos;
+    *pos += size;
 
     return ret;
 }
