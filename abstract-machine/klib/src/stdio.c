@@ -250,11 +250,13 @@ br:             break;
                 case 'c': {
                     char ch = (char)va_arg(ap, int);
                     *(out++) = ch;
+                    ret++;
                     break;
                 }
 
                 case '%': {
                     *(out++) = '%';
+                    ret++;
                 }
 
                 default:
