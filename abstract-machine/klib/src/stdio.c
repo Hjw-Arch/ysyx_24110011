@@ -247,6 +247,12 @@ br:             break;
                     break;
                 }
 
+                case 'c': {
+                    char ch = (char)va_arg(ap, int);
+                    *(out++) = ch;
+                    break;
+                }
+
                 case '%': {
                     *(out++) = '%';
                 }
