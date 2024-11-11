@@ -5,7 +5,6 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-
 enum {
     normal = 0,
     h,
@@ -18,13 +17,59 @@ enum {
     L,
 };
 
-static int num2string(char *out, int num, int base) {
+static bool leftAlign = false;
+static bool showSymbol = false;
+static bool replaceFormat = false; // TODO
+static bool blankBeforePostiveNum = false;
+static bool paddingCharZero = false;
+static int width = 0;
+static int precision = -1;  // TODO
+static int length = normal; // TODO
+
+static int handle_int(char *out, char *temp_str, int len) {
+    bool isSatisfiedWidth = false;
+    int j = 0;
+    int ret = 0;
+    if (width > len)
+    {
+        if (!leftAlign || paddingCharZero)
+        {
+            for (j = 0; j < width - len; j++)
+            {
+                *(out++) = (paddingCharZero ? '0' : ' ');
+            }
+            ret += j;
+            isSatisfiedWidth = true;
+        }
+    }
+
+    ret += len;
+    strncpy(out, temp_str, len);
+    out += len;
+
+    if (width > len && !isSatisfiedWidth)
+    {
+        for (j = 0; j < width - len; j++)
+        {
+            *(out++) = ' ';
+        }
+        ret += j;
+    }
+
+    return ret;
+}
+
+static int num2string(char *out, uint64_t num, int base) {
     int ret = 0;
     // process negative number
-    if (num < 0) {
-        *(out++) = '-';
-        num = -num;
-        ret++;
+    if (base == 10) {
+        int64_t _num = num;
+        if (_num < 0) {
+            *(out++) = '-';
+            _num = -_num;
+            num = _num;
+            ret++;
+        }
     }
 
     // process zero
@@ -34,7 +79,7 @@ static int num2string(char *out, int num, int base) {
     }
 
 
-    int a[20];
+    int a[36];
     int i = 0;
     while(num != 0) {
         a[i++] = num % base;
@@ -90,22 +135,21 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     int ret = 0;
     for (int i = 0; i < strlen(fmt); ++i) {
         if (fmt[i] != '%') {
-            *(out++) = fmt[i];
-            ret++;
+            out[ret++] = fmt[i];
         }
         else {
             i++;
 
-            bool leftAlign = false;
-            bool showSymbol = false;
-            bool replaceFormat = false;     // TODO
-            bool blankBeforePostiveNum = false;
-            bool paddingCharZero = false;
-            int width = 0;
-            int precision = -1;         // TODO
-            int length = normal;        // TODO
+            leftAlign = false;
+            showSymbol = false;
+            replaceFormat = false; // TODO
+            blankBeforePostiveNum = false;
+            paddingCharZero = false;
+            width = 0;
+            precision = -1;  // TODO
+            length = normal; // TODO
 
-            width = length - 1 + length + 1;    // 消除警告
+            width = length - 1 + length + 1; // 消除警告
             width = replaceFormat;
 
             // flags
@@ -203,37 +247,40 @@ br:             break;
                 break;
             }
 
+            uint64_t num;
+            if (fmt[i] != 's' && fmt[i] != 'c' && fmt[i] != '%') {
+                if(length == ll) {
+                    num = va_arg(ap, uint64_t);
+                } else {
+                    num = va_arg(ap, uint32_t);
+                }
+            }
+
             switch (fmt[i]) {
+                case 'i':
+                case 'x':
+                case 'X':
+                case 'o':
+                case 'u':
                 case 'd': {
-                    int num = va_arg(ap, int);
-                    if (showSymbol && num > 0) *(out++) = '+';
-                    if (blankBeforePostiveNum && num > 0) *(out++) = ' ';
-
-                    char temp_str[20];
-                    int len = num2string(temp_str, num, 10);
-
-                    bool isRequiredWidth = false;
-
-                    if (width > len) {
-                        if (!leftAlign || paddingCharZero) {
-                            for (j = 0; j < width - len; j++) {
-                                *(out++) = (paddingCharZero ? '0' : ' ');
-                            }
-                            ret += j;
-                            isRequiredWidth = true;
-                        }
+                    
+                    if (fmt[i] == 'd' || fmt[i] == 'i') {
+                        int64_t _num = num;
+                        if (showSymbol && _num > 0) out[ret++] = '+';
+                        if (blankBeforePostiveNum && _num > 0) out[ret++] = ' ';
                     }
+                    
+                    int base = 10;
 
+                    if (fmt[i] == 'x' || fmt[i] == 'X') base = 16;
+                    if (fmt[i] == '0') base = 8;
+
+                    char temp_str[36];
+                    int len = num2string(temp_str, num, base);
+
+                    len = handle_int(&out[ret], temp_str, len);
                     ret += len;
-                    strncpy(out, temp_str, len);
-                    out += len;
 
-                    if (width > len && !isRequiredWidth) {
-                        for (j = 0; j < width - len; j++) {
-                            *(out++) = ' ';
-                        }
-                        ret += j;
-                    }
 
                     break;
                 }
@@ -241,22 +288,19 @@ br:             break;
                 case 's': {
                     char *str = va_arg(ap, char*);
                     while (*str != '\0') {
-                        *(out++) = *(str++);
-                        ret++;
+                        out[ret++] = *(str++);
                     }
                     break;
                 }
 
                 case 'c': {
                     char ch = (char)va_arg(ap, int);
-                    *(out++) = ch;
-                    ret++;
+                    out[ret++] = ch;
                     break;
                 }
 
                 case '%': {
-                    *(out++) = '%';
-                    ret++;
+                    out[ret++] = '%';
                 }
 
                 default:
