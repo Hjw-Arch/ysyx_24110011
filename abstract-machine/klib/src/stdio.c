@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
@@ -26,54 +27,54 @@ static int width = 0;
 static int precision = -1;  // TODO
 static int length = normal; // TODO
 
-static int double2str(char *str, double num, int precision) {
-    int length = 0;  // 记录字符串长度
+// static int double2str(char *str, double num, int precision) {
+//     int length = 0;  // 记录字符串长度
 
-    // 处理负数
-    if (num < 0) {
-        *str++ = '-';
-        num = -num;  // 将负数转为正数处理
-        length++;
-    }
+//     // 处理负数
+//     if (num < 0) {
+//         *str++ = '-';
+//         num = -num;  // 将负数转为正数处理
+//         length++;
+//     }
 
-    // 处理整数部分
-    long long int_part = (long long)num;  // 整数部分
-    double decimal_part = num - int_part;  // 小数部分
+//     // 处理整数部分
+//     uint64_t int_part = (uint64_t)num;  // 整数部分
+//     double decimal_part = num - int_part;  // 小数部分
 
-    // 将整数部分转换为字符串
-    char temp[50];  // 临时数组用于存储整数部分字符串
-    int i = 0;
-    if (int_part == 0) {
-        temp[i++] = '0';
-    } else {
-        while (int_part > 0) {
-            temp[i++] = (int_part % 10) + '0';
-            int_part /= 10;
-        }
-    }
+//     // 将整数部分转换为字符串
+//     char temp[50];  // 临时数组用于存储整数部分字符串
+//     int i = 0;
+//     if (int_part == 0) {
+//         temp[i++] = '0';
+//     } else {
+//         while (int_part > 0) {
+//             temp[i++] = (int_part % 10) + '0';
+//             int_part /= 10;
+//         }
+//     }
 
-    // 反转整数部分
-    for (int j = 0; j < i; j++) {
-        str[length++] = temp[i - j - 1];
-    }
+//     // 反转整数部分
+//     for (int j = 0; j < i; j++) {
+//         str[length++] = temp[i - j - 1];
+//     }
 
-    // 处理小数部分
-    if (precision > 0) {
-        str[length++] = '.';  // 添加小数点
+//     // 处理小数部分
+//     if (precision > 0) {
+//         str[length++] = '.';  // 添加小数点
 
-        // 将小数部分转换为字符串
-        for (int j = 0; j < precision; j++) {
-            decimal_part *= 10;
-            int decimal_digit = (int)decimal_part;
-            str[length++] = decimal_digit + '0';
-            decimal_part -= decimal_digit;
-        }
-    }
+//         // 将小数部分转换为字符串
+//         for (int j = 0; j < precision; j++) {
+//             decimal_part *= 10;
+//             uint32_t decimal_digit = (uint32_t)decimal_part;
+//             str[length++] = decimal_digit + '0';
+//             decimal_part -= decimal_digit;
+//         }
+//     }
 
-    str[length] = '\0';  // 添加字符串结束符
+//     str[length] = '\0';  // 添加字符串结束符
 
-    return length;  // 返回字符串的长度
-}
+//     return length;  // 返回字符串的长度
+// }
 
 static int num2string(char *out, uint64_t num, int base) {
     int ret = 0;
@@ -186,74 +187,74 @@ static int handle_int(char *out, uint64_t num, bool isSigned) {
     return ret;
 }
 
-static int handle_float(char *out, double num){
-    bool isSatisfiedWidth = false;
-    bool isNegative = false;
-    int diffblank = 0;
-    int ret = 0;
+// static int handle_float(char *out, double num){
+//     bool isSatisfiedWidth = false;
+//     bool isNegative = false;
+//     int diffblank = 0;
+//     int ret = 0;
 
-    // 处理有符号数
+//     // 处理有符号数
 
-    // 判断正负，如果是负数会添加负号，占用一位宽度
-    if (num < 0) {
-        isNegative = true;
-        diffblank++;
-        num = -num;
-    }
+//     // 判断正负，如果是负数会添加负号，占用一位宽度
+//     if (num < 0) {
+//         isNegative = true;
+//         diffblank++;
+//         num = -num;
+//     }
 
-    // 如果是负数并且不是用0补宽度，直接添加负号
-    if (isNegative && paddingCharZero) {
-        out[ret++] = '-';
-    }
+//     // 如果是负数并且不是用0补宽度，直接添加负号
+//     if (isNegative && paddingCharZero) {
+//         out[ret++] = '-';
+//     }
 
-    if (isNegative) showSymbol = false, blankBeforePostiveNum = false;
+//     if (isNegative) showSymbol = false, blankBeforePostiveNum = false;
 
-    // 是否需要添加正号或者空格，如果添加，占一位宽度
-    if (length == ll || length == l) {
-        if (showSymbol && num > 0) out[ret++] = '+', diffblank++;
-        if (blankBeforePostiveNum && num > 0) out[ret++] = ' ', diffblank++;
-    } else {
-        if (showSymbol && num > 0) out[ret++] = '+', diffblank++;
-        if (blankBeforePostiveNum && num > 0) out[ret++] = ' ', diffblank++;
-    }
+//     // 是否需要添加正号或者空格，如果添加，占一位宽度
+//     if (length == ll || length == l) {
+//         if (showSymbol && num > 0) out[ret++] = '+', diffblank++;
+//         if (blankBeforePostiveNum && num > 0) out[ret++] = ' ', diffblank++;
+//     } else {
+//         if (showSymbol && num > 0) out[ret++] = '+', diffblank++;
+//         if (blankBeforePostiveNum && num > 0) out[ret++] = ' ', diffblank++;
+//     }
 
-    // 数字转字符串
-    char str[36];
-    int len = double2str(str, num, precision == -1 ? 6 : precision);
-    diffblank += len;
+//     // 数字转字符串
+//     char str[36];
+//     // int len = double2str(str, num, precision == -1 ? 6 : precision);
+//     diffblank += len;
 
-    // 计算需要补几位宽度
-    diffblank = width - diffblank;
+//     // 计算需要补几位宽度
+//     diffblank = width - diffblank;
 
-    if (diffblank > 0)
-    {   // 如果是右对齐或者使用0补宽度，要在数字前面补
-        if (!leftAlign || paddingCharZero)
-        {
-            for (int j = 0; j < diffblank; j++)
-            {
-                out[ret++] = (paddingCharZero ? '0' : ' ');
-            }
-            isSatisfiedWidth = true;
-        }
-    }
+//     if (diffblank > 0)
+//     {   // 如果是右对齐或者使用0补宽度，要在数字前面补
+//         if (!leftAlign || paddingCharZero)
+//         {
+//             for (int j = 0; j < diffblank; j++)
+//             {
+//                 out[ret++] = (paddingCharZero ? '0' : ' ');
+//             }
+//             isSatisfiedWidth = true;
+//         }
+//     }
 
-    // 之前没补负号的话现在补一下
-    if (isNegative && !paddingCharZero) out[ret++] = '-';
+//     // 之前没补负号的话现在补一下
+//     if (isNegative && !paddingCharZero) out[ret++] = '-';
 
-    strncpy(&out[ret], str, len);
-    ret += len;
+//     strncpy(&out[ret], str, len);
+//     ret += len;
 
-    // 如果之前没补宽度，现在补一下
-    if (diffblank > 0 && !isSatisfiedWidth)
-    {
-        for (int j = 0; j < diffblank; j++)
-        {
-            out[ret++] = ' ';
-        }
-    }
+//     // 如果之前没补宽度，现在补一下
+//     if (diffblank > 0 && !isSatisfiedWidth)
+//     {
+//         for (int j = 0; j < diffblank; j++)
+//         {
+//             out[ret++] = ' ';
+//         }
+//     }
 
-    return ret;
-}
+//     return ret;
+// }
 
 static int handle_x_o(char *out, uint64_t num, int base){
     bool isSatisfiedWidth = false;
@@ -484,8 +485,8 @@ br:         int j;
                 }
 
                 case 'f': {
-                    double float_num = va_arg(ap, double);
-                    ret += handle_float(&out[ret], float_num);
+                    // double float_num = va_arg(ap, double);
+                    // ret += handle_float(&out[ret], float_num);
                     break;
                 }
 
