@@ -220,7 +220,7 @@ static int handle_int(char *out, uint64_t num, bool isSigned) {
 
 //     // 数字转字符串
 //     char str[36];
-//     // int len = double2str(str, num, precision == -1 ? 6 : precision);
+//     int len = double2str(str, num, precision == -1 ? 6 : precision);
 //     diffblank += len;
 
 //     // 计算需要补几位宽度
@@ -360,12 +360,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
             leftAlign = false;
             showSymbol = false;
-            replaceFormat = false; // TODO
+            replaceFormat = false;
             blankBeforePostiveNum = false;
             paddingCharZero = false;
             width = 0;
-            precision = -1;  // TODO
-            length = normal; //
+            precision = -1;
+            length = normal; // TODO
 
             // flags
             while(true) {
@@ -529,9 +529,6 @@ int sprintf(char *out, const char *fmt, ...) {
     va_list list;
     va_start(list, fmt);
 
-    double a = 1-1;
-    int b = a;
-    b = b -a;
     int ret = vsprintf(out, fmt, list);
 
     va_end(list);
