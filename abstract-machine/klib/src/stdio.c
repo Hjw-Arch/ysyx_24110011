@@ -528,7 +528,9 @@ br:         int j;
 int sprintf(char *out, const char *fmt, ...) {
     va_list list;
     va_start(list, fmt);
-    
+
+    double a = 1-1;
+    a = a * a - a;
     int ret = vsprintf(out, fmt, list);
 
     va_end(list);
