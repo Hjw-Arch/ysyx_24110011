@@ -530,7 +530,8 @@ int sprintf(char *out, const char *fmt, ...) {
     va_start(list, fmt);
 
     double a = 1-1;
-    a = a * a - a;
+    int b = a;
+    b = b -a;
     int ret = vsprintf(out, fmt, list);
 
     va_end(list);
