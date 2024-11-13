@@ -34,23 +34,23 @@ static uint8_t *audio_pos = NULL;
 
 SDL_AudioSpec spec;
 
-// static void audio_callback(void *userdata, uint8_t *stream, int len) {
-//     uint32_t len_to_copy;
+static void audio_callback(void *userdata, uint8_t *stream, int len) {
+    uint32_t len_to_copy;
 
-//     memset(stream, 0, len);
+    memset(stream, 0, len);
 
-//     if (audio_base[reg_count] < len) {
-//         len_to_copy = audio_base[reg_count];
-//         // memset(stream + len_to_copy, 0, len - len_to_copy);
-//     } else {
-//         len_to_copy = len;
-//     }
+    if (audio_base[reg_count] < len) {
+        len_to_copy = audio_base[reg_count];
+        // memset(stream + len_to_copy, 0, len - len_to_copy);
+    } else {
+        len_to_copy = len;
+    }
 
-//     SDL_memcpy(stream, audio_pos, len_to_copy);
+    SDL_memcpy(stream, audio_pos, len_to_copy);
 
-//     audio_pos += len_to_copy;
-//     audio_base[reg_count] -= len_to_copy;
-// }
+    audio_pos += len_to_copy;
+    audio_base[reg_count] -= len_to_copy;
+}
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     if (is_write) {
@@ -64,7 +64,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
         audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
 
         SDL_InitSubSystem(SDL_INIT_AUDIO);
-        spec.callback = NULL;
+        spec.callback = audio_callback;
         spec.format = AUDIO_S16SYS;
         spec.silence = 0;
         SDL_OpenAudio(&spec, 0);
