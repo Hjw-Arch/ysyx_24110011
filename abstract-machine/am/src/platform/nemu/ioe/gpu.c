@@ -40,7 +40,6 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 // AM_DEVREG(11, GPU_FBDRAW,   WR, int x, y; void *pixels; int w, h; bool sync);
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-    return;
     int width = io_read(AM_GPU_CONFIG).width;
     for (uint32_t i = ctl->y; i < ctl->y + ctl->h; i++) {
         for (uint32_t j = ctl->x; j < ctl->x + ctl->w; j++) {
