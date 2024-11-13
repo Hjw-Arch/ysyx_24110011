@@ -33,6 +33,7 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
-    memcpy((void *)(AUDIO_SBUF_ADDR + inl(AUDIO_COUNT_ADDR)), ctl->buf.start, ctl->buf.start - ctl->buf.end);
-    outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + ctl->buf.start - ctl->buf.end);
+    int len = ctl->buf.end - ctl->buf.start;
+    memcpy((void *)(AUDIO_SBUF_ADDR + inl(AUDIO_COUNT_ADDR)), ctl->buf.start, len);
+    outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len);
 }
