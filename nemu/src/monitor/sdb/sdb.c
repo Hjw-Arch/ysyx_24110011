@@ -120,7 +120,7 @@ typedef struct _symtab{
     uint32_t end_addr;
 }symtab;
 
-static symtab symtabs[1024 * 1024];
+static symtab symtabs[1024];
 static uint32_t symtab_count = 0;
 
 void decode_elf() {
@@ -136,7 +136,7 @@ void decode_elf() {
 
     Elf32_Ehdr ehdr;
 
-    int ret = fread(&ehdr, sizeof (Elf32_Ehdr), 1, fp);
+    int ret = fread(&ehdr, sizeof(Elf32_Ehdr), 1, fp);
     assert(ret == 1);
 
     if (ehdr.e_ident[EI_MAG0] != ELFMAG0 || ehdr.e_ident[EI_MAG1] != ELFMAG1 || ehdr.e_ident[EI_MAG2] != ELFMAG2 || ehdr.e_ident[EI_MAG3] != ELFMAG3) {
@@ -159,7 +159,7 @@ void decode_elf() {
 
     for (int i = 0; i < ehdr.e_shnum; i++) {
         if (i == ehdr.e_shstrndx) continue;
-        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
+        ret = fread(&shdr, sizeof(Elf32_Shdr), 1, fp);
         assert(ret == 1);
         if (shdr.sh_type == SHT_STRTAB) {
             str_buffer = (char *)malloc(shdr.sh_size);
@@ -173,6 +173,8 @@ void decode_elf() {
             break;
         }
     }
+
+    puts("111\n");
 
     fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
 
