@@ -47,7 +47,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
     int width = io_read(AM_GPU_CONFIG).width;
     for (uint32_t i = ctl->y; i < ctl->y + ctl->h; i++) {
         for (uint32_t j = ctl->x; j < ctl->x + ctl->w; j++) {
-            outl(FB_ADDR + (i * width * 4 + j * 4), 0x00ffffff);
+            outl(FB_ADDR + (i * width * 4 + j * 4), ((uint32_t *)ctl->pixels)[(i - ctl->y) * ctl->w + (j - ctl->x)]);
         }
     }
 
