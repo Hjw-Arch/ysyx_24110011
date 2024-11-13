@@ -35,6 +35,8 @@ static uint8_t *audio_pos = NULL;
 SDL_AudioSpec spec;
 
 static void audio_callback(void *userdata, uint8_t *stream, int len) {
+    SDL_memcpy(stream, 0, 4096);
+
     uint32_t len_to_copy;
 
     if (audio_base[reg_count] == 0) {
