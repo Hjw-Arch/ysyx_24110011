@@ -35,11 +35,15 @@ static uint8_t *audio_pos = NULL;
 SDL_AudioSpec spec;
 
 static void audio_callback(void *userdata, uint8_t *stream, int len) {
-    SDL_memset(stream, 0, len);
-
     uint32_t len_to_copy;
 
-    len_to_copy = (audio_base[reg_count] < len) ? audio_base[reg_count] : len;
+    if (audio_base[reg_count] < len) {
+        len_to_copy = audio_base[reg_count];
+        memset(stream + len_to_copy, 0, len - len_to_copy);
+    } else {
+        len_to_copy = len;
+    }
+
     SDL_memcpy(stream, audio_pos, len_to_copy);
 
     audio_pos += len_to_copy;
@@ -54,29 +58,18 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     }
 
     if (audio_base[reg_init]) {
+        audio_pos = sbuf;
+        audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
+
+        SDL_InitSubSystem(SDL_INIT_AUDIO);
+        spec.callback = audio_callback;
+        spec.format = AUDIO_S16SYS;
+        spec.silence = 0;
         SDL_OpenAudio(&spec, 0);
         SDL_PauseAudio(0);
+
         audio_base[reg_init] = 0;
     }
-}
-
-// static void audio_sb_handler(uint32_t offset, int len, bool is_write) {
-//     if (!is_write) return;
-//     assert(offset < CONFIG_SB_SIZE && offset >= 0);
-
-//     if (is_write) {
-//         if (offset)
-//     }
-// }
-
-static void init_voice() {
-    audio_pos = sbuf;
-    audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
-
-    SDL_InitSubSystem(SDL_INIT_AUDIO);
-    spec.callback = audio_callback;
-    spec.format = AUDIO_S16SYS;
-    spec.silence = 0;
 }
 
 void init_audio() {
@@ -90,5 +83,4 @@ void init_audio() {
 
     sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
     add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
-    init_voice();
 }
