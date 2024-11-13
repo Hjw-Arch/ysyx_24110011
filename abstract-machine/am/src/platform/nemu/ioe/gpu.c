@@ -5,8 +5,8 @@
 
 void __am_gpu_init() {
     int i;
-    int w = io_read(AM_GPU_CONFIG).width / 32;
-    int h = io_read(AM_GPU_CONFIG).height / 32;
+    int w = io_read(AM_GPU_CONFIG).width;
+    int h = io_read(AM_GPU_CONFIG).height;
     uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
     for (i = 0; i < w * h; i++) fb[i] = i;
     outl(SYNC_ADDR, 1);
@@ -14,17 +14,11 @@ void __am_gpu_init() {
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
     uint32_t width_higth = inl(VGACTL_ADDR);
-    // *cfg = (AM_GPU_CONFIG_T){
-    //     .present = true, .has_accel = false,
-    //     .width = width_higth >> 16, .height = width_higth & 0x0000ffff,
-    //     .vmemsz = (width_higth >> 16) * (width_higth & 0x0000ffff) * 4
-    // };
-
-    cfg->present = true;
-    cfg->has_accel = false;
-    cfg->width = width_higth >> 16;
-    cfg->height = width_higth & 0x0000ffff;
-    cfg->vmemsz = (width_higth >> 16) * (width_higth & 0x0000ffff) * 4;
+    *cfg = (AM_GPU_CONFIG_T){
+        .present = true, .has_accel = false,
+        .width = width_higth >> 16, .height = width_higth & 0x0000ffff,
+        .vmemsz = (width_higth >> 16) * (width_higth & 0x0000ffff) * 4
+    };
 }
 
 // AM_DEVREG(11, GPU_FBDRAW,   WR, int x, y; void *pixels; int w, h; bool sync);
