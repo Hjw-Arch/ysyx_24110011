@@ -174,8 +174,6 @@ void decode_elf() {
         }
     }
 
-    puts("111\n");
-
     fseek(fp, (long)ehdr.e_shoff, SEEK_SET);
 
     for (int i = 0; i < ehdr.e_shnum; i++) {
@@ -197,6 +195,8 @@ void decode_elf() {
             break;
         }
     }
+
+    puts("111\n");
 
     free(str_buffer);
     fclose(fp);
