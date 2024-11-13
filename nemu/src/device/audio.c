@@ -51,7 +51,7 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
     SDL_memcpy(stream, audio_pos, len_to_copy);
 
     audio_pos += len_to_copy;
-    if (audio_pos > sbuf + CONFIG_SB_SIZE) audio_pos = sbuf;
+    if (audio_pos > (sbuf + CONFIG_SB_SIZE)) audio_pos = sbuf;
     audio_base[reg_count] -= len_to_copy;
 }
 
