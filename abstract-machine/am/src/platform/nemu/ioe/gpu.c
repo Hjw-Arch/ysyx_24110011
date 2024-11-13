@@ -1,15 +1,16 @@
 #include <am.h>
 #include <nemu.h>
+#include <stdio.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
 void __am_gpu_init() {
-    // int i;
-    // int w = io_read(AM_GPU_CONFIG).width;
-    // int h = io_read(AM_GPU_CONFIG).height;
-    // uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-    // for (i = 0; i < w * h; i++) fb[i] = i;
-    // outl(SYNC_ADDR, 1);
+    int i;
+    int w = io_read(AM_GPU_CONFIG).width;
+    int h = io_read(AM_GPU_CONFIG).height;
+    uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+    for (i = 0; i < w * h; i++) fb[i] = i;
+    outl(SYNC_ADDR, 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -19,6 +20,8 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
         .width = width_higth >> 16, .height = width_higth & 0x0000ffff,
         .vmemsz = (width_higth >> 16) * (width_higth & 0x0000ffff) * 4
     };
+
+    printf("%d, %d\n", cfg->width, cfg->height);
 }
 
 // AM_DEVREG(11, GPU_FBDRAW,   WR, int x, y; void *pixels; int w, h; bool sync);
