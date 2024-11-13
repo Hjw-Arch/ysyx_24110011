@@ -62,7 +62,7 @@ void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t i
 
 void iringbuf_display() {
     uint32_t start_index = iringbuf_index;
-    uint32_t end_index = iringbuf_index - 1;
+    uint32_t end_index = iringbuf_index == 0 ? 15 : iringbuf_index - 1;
     uint32_t index = start_index;
     puts("\n");
     while(1) {
@@ -231,7 +231,7 @@ void display_ftrace() {
     if (elf_file == NULL) return;
     uint32_t blank_num = 0;
     uint32_t start_index = fring_index;
-    uint32_t end_index = fring_index - 1;
+    uint32_t end_index = fring_index == 0 ? 63 : fring_index - 1;
     uint32_t index = start_index;
     while(1) {
         if (index >= 64) index = 0;
@@ -262,6 +262,60 @@ void display_ftrace() {
         if (index == end_index) break;
 
         index++;
+    }
+}
+
+#endif
+
+#ifdef CONFIG_DTRACE
+
+typedef struct dtrace
+{
+    const char *name;
+    vaddr_t addr;
+    bool isWrite;
+} dtrace;
+
+static dtrace dtrace_buf[16];
+static uint32_t dtrace_index = 0;
+
+#include "../include/device/map.h"
+void record_dtrace(const char *name, bool isWrite) {
+    dtrace_buf[dtrace_index++] = (dtrace){.name = name, .addr = cpu.pc, .isWrite = isWrite};
+    dtrace_index = dtrace_index % 16;
+}
+
+void display_dtrace() {
+    uint32_t start_index = dtrace_index;
+    uint32_t end_index = dtrace_index == 0 ? 15 : dtrace_index - 1;
+    uint32_t index = start_index;
+
+    puts("\nDevice Trace:");
+
+    puts("Action\t\tAT\t\tDevice Name");
+
+    while (1)
+    {
+        if (dtrace_buf[index].addr == 0) {
+            index++;
+            index = index % 16;
+            continue;
+        }
+
+        if (dtrace_buf[index].isWrite) printf("Wirte");
+        else printf("Read");
+        printf("\t\t");
+
+        printf("0x%08x\t", dtrace_buf[index].addr);
+
+        printf("%s\n", dtrace_buf[index].name);
+
+        if (index == end_index) {
+            break;
+        }
+
+        index++;
+        index = index % 16;
     }
 }
 
