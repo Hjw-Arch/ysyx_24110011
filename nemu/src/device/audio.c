@@ -30,18 +30,68 @@ enum {
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
+static uint8_t *audio_pos = NULL;
+
+SDL_AudioSpec spec;
+
+static void audio_callback(void *userdata, uint8_t *stream, int len) {
+    uint32_t len_to_copy;
+
+    if (audio_base[reg_count] == 0) {
+        return;
+    }
+
+    len_to_copy = (audio_base[reg_count] < len) ? audio_base[reg_count] : len;
+    SDL_memcpy(stream, &sbuf[audio_base[reg_count]], len_to_copy);
+
+    audio_pos += len_to_copy;
+    audio_base[reg_count] -= len_to_copy;
+
+    SDL_PauseAudio(0);
+}
+
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+    if (is_write) {
+        if (offset == reg_freq * 4) spec.freq = audio_base[reg_freq];
+        if (offset == reg_channels * 4) spec.channels = audio_base[reg_channels];
+        if (offset == reg_samples * 4) spec.samples = audio_base[reg_samples];
+    }
+
+    if (audio_base[reg_init]) {
+        SDL_OpenAudio(&spec, 0);
+        audio_base[reg_init] = 0;
+    }
+}
+
+// static void audio_sb_handler(uint32_t offset, int len, bool is_write) {
+//     if (!is_write) return;
+//     assert(offset < CONFIG_SB_SIZE && offset >= 0);
+
+//     if (is_write) {
+//         if (offset)
+//     }
+// }
+
+static void init_voice() {
+    audio_pos = sbuf;
+    audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
+
+    SDL_InitSubSystem(SDL_INIT_AUDIO);
+    spec.callback = audio_callback;
+    spec.format = AUDIO_S16SYS;
+    spec.silence = 0;
 }
 
 void init_audio() {
-  uint32_t space_size = sizeof(uint32_t) * nr_reg;
-  audio_base = (uint32_t *)new_space(space_size);
+    uint32_t space_size = sizeof(uint32_t) * nr_reg;
+    audio_base = (uint32_t *)new_space(space_size);
 #ifdef CONFIG_HAS_PORT_IO
-  add_pio_map ("audio", CONFIG_AUDIO_CTL_PORT, audio_base, space_size, audio_io_handler);
+    add_pio_map ("audio", CONFIG_AUDIO_CTL_PORT, audio_base, space_size, audio_io_handler);
 #else
-  add_mmio_map("audio", CONFIG_AUDIO_CTL_MMIO, audio_base, space_size, audio_io_handler);
+    add_mmio_map("audio", CONFIG_AUDIO_CTL_MMIO, audio_base, space_size, audio_io_handler);
 #endif
 
-  sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
-  add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
+    sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
+    add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
+    init_voice();
 }
