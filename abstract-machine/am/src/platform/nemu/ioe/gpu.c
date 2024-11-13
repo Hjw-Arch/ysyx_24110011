@@ -30,9 +30,11 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
     if (ctl->h == 0 || ctl->y == 0) return;
     AM_GPU_CONFIG_T cfg;
     __am_gpu_config(&cfg);
+    uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
     for (uint32_t i = ctl->y; i < ctl->y + ctl->h; i++) {
         for (uint32_t j = ctl->x; j < ctl->x + ctl->w; j++) {
-            outl(FB_ADDR + (i * cfg.width + j) * 4, *((uint32_t *)ctl->pixels + ((i - ctl->y) * cfg.width + (j - ctl->x))));
+            // outl(FB_ADDR + (i * cfg.width + j) * 4, *((uint32_t *)ctl->pixels + ((i - ctl->y) * cfg.width + (j - ctl->x))));
+            fb[(i * cfg.width + j)] = ((uint32_t *)ctl->pixels)[(i - ctl->y) * cfg.width + (j - ctl->x)];
         }
     }
 
