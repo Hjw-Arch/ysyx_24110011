@@ -46,8 +46,6 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
 
     audio_pos += len_to_copy;
     audio_base[reg_count] -= len_to_copy;
-
-    SDL_PauseAudio(0);
 }
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
@@ -59,6 +57,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
 
     if (audio_base[reg_init]) {
         SDL_OpenAudio(&spec, 0);
+        SDL_PauseAudio(0);
         audio_base[reg_init] = 0;
     }
 }
