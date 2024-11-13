@@ -561,6 +561,17 @@ static int cmd_ftrace(char *args) {
     return 0;
 }
 
+static int cmd_dtrace(char *args) {
+    if (args != NULL) {
+        printf("Unknown command '%s'\n", args);
+        return 0;
+    }
+
+    IFDEF(CONFIG_DTRACE, display_dtrace());
+
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -578,6 +589,7 @@ static struct {
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"ftrace", "View function trace", cmd_ftrace},
+    {"dtrace", "View device trace", cmd_dtrace},
     {"test_expr", "test expr", cmd_test_expr},
     /* TODO: Add more commands */
 
