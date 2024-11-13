@@ -120,7 +120,7 @@ typedef struct _symtab{
     uint32_t end_addr;
 }symtab;
 
-static symtab symtabs[2048];
+static symtab symtabs[4096];
 static uint32_t symtab_count = 0;
 
 void decode_elf() {
