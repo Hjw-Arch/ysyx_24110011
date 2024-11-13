@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <stdio.h>
 
 #define AUDIO_FREQ_ADDR      (AUDIO_ADDR + 0x00)
 #define AUDIO_CHANNELS_ADDR  (AUDIO_ADDR + 0x04)
@@ -34,5 +35,6 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
     for (uint8_t *i = (uint8_t *)ctl->buf.start; i < (uint8_t *)ctl->buf.end; i++) {
         outb(AUDIO_SBUF_ADDR + io_read(AM_AUDIO_STATUS).count, *i);
         outl(AUDIO_COUNT_ADDR, io_read(AM_AUDIO_STATUS).count + 1);
+        printf("count = %d\n", io_read(AM_AUDIO_STATUS).count);
     }
 }
