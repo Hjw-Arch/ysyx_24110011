@@ -37,6 +37,8 @@ SDL_AudioSpec spec;
 static void audio_callback(void *userdata, uint8_t *stream, int len) {
     uint32_t len_to_copy;
 
+    printf("%d\n", len);
+
     if (audio_base[reg_count] == 0) {
         return;
     }
@@ -50,7 +52,7 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
 
     SDL_memcpy(stream, audio_pos, len_to_copy);
 
-    // audio_pos += len_to_copy;
+    audio_pos += len_to_copy;
     audio_base[reg_count] -= len_to_copy;
 }
 
