@@ -40,10 +40,9 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
     uint32_t len_to_copy;
 
     if (audio_base[reg_count] == 0) {
+        SDL_PauseAudio(1);
         return;
-    }
-
-    if (audio_base[reg_count] == len) {
+    } else {
         SDL_PauseAudio(0);
     }
 
