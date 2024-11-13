@@ -43,7 +43,9 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
         return;
     }
 
-    SDL_PauseAudio(0);
+    if (audio_base[reg_count] == len) {
+        SDL_PauseAudio(0);
+    }
 
     len_to_copy = (audio_base[reg_count] < len) ? audio_base[reg_count] : len;
     SDL_memcpy(stream, audio_pos, len_to_copy);
