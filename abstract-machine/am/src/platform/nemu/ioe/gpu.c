@@ -25,7 +25,8 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 // AM_DEVREG(11, GPU_FBDRAW,   WR, int x, y; void *pixels; int w, h; bool sync);
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-    // if (ctl->h == 0 || ctl->y == 0) return;
+    if (ctl->h == 0 || ctl->y == 0) return;
+    printf("111");
     AM_GPU_CONFIG_T cfg;
     __am_gpu_config(&cfg);
     // uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
