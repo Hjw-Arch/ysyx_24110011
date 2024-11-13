@@ -115,7 +115,7 @@ void mtrace_write(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_rec
 extern char *elf_file;
 
 typedef struct _symtab{
-    char name[64];
+    char name[128];
     uint32_t start_addr;
     uint32_t end_addr;
 }symtab;
