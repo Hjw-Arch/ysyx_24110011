@@ -61,7 +61,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
         audio_pos = sbuf;
         audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
 
-        SDL_InitSubSystem(SDL_INIT_AUDIO);
+        SDL_Init(SDL_INIT_AUDIO);
         spec.callback = audio_callback;
         spec.format = AUDIO_S16SYS;
         spec.silence = 0;
