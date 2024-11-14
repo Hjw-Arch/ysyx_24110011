@@ -20,7 +20,7 @@
 
 #define CONFIG_SERIAL_MMIO      0xa00003f8
 #define CONFIG_RTC_MMIO         0xa0000048
-#define CONFIG_I8042_DATA_MMIO  0xa0000060
+#define CONFIG_I8042_DATA_MMIO  0xa0000080      // 与nemu不同
 #define CONFIG_FB_ADDR          0xa1000000
 #define CONFIG_VGA_CTL_MMIO     0xa0000100
 #define CONFIG_AUDIO_CTL_MMIO   0xa0000200
@@ -54,19 +54,7 @@ static inline int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr) {
   return -1;
 }
 
-extern uint64_t boot_time;
-
-static inline uint64_t get_time_internal() {
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  uint64_t us = now.tv_sec * 1000000 + now.tv_usec;
-  return us;
-}
-
-static inline uint64_t get_time() {
-  uint64_t now = get_time_internal();
-  return now - boot_time;
-}
+uint64_t get_time();
 
 void init_map();
 word_t map_read(paddr_t addr, int len, IOMap *map);

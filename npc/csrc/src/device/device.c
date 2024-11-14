@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 #include "../Include/cpu_exec.h"
 
-uint64_t boot_time = 0;
 
 extern uint32_t cpu_state;
 void device_update()

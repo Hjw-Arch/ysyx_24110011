@@ -30,7 +30,9 @@ void init_map() {
 
 word_t map_read(paddr_t addr, int len, IOMap *map) {
     assert(len >= 1 && len <= 8);
-    if (map == NULL) return 0;
+    if (map == NULL) {
+        return 0;
+    }
     paddr_t offset = addr - map->low;
     invoke_callback(map->callback, offset, len, 0);
     word_t ret = *(uint32_t *)(map->space + offset);
