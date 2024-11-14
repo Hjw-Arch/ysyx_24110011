@@ -29,7 +29,7 @@ enum {
 
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
-
+static uint8_t *sbuf_end = NULL;
 static uint8_t *audio_pos = NULL;
 
 SDL_AudioSpec spec;
@@ -48,10 +48,16 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
         len_to_copy = len;
     }
 
-    SDL_memcpy(stream, audio_pos, len_to_copy);
+    uint32_t remainderSize = sbuf_end - audio_pos;
 
-    if (audio_pos + 4096 > sbuf + CONFIG_SB_SIZE) audio_pos = sbuf;
-    else audio_pos += len_to_copy;
+    if (remainderSize < len_to_copy) {
+        SDL_memcpy(stream, audio_pos, remainderSize);
+        audio_pos = sbuf;
+        SDL_memcpy(stream, audio_pos, len_to_copy - remainderSize);
+    } else {
+        SDL_memcpy(stream, audio_pos, len_to_copy);
+        audio_pos += len_to_copy;
+    }
 
     audio_base[reg_count] -= len_to_copy;
 }
@@ -66,7 +72,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     if (audio_base[reg_init]) {
         audio_pos = sbuf;
         audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
-
+        sbuf_end = sbuf + CONFIG_SB_SIZE;
         SDL_InitSubSystem(SDL_INIT_AUDIO);
         spec.callback = audio_callback;
         spec.format = AUDIO_S16SYS;
