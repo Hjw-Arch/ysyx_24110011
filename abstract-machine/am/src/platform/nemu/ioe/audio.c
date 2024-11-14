@@ -35,8 +35,11 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
     static uint32_t index = 0;
     int len = ctl->buf.end - ctl->buf.start;
-    for (uint32_t i = index; i < index + len; i++) {
-        ((uint8_t *)(AUDIO_SBUF_ADDR))[i] = ((uint8_t *)(ctl->buf.start))[i - index];
-        outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + i - index);
+    memcpy((void *)(AUDIO_SBUF_ADDR + index), ctl->buf.start, len);
+    if (index + 4096 > 0x10000) {
+        index = 0;
+    } else {
+        index = index + len;
     }
+    outl(AUDIO_COUNT_ADDR, inl(AUDIO_COUNT_ADDR) + len);
 }
