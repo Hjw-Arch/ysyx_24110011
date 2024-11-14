@@ -44,6 +44,7 @@ static char *rl_gets() {
     return line_read;
 }
 
+#ifdef CONFIG_ITRACE
 // ringbuffer
 typedef struct _ringbuf
 {
@@ -61,7 +62,7 @@ void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t i
 
 void iringbuf_display() {
     uint32_t start_index = iringbuf_index;
-    uint32_t end_index = iringbuf_index - 1;
+    uint32_t end_index = iringbuf_index == 0 ? 15 : iringbuf_index - 1;
     uint32_t index = start_index;
     puts("\n");
     while(1) {
@@ -93,6 +94,8 @@ void iringbuf_display() {
     puts("\n");
 }
 
+#endif
+
 #ifdef CONFIG_MTRACE
 void mtrace_read(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_record_fetch_pc) {
     if (addr < CONFIG_MTRACE_START_ADDR || addr > CONFIG_MTRACE_END_ADDR) return;
@@ -112,12 +115,12 @@ void mtrace_write(uint32_t addr, uint32_t len, uint32_t content, uint32_t is_rec
 extern char *elf_file;
 
 typedef struct _symtab{
-    char name[32];
+    char name[64];
     uint32_t start_addr;
     uint32_t end_addr;
 }symtab;
 
-static symtab symtabs[128];
+static symtab symtabs[1024];
 static uint32_t symtab_count = 0;
 
 void decode_elf() {
@@ -133,7 +136,7 @@ void decode_elf() {
 
     Elf32_Ehdr ehdr;
 
-    int ret = fread(&ehdr, sizeof (Elf32_Ehdr), 1, fp);
+    int ret = fread(&ehdr, sizeof(Elf32_Ehdr), 1, fp);
     assert(ret == 1);
 
     if (ehdr.e_ident[EI_MAG0] != ELFMAG0 || ehdr.e_ident[EI_MAG1] != ELFMAG1 || ehdr.e_ident[EI_MAG2] != ELFMAG2 || ehdr.e_ident[EI_MAG3] != ELFMAG3) {
@@ -156,7 +159,7 @@ void decode_elf() {
 
     for (int i = 0; i < ehdr.e_shnum; i++) {
         if (i == ehdr.e_shstrndx) continue;
-        ret = fread(&shdr, sizeof (Elf32_Shdr), 1, fp);
+        ret = fread(&shdr, sizeof(Elf32_Shdr), 1, fp);
         assert(ret == 1);
         if (shdr.sh_type == SHT_STRTAB) {
             str_buffer = (char *)malloc(shdr.sh_size);
@@ -228,7 +231,7 @@ void display_ftrace() {
     if (elf_file == NULL) return;
     uint32_t blank_num = 0;
     uint32_t start_index = fring_index;
-    uint32_t end_index = fring_index - 1;
+    uint32_t end_index = fring_index == 0 ? 63 : fring_index - 1;
     uint32_t index = start_index;
     while(1) {
         if (index >= 64) index = 0;
@@ -259,6 +262,60 @@ void display_ftrace() {
         if (index == end_index) break;
 
         index++;
+    }
+}
+
+#endif
+
+#ifdef CONFIG_DTRACE
+
+typedef struct dtrace
+{
+    const char *name;
+    vaddr_t addr;
+    bool isWrite;
+} dtrace;
+
+static dtrace dtrace_buf[16];
+static uint32_t dtrace_index = 0;
+
+#include "../include/device/map.h"
+void record_dtrace(const char *name, bool isWrite) {
+    dtrace_buf[dtrace_index++] = (dtrace){.name = name, .addr = cpu.pc, .isWrite = isWrite};
+    dtrace_index = dtrace_index % 16;
+}
+
+void display_dtrace() {
+    uint32_t start_index = dtrace_index;
+    uint32_t end_index = dtrace_index == 0 ? 15 : dtrace_index - 1;
+    uint32_t index = start_index;
+
+    puts("\nDevice Trace:");
+
+    puts("Action\t\tAT\t\tDevice Name");
+
+    while (1)
+    {
+        if (dtrace_buf[index].addr == 0) {
+            index++;
+            index = index % 16;
+            continue;
+        }
+
+        if (dtrace_buf[index].isWrite) printf("Wirte");
+        else printf("Read");
+        printf("\t\t");
+
+        printf("0x%08x\t", dtrace_buf[index].addr);
+
+        printf("%s\n", dtrace_buf[index].name);
+
+        if (index == end_index) {
+            break;
+        }
+
+        index++;
+        index = index % 16;
     }
 }
 
@@ -504,6 +561,17 @@ static int cmd_ftrace(char *args) {
     return 0;
 }
 
+static int cmd_dtrace(char *args) {
+    if (args != NULL) {
+        printf("Unknown command '%s'\n", args);
+        return 0;
+    }
+
+    IFDEF(CONFIG_DTRACE, display_dtrace());
+
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -521,6 +589,7 @@ static struct {
     {"w", "w EXPR | When the value of the expression EXPR changes, program execution is stopped", cmd_w},
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"ftrace", "View function trace", cmd_ftrace},
+    {"dtrace", "View device trace", cmd_dtrace},
     {"test_expr", "test expr", cmd_test_expr},
     /* TODO: Add more commands */
 

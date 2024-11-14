@@ -37,4 +37,8 @@ void decode_elf();
 void record_ftrace(uint32_t pc_now, uint32_t action, uint32_t pc_target);
 void display_ftrace();
 
+// dtrace
+void record_dtrace(const char *name, bool isWrite);
+void display_dtrace();
+
 #endif

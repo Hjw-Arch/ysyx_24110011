@@ -96,7 +96,7 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
-    iringbuf_display();      // iringbuf
+    IFDEF(CONFIG_ITRACE, iringbuf_display());      // iringbuf
     IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
     Log("host time spent = " NUMBERIC_FMT " us", g_timer);

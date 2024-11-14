@@ -18,7 +18,7 @@
 #include <memory/vaddr.h>
 #include <device/map.h>
 
-#define IO_SPACE_MAX (2 * 1024 * 1024)
+#define IO_SPACE_MAX (6 * 1024 * 1024)
 
 static uint8_t *io_space = NULL;
 static uint8_t *p_space = NULL;
@@ -52,12 +52,15 @@ void init_map() {
   p_space = io_space;
 }
 
+#include "../../monitor/sdb/sdb.h"
+
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
   paddr_t offset = addr - map->low;
   invoke_callback(map->callback, offset, len, false); // prepare data to read
   word_t ret = host_read(map->space + offset, len);
+  IFDEF(CONFIG_DTRACE, record_dtrace(map->name, 0));
   return ret;
 }
 
@@ -67,4 +70,5 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   paddr_t offset = addr - map->low;
   host_write(map->space + offset, len, data);
   invoke_callback(map->callback, offset, len, true);
+  IFDEF(CONFIG_DTRACE, record_dtrace(map->name, 1));
 }

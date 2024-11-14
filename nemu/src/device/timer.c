@@ -26,6 +26,13 @@ static void rtc_io_handler(uint32_t offset, int len, bool is_write) {
     rtc_port_base[0] = (uint32_t)us;
     rtc_port_base[1] = us >> 32;
   }
+
+  // // 32位, 在64位上长时间跑的话，有几率触发问题，读高位和低位之间有时间差
+  // if (!is_write && !offset) {
+  //   uint64_t us = get_time();
+  //   rtc_port_base[0] = (uint32_t)us;
+  //   rtc_port_base[1] = us >> 32;
+  // }
 }
 
 #ifndef CONFIG_TARGET_AM
