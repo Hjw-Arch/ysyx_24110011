@@ -53,6 +53,7 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
         SDL_memcpy(stream, audio_pos, remainderSize);
         audio_pos = sbuf;
         SDL_memcpy(stream + remainderSize, audio_pos, len_to_copy - remainderSize);
+        audio_pos += len_to_copy - remainderSize;
     } else {    // 剩余空间足够的话，直接复制，然后更新读指针的位置
         SDL_memcpy(stream, audio_pos, len_to_copy);
         audio_pos += len_to_copy;

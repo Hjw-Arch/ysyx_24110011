@@ -41,6 +41,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
         memcpy((void *)(AUDIO_SBUF_ADDR + index), ctl->buf.start, remaindSize); // 先将剩下的缓冲区填满
         index = 0;  // 转移到开头，将还没被填入缓冲区的数据填入缓冲区的开头，构成环形缓冲区
         memcpy((void *)(AUDIO_SBUF_ADDR + index), ctl->buf.start + remaindSize, len - remaindSize);
+        index += len - remaindSize;
     } else {    // 如果剩余空间足够存下len字节的数据，直接填充
         memcpy((void *)(AUDIO_SBUF_ADDR + index), ctl->buf.start, len);
         index += len;   // 填充后更新位置index
