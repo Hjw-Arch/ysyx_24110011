@@ -10,7 +10,7 @@ IMG ?=
 VERILATOR = verilator
 
 # 常规参数 将verilog代码翻译为C++代码后直接生成可执行文件
-VERILATOR_FLAGS = -Mdir $(OBJ_DIR) -cc --exe --build --x-assign fast -Wall --top-module $(TOP_NAME) -y $(abspath, ./vsrc)
+VERILATOR_FLAGS = -Mdir $(OBJ_DIR) -cc --exe --build -O3 --x-assign fast -Wall --top-module $(TOP_NAME) -y $(abspath, ./vsrc)
 INC_FLAGS = $(addprefix -I, $(abspath ./csrc/Include))
 # 需要llvm
 LLVMFLAGS = $(shell llvm-config --cxxflags) -fPIE

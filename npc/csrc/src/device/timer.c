@@ -12,7 +12,7 @@ static void rtc_io_handler(uint32_t offset, int len, uint32_t is_write) {
         rtc_port_base[1] = us >> 32;
     }
 
-    if(offset == 8 && !is_write) {
+    if(offset > 4 && !is_write) {
         // puts("111");
 
         time_t t = time(NULL);
@@ -23,9 +23,6 @@ static void rtc_io_handler(uint32_t offset, int len, uint32_t is_write) {
         }
 
         struct tm *tm_info = localtime(&t);
-        char buffer[20];
-        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tm_info);
-        printf("Current time: %s\n", buffer);
 
         rtc_port_base[2] = tm_info->tm_year + 1900;
         rtc_port_base[3] = tm_info->tm_mon + 1;
