@@ -36,7 +36,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
     static uint32_t index = 0;
     int len = ctl->buf.end - ctl->buf.start;
     memcpy((void *)(AUDIO_SBUF_ADDR + index), ctl->buf.start, len);
-    if (index + 2048 > 0x10000) {
+    if (index + 4096 > 0x10000) {
         index = 0;
     } else {
         index = index + len;
