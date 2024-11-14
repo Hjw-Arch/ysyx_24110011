@@ -3,6 +3,7 @@
 #include "../Include/cpu_exec.h"
 #include "../Include/log.h"
 #include "../Include/common.h"
+#include "../Include/device.h"
 #include "Vysyx___024root.h"
 #include "../Include/difftest.h"
 
@@ -68,6 +69,7 @@ void cpu_exec(uint32_t n) {
         IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
         IFDEF(CONFIG_WATCHPOINT, diff_wp(old_pc));
         IFDEF(CONFIG_DIFFTEST, difftest_step(old_pc));
+        IFDEF(CONFIG_DEVICE, void device_update());
 
         if (cpu_state != RUNNING) {
             switch (cpu_state) {

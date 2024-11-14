@@ -2,6 +2,7 @@
 #define LOG_H
 
 #include <assert.h>
+#include <stdio.h>
 // ----------- log -----------
                         
 #define ANSI_FG_BLACK   "\33[1;30m"
@@ -23,6 +24,8 @@
 #define ANSI_NONE       "\33[0m"
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
+#define FMT_PADDR   0x%08x
+#define FMT_WORD    0x%08x
 
 #define Assert(cond, format, ...) \
     do { \

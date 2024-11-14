@@ -6,6 +6,7 @@
 #include "../Include/cpu_exec.h"
 #include "../Include/config.h"
 #include "../Include/difftest.h"
+#include "../Include/device.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <getopt.h>
@@ -103,6 +104,7 @@ int main(int argc, char *argv[]) {
     cpu_rst;
     IFDEF(CONFIG_FTRACE, decode_elf());
     IFDEF(CONFIG_DIFFTEST, init_difftest(diff_so_file, img_size, difftest_port));
+    IFDEF(CONFIG_DEVICE, init_device());
     if (batch_mode_flag) {
         cpu_exec(-1);
         return 0;

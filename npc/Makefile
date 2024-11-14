@@ -51,6 +51,7 @@ run:
 	$(OBJ_DIR)/V$(TOP_NAME) $(NPCARGS) $(IMG)
 	@echo
 	@echo "-------------------- Finish -----------------------"
+	@$(call git_commit, "sim RTL")
 
 # --------------------------- NVboard ----------------------------"
 #
@@ -82,16 +83,11 @@ sim: $(SRC_AUTO_BIND)
 	$(OBJ_DIR)/V$(TOP_NAME)
 	@echo
 	@echo "--------------------------- Finish ---------------------------"
+	@$(call git_commit, "sim RTL")
 
 clean:
 	rm -rf $(BUILD_DIR)
 
 
-#	$(call git_commit, "sim RTL")
 
-# maintainer-copy::
-# clean mostlyclean distclean maintainer-clean::
-# 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat core
-
-
-# include ../Makefile
+include ../Makefile
