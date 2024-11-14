@@ -58,9 +58,9 @@ static void audio_callback(void *userdata, uint8_t *stream, int len) {
         audio_pos += len_to_copy;
     }
     // 如果给到SDL的字节小于len，将后面缺少的空间填0
-    if (audio_base[reg_count] < len) memset(stream + len_to_copy, 0, len - len_to_copy);
+    if (len_to_copy < len) memset(stream + len_to_copy, 0, len - len_to_copy);
 
-    // 更新剩余的字节
+    // 更新剩余的音频字节
     audio_base[reg_count] -= len_to_copy;
 }
 
