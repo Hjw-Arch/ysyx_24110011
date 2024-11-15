@@ -21,7 +21,7 @@ static void init_screen()
 {
     SDL_Window *window = NULL;
     char title[128];
-    sprintf(title, "%s-NPC", "riscv32");
+    sprintf(title, "%s-NPC", "riscv32e");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(
         SCREEN_W * (MUXDEF(CONFIG_VGA_SIZE_400x300, 2, 1)),

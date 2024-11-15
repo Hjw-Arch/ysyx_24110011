@@ -13,7 +13,6 @@ static void rtc_io_handler(uint32_t offset, int len, uint32_t is_write) {
     }
 
     if(offset > 4 && !is_write) {
-        // puts("111");
 
         time_t t = time(NULL);
 
