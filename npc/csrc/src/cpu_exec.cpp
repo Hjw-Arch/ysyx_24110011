@@ -63,8 +63,7 @@ void cpu_exec(uint32_t n) {
         // 执行一次
         cpu_exec_one();
 
-
-        iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst);
+        IFDEF(CONFIG_ITRACE, iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst));
 
         IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
         IFDEF(CONFIG_WATCHPOINT, diff_wp(old_pc));
