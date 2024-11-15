@@ -18,7 +18,7 @@ LLVMFLAGS = $(echo $LLVMFLAGS | sed 's/ -D__STDC_FORMAT_MACROS//')  # 去掉D__S
 
 
 LDFLAGS += $(shell llvm-config --libs) -lreadline -L/home/hjw-arch/ysyx-workbench/npc/ -lnemu
-CFLAGS += -O2 $(INC_FLAGS) $(LLVMFLAGS)
+CFLAGS += -O3 $(INC_FLAGS) $(LLVMFLAGS)
 
 # 是否开启trace
 TRACE_IS_ON ?= ON
