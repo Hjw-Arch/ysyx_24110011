@@ -24,11 +24,13 @@
 
 #define PRR(i)  ((i) == 0x305 ? cpu.mtvec : \
                 (i) == 0x342 ? cpu.mcause : \
-                (i) == 0x341 ? cpu.mepc : 0)
+                (i) == 0x341 ? cpu.mepc : \
+                (i) == 0x300 ? cpu.mstate : 0)
 
 #define PRW(i, val)  ((i) == 0x305 ? cpu.mtvec = val : \
                 (i) == 0x342 ? cpu.mcause = val : \
-                (i) == 0x341 ? cpu.mepc = val : 0)
+                (i) == 0x341 ? cpu.mepc = val : \
+                (i) == 0x300 ? cpu.mstate = val : 0)
 
 #ifdef CONFIG_FTRACE
 #include "../../monitor/sdb/sdb.h"
