@@ -321,6 +321,44 @@ void display_dtrace() {
 
 #endif
 
+#ifdef CONFIG_ETRACE
+
+typedef struct etrace
+{
+    vaddr_t pc;
+    uint32_t cause;
+    uint32_t tvec;
+} etrace;
+
+static etrace etrace_buf[16];
+static uint32_t etrace_index = 0;
+
+void record_etrace(vaddr_t pc, uint32_t cause, uint32_t tvec) {
+    etrace_buf[etrace_index] = (etrace){.pc = pc, .cause = cause, .tvec = tvec};
+    etrace_index = (etrace_index + 1) % 16;
+}
+
+
+void display_etrace() {
+    uint32_t start_index = etrace_index;
+    uint32_t end_trace = etrace_index == 0 ? 15 : etrace_index - 1;
+    uint32_t index = start_index;
+    puts("Expection Trace:");
+    puts("AT\t\treason\t\tTrap vector\t");
+    while (1) {
+        if (etrace_buf[index].pc == 0) {
+            index = (index + 1) % 16;
+            continue;
+        }
+        printf("0x%08x\t%d\t\t0x%08x\n", etrace_buf[index].pc, etrace_buf[index].cause, etrace_buf[index].tvec);
+        if (index == end_trace) break;
+        index = (index + 1) % 16;
+    }
+}
+
+
+#endif
+
 static int cmd_c(char *args) {
     cpu_exec(-1);
     return 0;
