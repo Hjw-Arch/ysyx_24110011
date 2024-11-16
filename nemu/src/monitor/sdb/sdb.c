@@ -616,7 +616,7 @@ static int cmd_etrace(char *args) {
         return 0;
     }
 
-    IFDEF(CONFIG_DTRACE, display_etrace());
+    IFDEF(CONFIG_ETRACE, display_etrace());
 
     return 0;
 }
