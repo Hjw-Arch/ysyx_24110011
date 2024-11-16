@@ -68,6 +68,7 @@ void iringbuf_display() {
     while(1) {
         if (index > 15) index = 0;
         if (iringbuf.addr[index] == 0) {
+            if(index == end_index) break;
             index++;
             continue;
         }
@@ -237,6 +238,7 @@ void display_ftrace() {
         if (index >= 64) index = 0;
 
         if (fring_ftrace[index].pc_now == 0) {
+            if (index == end_index) break;
             index++;
             continue;
         }
@@ -259,7 +261,7 @@ void display_ftrace() {
             printf("0x%08x: %*s%s [%s@0x%08x]\n", fring_ftrace[index].pc_now, blank_num, "", "ret", func_name, fring_ftrace[index].pc_target);
         }
 
-        if (index == end_index) break;
+        
 
         index++;
     }
@@ -297,6 +299,9 @@ void display_dtrace() {
     while (1)
     {
         if (dtrace_buf[index].addr == 0) {
+            if (index == end_index) {
+                break;
+            }
             index++;
             index = index % 16;
             continue;
@@ -347,6 +352,7 @@ void display_etrace() {
     puts("AT\t\treason\t\tTrap vector\t");
     while (1) {
         if (etrace_buf[index].pc == 0) {
+            if (index == end_trace) break;
             index = (index + 1) % 16;
             continue;
         }
