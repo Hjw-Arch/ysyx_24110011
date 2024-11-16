@@ -610,6 +610,17 @@ static int cmd_dtrace(char *args) {
     return 0;
 }
 
+static int cmd_etrace(char *args) {
+    if (args != NULL) {
+        printf("Unknown command '%s'\n", args);
+        return 0;
+    }
+
+    IFDEF(CONFIG_DTRACE, display_etrace());
+
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -628,6 +639,7 @@ static struct {
     {"d", "d NO | Delete a watchpoint with serial number N", cmd_d},
     {"ftrace", "View function trace", cmd_ftrace},
     {"dtrace", "View device trace", cmd_dtrace},
+    {"etrace", "View exception trace", cmd_etrace},
     {"test_expr", "test expr", cmd_test_expr},
     /* TODO: Add more commands */
 
