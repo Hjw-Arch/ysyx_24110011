@@ -13,7 +13,7 @@
 #endif
 
 #define REGS_LO16(f) \
-      f( 1)  f( 2)  f( 3) f( 4) f( 5) f( 6) f( 7) f( 8) f( 9) \
+      f( 1)    f( 3) f( 4) f( 5) f( 6) f( 7) f( 8) f( 9) \
 f(10) f(11) f(12) f(13) f(14) f(15)
 #ifndef __riscv_e
 #define REGS_HI16(f) \
@@ -44,6 +44,8 @@ __am_asm_trap:
 
   MAP(REGS, PUSH)
 
+  sw x2, 8(sp)
+
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
@@ -68,6 +70,6 @@ __am_asm_trap:
 
   MAP(REGS, POP)
 
-#   lw sp, 8(sp)
+  lw sp, 8(sp)
 #   addi sp, sp, CONTEXT_SIZE
   mret
