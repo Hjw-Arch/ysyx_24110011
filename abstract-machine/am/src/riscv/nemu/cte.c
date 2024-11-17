@@ -48,12 +48,12 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   }
 
   context->gpr[2] = (uintptr_t)(end - 4);    // 栈指针
+  context->gpr[10] = (uintptr_t)(arg);
 
   context->mepc = (uintptr_t)(entry - 4);
   // context_pos->mcause = 0;
   context->mstatus = 0x1800;
 
-  // context->pdir = arg;
 
   *(uint32_t *)(kstack.start) = (uint32_t)context;
 
