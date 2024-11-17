@@ -32,8 +32,29 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
   return true;
 }
 
+// #include "../arch/riscv.h"
+#include ARCH_H
+
+#define CONTEXT_SIZE  ((NR_REGS + 3) * 4)
+
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  // Context *ptr = kstack.start;
+  uint8_t *end = kstack.end;
+  Context *context = (Context *)(end - sizeof(Context));
+  
+  for (int i = 0; i < NR_REGS; i++) {
+    context->gpr[i] = 0;
+  }
+
+  context->gpr[2] = (uintptr_t)end;    // 栈指针
+
+  context->mepc = (uintptr_t)entry;
+  // context_pos->mcause = 0;
+  context->mstatus = 0x1800;
+
+  *(uint32_t *)(kstack.start) = (uint32_t)context;
+
+  return context;
 }
 
 void yield() {
