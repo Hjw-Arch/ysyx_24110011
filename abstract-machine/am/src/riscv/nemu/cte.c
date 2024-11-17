@@ -49,7 +49,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 
   context->gpr[2] = (uintptr_t)(end - 4);    // 栈指针
 
-  context->mepc = (uintptr_t)entry;
+  context->mepc = (uintptr_t)(entry - 4);
   // context_pos->mcause = 0;
   context->mstatus = 0x1800;
 
