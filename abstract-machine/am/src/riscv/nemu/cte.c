@@ -40,7 +40,7 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   // Context *ptr = kstack.start;
   uint8_t *end = kstack.end;
-  Context *context = (Context *)(end - sizeof(Context));
+  Context *context = (Context *)(end - CONTEXT_SIZE);
   
   for (int i = 0; i < NR_REGS; i++) {
     context->gpr[i] = 0;
