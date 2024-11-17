@@ -47,10 +47,10 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
     context->gpr[i] = 0;
   }
 
-  context->gpr[2] = (uintptr_t)(end);    // 栈指针
+  context->gpr[2] = (uintptr_t)(end - 4);    // 栈指针
   context->gpr[10] = (uintptr_t)(arg);
 
-  context->mepc = (uintptr_t)(entry - 4);
+  context->mepc = (uintptr_t)(entry);
   // context_pos->mcause = 0;
   context->mstatus = 0x1800;
 
