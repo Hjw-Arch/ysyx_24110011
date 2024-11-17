@@ -33,7 +33,7 @@ static void restart() {
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
 
-  IFDEF(CONFIG_DIFFTESE, cpu.mstate = 0x1800);
+  IFDEF(CONFIG_DIFFTEST, cpu.mstate = 0x1800);
 }
 
 void init_isa() {

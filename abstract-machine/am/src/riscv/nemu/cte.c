@@ -57,8 +57,6 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 
   *(uint32_t *)(kstack.start) = (uint32_t)context;
 
-  printf("context end = %#08x, context start = %#08x, ptr addr = %#08x\n", kstack.end, kstack.start, *(uint32_t *)(kstack.start));
-
   return context;
 }
 
