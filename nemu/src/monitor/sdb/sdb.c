@@ -48,25 +48,25 @@ static char *rl_gets() {
 // ringbuffer
 typedef struct _ringbuf
 {
-    MUXDEF(CONFIG_RV64, uint64_t addr[16], uint32_t addr[16]);
-    uint32_t inst[16];
+    MUXDEF(CONFIG_RV64, uint64_t addr[32], uint32_t addr[32]);
+    uint32_t inst[32];
 }ringbuf;
 static ringbuf iringbuf;
 static uint32_t iringbuf_index = 0;
 
 void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst) {
-    if (iringbuf_index > 15) iringbuf_index = 0;
+    if (iringbuf_index > 31) iringbuf_index = 0;
     iringbuf.addr[iringbuf_index] = addr;
     iringbuf.inst[iringbuf_index++] = inst;
 }
 
 void iringbuf_display() {
     uint32_t start_index = iringbuf_index;
-    uint32_t end_index = iringbuf_index == 0 ? 15 : iringbuf_index - 1;
+    uint32_t end_index = iringbuf_index == 0 ? 31 : iringbuf_index - 1;
     uint32_t index = start_index;
     puts("\n");
     while(1) {
-        if (index > 15) index = 0;
+        if (index > 31) index = 0;
         if (iringbuf.addr[index] == 0) {
             if(index == end_index) break;
             index++;
