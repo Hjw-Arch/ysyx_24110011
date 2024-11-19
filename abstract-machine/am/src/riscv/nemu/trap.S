@@ -44,8 +44,6 @@ __am_asm_trap:
 
   MAP(REGS, PUSH)
 
-#  sw sp, 8(sp)
-
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
@@ -73,6 +71,5 @@ __am_asm_trap:
 
   MAP(REGS, POP)
 
-#  lw sp, 8(sp)
   addi sp, sp, CONTEXT_SIZE
   mret
