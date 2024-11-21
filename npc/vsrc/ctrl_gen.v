@@ -49,9 +49,9 @@ assign aluOP[3] = opcode[4] & ~opcode[2] & func3[2] |        // compute i + comp
 assign memOP = func3;
 
 
-assign branchWay[0] = opcode[6] & ~opcode[2] & func3[0];
-assign branchWay[1] = opcode[6] & ~opcode[2];
-assign branchWay[2] = opcode[6] & ~opcode[2] & func3[2];
+assign branchWay[0] = opcode[6] & ~opcode[4] & ~opcode[2] & func3[0];
+assign branchWay[1] = opcode[6] & ~opcode[4] & ~opcode[2];
+assign branchWay[2] = opcode[6] & ~opcode[4] & ~opcode[2] & func3[2];
 
 // pcAdderBSel 需要根据alu计算结果判断
 assign pcAdderASel = opcode[6] & ~opcode[3] & opcode[2];        // jalr
