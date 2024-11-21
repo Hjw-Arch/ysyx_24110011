@@ -45,45 +45,47 @@ static char *rl_gets() {
 }
 
 #ifdef CONFIG_ITRACE
+
+#define BUFFER_SIZE     16
 // ringbuffer
 typedef struct _ringbuf
 {
-    MUXDEF(CONFIG_RV64, uint64_t addr[56], uint32_t addr[56]);
-    uint32_t inst[56];
+    MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr);
+    uint32_t inst;
 }ringbuf;
-static ringbuf iringbuf;
+static ringbuf iringbuf[BUFFER_SIZE];
 static uint32_t iringbuf_index = 0;
 
 void iringbuf_load(MUXDEF(CONFIG_RV64, uint64_t addr, uint32_t addr), uint32_t inst) {
-    if (iringbuf_index > 55) iringbuf_index = 0;
-    iringbuf.addr[iringbuf_index] = addr;
-    iringbuf.inst[iringbuf_index++] = inst;
+    iringbuf[iringbuf_index].addr = addr;
+    iringbuf[iringbuf_index++].inst = inst;
+    if (iringbuf_index > BUFFER_SIZE - 1) iringbuf_index = 0;
 }
 
 void iringbuf_display() {
     uint32_t start_index = iringbuf_index;
-    uint32_t end_index = iringbuf_index == 0 ? 55 : iringbuf_index - 1;
+    uint32_t end_index = iringbuf_index == 0 ? BUFFER_SIZE - 1 : iringbuf_index - 1;
     uint32_t index = start_index;
     puts("\n");
     while(1) {
-        if (index > 55) index = 0;
-        if (iringbuf.addr[index] == 0) {
+        if (index > BUFFER_SIZE - 1) index = 0;
+        if (iringbuf[index].addr == 0) {
             if(index == end_index) break;
             index++;
             continue;
         }
 
-        printf("0x%08x: ", iringbuf.addr[index]);
+        printf("0x%08x: ", iringbuf[index].addr);
 
-        printf("%02x ", (iringbuf.inst[index] & 0xff000000) >> 24);
-        printf("%02x ", (iringbuf.inst[index] & 0x00ff0000) >> 16);
-        printf("%02x ", (iringbuf.inst[index] & 0x0000ff00) >> 8);
-        printf("%02x       ",  (uint8_t)iringbuf.inst[index]);
+        printf("%02x ", (iringbuf[index].inst & 0xff000000) >> 24);
+        printf("%02x ", (iringbuf[index].inst & 0x00ff0000) >> 16);
+        printf("%02x ", (iringbuf[index].inst & 0x0000ff00) >> 8);
+        printf("%02x       ",  (uint8_t)iringbuf[index].inst);
 
 #ifndef CONFIG_ISA_loongarch32r
         char disasm_buf[64];
         void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-        disassemble(disasm_buf, 64, iringbuf.addr[index], (uint8_t *)&iringbuf.inst[index], 4);
+        disassemble(disasm_buf, 64, iringbuf[index].addr, (uint8_t *)&iringbuf[index].inst, 4);
         printf("%s\n", disasm_buf);
 #else
         p[0] = '\0'; // the upstream llvm does not support loongarch32r
@@ -278,18 +280,18 @@ typedef struct dtrace
     bool isWrite;
 } dtrace;
 
-static dtrace dtrace_buf[16];
+static dtrace dtrace_buf[BUFFER_SIZE];
 static uint32_t dtrace_index = 0;
 
 #include "../include/device/map.h"
 void record_dtrace(const char *name, bool isWrite) {
     dtrace_buf[dtrace_index++] = (dtrace){.name = name, .addr = cpu.pc, .isWrite = isWrite};
-    dtrace_index = dtrace_index % 16;
+    dtrace_index = dtrace_index % BUFFER_SIZE;
 }
 
 void display_dtrace() {
     uint32_t start_index = dtrace_index;
-    uint32_t end_index = dtrace_index == 0 ? 15 : dtrace_index - 1;
+    uint32_t end_index = dtrace_index == 0 ? BUFFER_SIZE - 1 : dtrace_index - 1;
     uint32_t index = start_index;
 
     puts("\nDevice Trace:");
@@ -303,7 +305,7 @@ void display_dtrace() {
                 break;
             }
             index++;
-            index = index % 16;
+            index = index % BUFFER_SIZE;
             continue;
         }
 
@@ -320,7 +322,7 @@ void display_dtrace() {
         }
 
         index++;
-        index = index % 16;
+        index = index % BUFFER_SIZE;
     }
 }
 
@@ -335,30 +337,30 @@ typedef struct etrace
     uint32_t tvec;
 } etrace;
 
-static etrace etrace_buf[16];
+static etrace etrace_buf[BUFFER_SIZE];
 static uint32_t etrace_index = 0;
 
 void record_etrace(vaddr_t pc, uint32_t cause, uint32_t tvec) {
     etrace_buf[etrace_index] = (etrace){.pc = pc, .cause = cause, .tvec = tvec};
-    etrace_index = (etrace_index + 1) % 16;
+    etrace_index = (etrace_index + 1) % BUFFER_SIZE;
 }
 
 
 void display_etrace() {
     uint32_t start_index = etrace_index;
-    uint32_t end_trace = etrace_index == 0 ? 15 : etrace_index - 1;
+    uint32_t end_trace = etrace_index == 0 ? BUFFER_SIZE - 1 : etrace_index - 1;
     uint32_t index = start_index;
     puts("Expection Trace:");
     puts("AT\t\treason\t\tTrap vector\t");
     while (1) {
         if (etrace_buf[index].pc == 0) {
             if (index == end_trace) break;
-            index = (index + 1) % 16;
+            index = (index + 1) % BUFFER_SIZE;
             continue;
         }
         printf("0x%08x\t%d\t\t0x%08x\n", etrace_buf[index].pc, etrace_buf[index].cause, etrace_buf[index].tvec);
         if (index == end_trace) break;
-        index = (index + 1) % 16;
+        index = (index + 1) % BUFFER_SIZE;
     }
 }
 

@@ -112,6 +112,15 @@ registerFile #(32, 5) _registerFile(
 );
 
 
+csr _csr(
+    .clk(clk),
+    .rst(rst),
+    .addr(inst[31 : 20]),
+    .data_in(_),    // TODO
+    .data_out(_)
+);
+
+
 /*************************************** EXU ***************************************/
 
 mux32_2_1 _mux_aluA(
