@@ -76,6 +76,7 @@ void cpu_exec(uint32_t n) {
                     iringbuf_display();
                     break;
                 case STOPPED:
+                case QUIT:
                     break;
             }
             return;
