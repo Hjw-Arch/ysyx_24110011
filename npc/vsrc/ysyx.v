@@ -14,7 +14,10 @@ pc #(WIDTH, 32'h80000000) _pc (
     .rst(rst),
     .rs1_data(rs1_data),
     .imm(imm),
-    .sel({pcAdderASel, pcAdderBSel}),
+    .mtvec(mtvec),
+    .mepc(mepc),
+    .pc_sel(pcSel),
+    .adderSel({pcAdderASel, pcAdderBSel}),
     .pc(pc)
 );
 
@@ -45,11 +48,20 @@ wire aluBSel;   // 控制aluA的输入选择, 目前jump指令需要选择4
 wire [3 : 0] aluOP;     // 控制alu动作
 wire rdWriteEnable;
 wire memWriteEnable;
-wire rdInputSel;
+wire [1 : 0] rdInputSel;
 wire [2 : 0] memOP;
 wire [2 : 0] branchWay;
 wire pcAdderASel;
 wire pcAdderBSel;
+
+wire [1 : 0] pcSel;
+wire CSRSel;
+wire CSRWriteEnable;
+wire is_ecall;
+
+wire [31 : 0] csr_data_out;
+wire [31 : 0] mtvec;
+wire [31 : 0] mepc;
 
 wire zero_flag;
 wire [31 : 0] mem_result;
@@ -66,6 +78,7 @@ ctrl_gen _ctrl_gen(
     .opcode(opcode[6 : 2]),
     .func3(func3),
     .func7(func7[5]),
+    .inst_21(inst[21]),
     .aluASel(aluASel),
     .aluBSel(aluBSel),
     .aluOP(aluOP),
@@ -74,7 +87,12 @@ ctrl_gen _ctrl_gen(
     .memWriteEnable(memWriteEnable),
     .rdInputSel(rdInputSel),
     .memOP(memOP),
-    .branchWay(branchWay)
+    .branchWay(branchWay),
+
+    .pcSel(pcSel),
+    .CSRSel(CSRSel),
+    .CSRWriteEnable(CSRWriteEnable),
+    .is_ecall(is_ecall)
 );
 
 // pcAdderBSel三级延迟，整个控制信号产生阶段需要四级延迟
@@ -92,12 +110,16 @@ imm_gen _imm_gen(
     .imm(imm)
 );
 
-mux32_2_1 _mux_rd(
-    .input1(alu_result),
-    .input2(mem_result),
-    .s(rdInputSel), 
-    .result(rd_data)
-);
+// mux32_2_1 _mux_rd(
+//     .input1(alu_result),
+//     .input2(mem_result),
+//     .s(rdInputSel), 
+//     .result(rd_data)
+// );
+
+assign rd_data = rdInputSel == 2'b00 ? alu_result : 
+                 rdInputSel == 2'b01 ? mem_result :
+                 rdInputSel == 2'b10 ? csr_data_out : 32'b0;
 
 // registerfile, get data required by IDU
 registerFile #(32, 5) _registerFile(
@@ -112,12 +134,19 @@ registerFile #(32, 5) _registerFile(
 );
 
 
+
+wire [31 : 0] csr_data_in = CSRSel ? rs1_data | csr_data_out : rs1_data;
 csr _csr(
     .clk(clk),
     .rst(rst),
+    .write_enable(CSRWriteEnable),
+    .is_ecall(is_ecall),
+    .pc(pc),
     .addr(inst[31 : 20]),
-    .data_in(_),    // TODO
-    .data_out(_)
+    .data_in(csr_data_in),    // TODO
+    .data_out(csr_data_out),
+    .mtvec_out(mtvec),
+    .mepc_out(mepc)
 );
 
 

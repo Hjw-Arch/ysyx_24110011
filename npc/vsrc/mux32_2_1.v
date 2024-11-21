@@ -7,4 +7,6 @@ module mux32_2_1(
 // 两级门电路延迟
 assign result = ({32{~s}} & input1) | ({32{s}} & input2);
 
+// assign result = s ? input2 : input1;
+
 endmodule
