@@ -26,7 +26,7 @@ wire is_sys = opcode[6] & opcode[4] & ~(|func3[1 : 0]);     // 添加更多指�
 assign aluASel = opcode[2];     // U + J
 assign aluBSel = ~opcode[6] & ~opcode[4] | ~opcode[5] & opcode[4] | opcode[4] & ~opcode[3] & opcode[2];     // imm
 
-assign rdWriteEnable = ~(opcode[5] & ~opcode[4] & ~opcode[3] & ~opcode[2] & is_sys);     // ~(B + S)
+assign rdWriteEnable = ~(opcode[5] & ~opcode[4] & ~opcode[3] & ~opcode[2]);     // ~(B + S)
 
 assign memWriteEnable = ~opcode[6] & opcode[5] & ~opcode[4];        // S
 
