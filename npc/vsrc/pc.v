@@ -42,7 +42,7 @@ wire [31 : 0] new_pc = pc_sel == 2'b00 ? adder_res :
                        pc_sel == 2'b11 ? mepc : adder_res;
 
 always @(posedge clk) begin
-    $display("pcsel = %x", new_pc);
+    $display("pcsel = %x", adder_res);
     if (rst) pc <= RST_VALUE;
     else pc <= new_pc;
 end
