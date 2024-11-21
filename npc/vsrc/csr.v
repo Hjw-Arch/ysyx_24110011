@@ -26,13 +26,14 @@ wire is_mepc = (addr[7 : 0] == 8'h41);
 always @(posedge clk) begin
     if (rst) begin
         mcause <= 32'h0;
-        mstatus <= 32'h1800;
+        // mstatus <= 32'h1800;
         mtvec <= 32'h0;
         mepc <= 32'h0;
     end else begin
         if (is_ecall) begin
             mcause <= 32'd11;
             mepc <= pc;
+            mstatus <= 32'h1800;    // for difftest
         end else begin
             mcause <= (is_mcause & write_enable) ? data_in : mcause;
             mstatus <= (is_mstatus & write_enable) ? data_in : mstatus;
