@@ -8,6 +8,15 @@ static Context *(*user_handler)(Event, Context *) = NULL;
 Context *__am_irq_handle(Context *c)
 {
     printf("macuse = %d\n", c->mcause);
+
+    printf("regs = \n");
+    for (int i = 0; i < NR_REGS; i++) printf("reg%d = 0x%08x\n", i, c->gpr[i]);
+
+    printf("mepc = 0x%08x\n", c->mepc);
+
+    printf("context = 0x%08x\n", c);
+
+
     if (user_handler) {
         Event ev = {0};
         switch (c->mcause)
@@ -59,15 +68,6 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
     context->mstatus = 0x1800;
 
     *(uint32_t *)(kstack.start) = (uint32_t)context;
-
-    printf("regs = \n");
-    for (int i = 0; i < NR_REGS; i++) printf("reg%d = 0x%08x\n", i, context->gpr[i]);
-
-    printf("mepc = 0x%08x\n", context->mepc);
-
-    printf("context = 0x%08x\n", context);
-
-    printf("stack = 0x%08x\n", kstack.end);
 
     return context;
 }
