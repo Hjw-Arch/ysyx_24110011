@@ -64,6 +64,10 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
 
     printf("mepc = 0x%08x\n", context->mepc);
 
+    printf("context = 0x%08x\n", context);
+
+    printf("stack = 0x%08x\n", kstack.end);
+
     return context;
 }
 
