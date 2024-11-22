@@ -4,7 +4,9 @@
 static uint8_t *serial_base = NULL;
 static void serial_io_handler(uint32_t offset, int len, uint32_t is_write) {
     if (!is_write) return;
-    putchar(serial_base[0]);
+    // putchar(serial_base[0]);
+    printf("%c", serial_base[0]);
+    fflush(stdout);
 }
 
 void init_serial()
