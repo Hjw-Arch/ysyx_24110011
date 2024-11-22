@@ -1,6 +1,7 @@
 #include <am.h>
 #include <riscv/riscv.h>
 #include <klib.h>
+#include <stdio.h>
 
 static Context *(*user_handler)(Event, Context *) = NULL;
 
@@ -57,6 +58,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
     context->mstatus = 0x1800;
 
     *(uint32_t *)(kstack.start) = (uint32_t)context;
+
+    printf("333\n");
 
     return context;
 }
