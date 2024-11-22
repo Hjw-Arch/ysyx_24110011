@@ -59,8 +59,6 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
 
     *(uint32_t *)(kstack.start) = (uint32_t)context;
 
-    printf("333\n");
-
     return context;
 }
 
