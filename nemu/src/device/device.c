@@ -30,6 +30,9 @@ void init_disk();
 void init_sdcard();
 void init_alarm();
 
+void destory_audio();
+void destory_vga();
+
 void send_key(uint8_t, bool);
 void vga_update_screen();
 
@@ -49,6 +52,9 @@ void device_update() {
     switch (event.type) {
       case SDL_QUIT:
         nemu_state.state = NEMU_QUIT;
+        destory_audio();
+        destory_vga();
+        SDL_Quit();
         break;
 #ifdef CONFIG_HAS_KEYBOARD
       // If a key was pressed
