@@ -52,9 +52,9 @@ void device_update() {
     switch (event.type) {
       case SDL_QUIT:
         nemu_state.state = NEMU_QUIT;
-        destory_audio();
-        destory_vga();
-        SDL_Quit();
+        // destory_audio();
+        // destory_vga();
+        // SDL_Quit();
         break;
 #ifdef CONFIG_HAS_KEYBOARD
       // If a key was pressed
