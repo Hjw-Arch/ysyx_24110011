@@ -14,8 +14,12 @@
 
 #define RESET_VECTOR    RAM_START_ADDR + PC_RST_OFFSET
 
+#define PAGE_SHIFT        12
+#define PAGE_SIZE         (1ul << PAGE_SHIFT)
+#define PAGE_MASK         (PAGE_SIZE - 1)
+
 typedef word_t  vaddr_t;
-typedef uint64_t  paddr_t;
+typedef uint32_t  paddr_t;
 
 void *guest_to_host(uint32_t addr);
 int pmem_read(int addr, int len);

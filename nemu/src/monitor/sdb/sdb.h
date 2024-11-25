@@ -41,4 +41,7 @@ void display_ftrace();
 void record_dtrace(const char *name, bool isWrite);
 void display_dtrace();
 
+// etrace
+void record_etrace(vaddr_t pc, uint32_t cause, uint32_t tvec);
+
 #endif

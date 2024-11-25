@@ -19,6 +19,7 @@ enum {
     RUNNING = 0,
     STOPPED,
     IDLE,
+    QUIT,
 };
 
 void cpu_exec(uint32_t n);

@@ -18,9 +18,21 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+#include "../../monitor/sdb/sdb.h"
+
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
+
+#define PRR(i)  ((i) == 0x305 ? cpu.mtvec : \
+                (i) == 0x342 ? cpu.mcause : \
+                (i) == 0x341 ? cpu.mepc : \
+                (i) == 0x300 ? cpu.mstate : 0)
+
+#define PRW(i, val)  ((i) == 0x305 ? cpu.mtvec = val : \
+                (i) == 0x342 ? cpu.mcause = val : \
+                (i) == 0x341 ? cpu.mepc = val : \
+                (i) == 0x300 ? cpu.mstate = val : 0)
 
 #ifdef CONFIG_FTRACE
 #include "../../monitor/sdb/sdb.h"
@@ -118,8 +130,13 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 101 ????? 11000 11", bge    , B, s->dnpc = ((int32_t)src1 >= (int32_t)src2) ? s->pc + imm : s->dnpc);
   INSTPAT("??????? ????? ????? 111 ????? 11000 11", bgeu   , B, s->dnpc = (src1 >= src2) ? s->pc + imm : s->dnpc);
 
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, s->dnpc = s->pc + imm; R(rd) = s->snpc; IFDEF(CONFIG_FTRACE, FTRACE_RECORD));  // TODO   // pass
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, s->dnpc = s->pc + imm; R(rd) = s->snpc; IFDEF(CONFIG_FTRACE, FTRACE_RECORD));
 
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = PRR(imm), PRW(imm, src1));
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = PRR(imm), PRW(imm, (PRR(imm) | src1)));
+
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = cpu.mepc);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc = isa_raise_intr(11, cpu.pc); IFDEF(CONFIG_ETRACE, record_etrace(cpu.pc, cpu.mcause, cpu.mtvec)));
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

@@ -12,7 +12,7 @@ module registerFile #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 5) (
     output [DATA_WIDTH - 1 : 0] rs2_data
 );
 
-wire [DATA_WIDTH - 1 : 0] registerFile0 = 32'b0;        // number zero register, it's value keeps zero forever
+wire [DATA_WIDTH - 1 : 0] registerFile0 = 32'b0;        // number zero register, its value keeps zero forever
 reg [DATA_WIDTH - 1 : 0] registerFile31_1 [2 ** ADDR_WIDTH - 1 : 1]; // nember one to thirty-one registers
 
 wire [DATA_WIDTH - 1 : 0] registerFile [2 ** ADDR_WIDTH - 1 : 0];

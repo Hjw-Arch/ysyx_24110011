@@ -10,7 +10,7 @@ IMG ?=
 VERILATOR = verilator
 
 # 常规参数 将verilog代码翻译为C++代码后直接生成可执行文件
-VERILATOR_FLAGS = -Mdir $(OBJ_DIR) -cc --exe --build --x-assign fast -Wall --top-module $(TOP_NAME) -y $(abspath, ./vsrc)
+VERILATOR_FLAGS = -Mdir $(OBJ_DIR) -cc --exe --build -O3 --x-assign fast --x-initial fast -Wall --top-module $(TOP_NAME) -y $(abspath, ./vsrc)
 INC_FLAGS = $(addprefix -I, $(abspath ./csrc/Include))
 # 需要llvm
 LLVMFLAGS = $(shell llvm-config --cxxflags) -fPIE
@@ -18,7 +18,7 @@ LLVMFLAGS = $(echo $LLVMFLAGS | sed 's/ -D__STDC_FORMAT_MACROS//')  # 去掉D__S
 
 
 LDFLAGS += $(shell llvm-config --libs) -lreadline -L/home/hjw-arch/ysyx-workbench/npc/ -lnemu
-CFLAGS += -O2 $(INC_FLAGS) $(LLVMFLAGS)
+CFLAGS += -O3 $(INC_FLAGS) $(LLVMFLAGS)
 
 # 是否开启trace
 TRACE_IS_ON ?= ON
@@ -51,6 +51,7 @@ run:
 	$(OBJ_DIR)/V$(TOP_NAME) $(NPCARGS) $(IMG)
 	@echo
 	@echo "-------------------- Finish -----------------------"
+	@$(call git_commit, "sim RTL")
 
 # --------------------------- NVboard ----------------------------"
 #
@@ -82,16 +83,11 @@ sim: $(SRC_AUTO_BIND)
 	$(OBJ_DIR)/V$(TOP_NAME)
 	@echo
 	@echo "--------------------------- Finish ---------------------------"
+	@$(call git_commit, "sim RTL")
 
 clean:
 	rm -rf $(BUILD_DIR)
 
 
-#	$(call git_commit, "sim RTL")
 
-# maintainer-copy::
-# clean mostlyclean distclean maintainer-clean::
-# 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat core
-
-
-# include ../Makefile
+include ../Makefile
