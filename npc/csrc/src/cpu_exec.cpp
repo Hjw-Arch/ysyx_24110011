@@ -17,8 +17,13 @@ cpu_t cpu;
 
 uint32_t cpu_state = RUNNING;
 
+uint64_t cycle_times = 0;
+
 void halt() {
     cpu_state = IDLE;
+
+    printf("\n\nTotle cycle times = %llu\n\n", cycle_times);
+
     if (cpu.registerFile[10] != 0) {
         printf(ANSI_FG_RED "Hit bad trap" ANSI_NONE " at pc = 0x%08x\n", cpu.pc);
         return;
@@ -30,6 +35,8 @@ void halt() {
 
 void cpu_exec_one() {
     cycle;
+
+    cycle_times++;      // 测试CPU性能使用
 
     if (dut.rootp->ysyx__DOT__inst == ebreak) {
         Log("Get 'ebreak' instruction, program over.");
