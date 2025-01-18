@@ -25,6 +25,21 @@ pc #(WIDTH, 32'h80000000) _pc (
 wire [31 : 0] inst;
 assign inst = fetch_inst(pc);
 
+/*
+
+// 测试单周期NPC性能
+
+wire [7 : 0] testForIF1;
+wire [7 : 0] testForIF2;
+wire [31 : 0] testForIF3;
+wire [31 : 0] testForIF4;
+
+registerFile #(32, 8) testForIF(clk, 1'b0, testForIF1, testForIF3, pc[7 : 0], inst, testForIF2, testForIF4);
+
+// 结束位置
+
+*/
+
 /*************************************** IDU ***************************************/
 wire [6 : 0] opcode;
 wire [2 : 0] func3;
