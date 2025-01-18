@@ -11,7 +11,7 @@ do { \
     dut.clk = 1;    \
     dut.eval();     \
     cpu.pc = dut.rootp->ysyx__DOT__pc;  \
-    for (int i = 1; i < 32; i++) {  \
+    for (int i = 0; i < 32; i++) {  \
         cpu.registerFile[i] = dut.rootp->ysyx__DOT___registerFile__DOT__registerFile31_1[i];    \
     }   \
 } while(0) \
