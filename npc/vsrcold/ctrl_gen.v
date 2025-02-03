@@ -3,6 +3,7 @@ module ctrl_gen(
     input [2 : 0] func3,
     input func7,
     input inst_21,
+    input zero_flag, less_flag,
     output aluASel,
     output aluBSel,
     output pcAdderASel,
@@ -15,6 +16,7 @@ module ctrl_gen(
     output [1 : 0] rdInputSel,
     output [3 : 0] aluOP,
     output [2 : 0] memOP,
+    // output pc_adder_right_sel
     output [2 : 0] branchWay
 );
 
@@ -55,6 +57,12 @@ assign branchWay[2] = opcode[6] & ~opcode[4] & ~opcode[2] & func3[2];
 
 // pcAdderBSel 需要根据alu计算结果判断
 assign pcAdderASel = opcode[6] & ~opcode[3] & opcode[2];        // jalr
+wire is_b_type = opcode[6] & ~opcode[4] & ~opcode[2];
+// assign pc_adder_right_sel = opcode[6] & opcode[2] |     // 这条信号会是瓶颈，是关键路径，单周期不影响，流水线需要单独设置这条信号
+//                             is_b_type & ~func3[2] & ~func3[0] & zero_flag |
+//                             is_b_type & ~func3[2] & func3[0] & ~zero_flag |
+//                             is_b_type & func3[2] & ~func3[0] & less_flag |
+//                             is_b_type & func3[2] & func3[0] & ~less_flag;
 
 assign pcSel[0] = is_sys;
 assign pcSel[1] = is_sys & inst_21;
