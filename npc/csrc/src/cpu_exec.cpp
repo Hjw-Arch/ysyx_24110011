@@ -80,13 +80,13 @@ void cpu_exec(uint32_t n) {
         if (cpu_state != RUNNING) {
             switch (cpu_state) {
                 case IDLE:
-                    iringbuf_display();
-                    break;
+                    IFDEF(CONFIG_ITRACE, iringbuf_display());
+                    return;
                 case STOPPED:
+                    return;
                 case QUIT:
-                    break;
+                    return;
             }
-            return;
         }
     }
 }
