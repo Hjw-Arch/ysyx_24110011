@@ -54,7 +54,7 @@ void pmem_write(int addr, int data, int len) {
     // Assert((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR), "Addr 0x%08x transbordered the boundary.", addr);
     printf("pc = 0x%08x, Addr: 0x%08x, Data: 0x%08x, len: %d\n", cpu.pc, addr, data, len);
     printf("aluop = %d, result = 0x%08x\n", dut.rootp->ysyx__DOT__alu_op, dut.rootp->_result);
-    printf("%d, %d, left = 0x%08x, right = 0x%08x\n", dut.rootp->ysyx__DOT____Vcellinp__EXU_INTER__alu_sel_right, dut.rootp->ysyx__DOT____Vcellinp__EXU_INTER__alu_sel_right, dut.rootp->ysyx__DOT__EXU_INTER__DOT__left_data, dut.rootp->ysyx__DOT__EXU_INTER__DOT__right_data);
+    printf("%d, %d, rs1 = 0x%08x, imm = 0x%08x, left = 0x%08x, right = 0x%08x\n", dut.rootp->ysyx__DOT____Vcellinp__EXU_INTER__alu_sel_right, dut.rootp->ysyx__DOT____Vcellinp__EXU_INTER__alu_sel_right, dut.rootp->_rs1_data, dut.rootp->ysyx__DOT__imm, dut.rootp->ysyx__DOT__EXU_INTER__DOT__left_data, dut.rootp->ysyx__DOT__EXU_INTER__DOT__right_data);
     if (len == 0) len = 1;
     else if (len == 1) len = 2;
     else if (len == 2) len = 4;
