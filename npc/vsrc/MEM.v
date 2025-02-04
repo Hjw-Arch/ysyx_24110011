@@ -14,13 +14,12 @@ import "DPI-C" function void pmem_write(input int addr, input int data, input in
 
 always @(posedge clk) begin
     if(we) begin
-        pmem_write(write_addr, write_data, mem_op);
-        // $display("write_addr = 0x%08x, write_addr = 0x%08x", write_addr, );
+        pmem_write(write_addr, write_data, mem_op[1:0]);
     end
 end
 
 
-wire [WIDTH - 1 : 0] _read_data = pmem_read(read_addr, mem_op);
+wire [WIDTH - 1 : 0] _read_data = pmem_read(read_addr, mem_op[1:0]);
 
 
 // wire [WIDTH - 1 : 0] _read_data;
