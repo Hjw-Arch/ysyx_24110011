@@ -37,7 +37,7 @@ wire overflow_flag = (left_data[WIDTH - 1] & real_symbol & ~addsub_result[WIDTH 
                      (~left_data[WIDTH - 1] & ~real_symbol & addsub_result[WIDTH - 1]);
 
 wire [WIDTH - 1 : 0] less_signed_result = {{(WIDTH - 1){1'b0}}, addsub_result[WIDTH - 1] ^ overflow_flag};
-wire [WIDTH - 1 : 0] less_unsigned_result = {{(WIDTH - 1){1'b0}}, cout};
+wire [WIDTH - 1 : 0] less_unsigned_result = {{(WIDTH - 1){1'b0}}, cout ^ cin};
 
 
 // 选择器

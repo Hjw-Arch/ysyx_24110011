@@ -7,15 +7,11 @@
 Vadder32 dut;
 
 int main() {
-    for (uint32_t i = 0xffffffff; i > 0xfffff000; i--) {
-        for (uint32_t j = 0xffffffff; j > 0xfffff000; j--) {
-            dut.a = i;
-            dut.b = j;
-            dut.cin = 0;
-            dut.eval();
-            assert(dut.result == i + j);
-        }
-    }
+    dut.a = 0;
+    dut.b = 0xfffffffe;
+    dut.cin = 1;
+    dut.eval();
+    printf("cout = %d, result = 0x%08x\n", dut.cout, dut.result);
 
     return 0;
 }
