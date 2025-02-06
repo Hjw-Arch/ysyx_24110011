@@ -17,11 +17,11 @@
 // #define CONFIG_FTRACE       1
 // #define CONFIG_ITRACE       1
 
-#define CONFIG_DIFFTEST     1
+// #define CONFIG_DIFFTEST     1
 
 
 // device
-// #define CONFIG_DEVICE       1
+#define CONFIG_DEVICE       1
 
 
 #endif
