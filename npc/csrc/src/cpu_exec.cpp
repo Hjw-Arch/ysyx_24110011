@@ -34,6 +34,7 @@ void halt() {
 }
 
 void cpu_exec_one() {
+    printf("aluop = %d\n", dut.rootp->ysyx__DOT__alu_op);
     cycle;
 
     cycle_times++;      // 测试CPU性能使用
