@@ -21,8 +21,8 @@ always @(posedge clk) begin
 end
 
 
-assign rs1_data = not_x0 ? register_file[rs1_addr] : {WIDTH{1'b0}};
-assign rs2_data = not_x0 ? register_file[rs2_addr] : {WIDTH{1'b0}};
+assign rs1_data = rs1_addr != 0 ? register_file[rs1_addr] : {WIDTH{1'b0}};
+assign rs2_data = rs2_addr != 0 ? register_file[rs2_addr] : {WIDTH{1'b0}};
 
 
 endmodule
