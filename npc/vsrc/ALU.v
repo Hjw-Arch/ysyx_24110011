@@ -24,7 +24,7 @@ adder32 addsub(
 // 移位, 这么写可能带来巨大的面积开销，可以手写桶形移位器来解决
 wire [WIDTH - 1 : 0] left_logic_shifter = left_data << right_data[$clog2(WIDTH) - 1 : 0];
 wire [WIDTH - 1 : 0] right_logic_shifter = left_data >> right_data[$clog2(WIDTH) - 1 : 0];
-wire [WIDTH - 1 : 0] right_arithmetic_shifter = left_data >>> right_data[$clog2(WIDTH) - 1 : 0];
+wire [WIDTH - 1 : 0] right_arithmetic_shifter = $signed(left_data) >>> right_data[$clog2(WIDTH) - 1 : 0];
 
 // 与 或 异或
 wire [WIDTH - 1 : 0] and_result = left_data & right_data;
