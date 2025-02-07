@@ -54,7 +54,7 @@ wire [WIDTH - 1 : 0] read_data;
 // PC
 
 PC #(WIDTH) PC_INTER(
-    .clk(clk_2_n),
+    .clk(clk_2),
     .rst(rst),
     .sel(pc_sel),
     .sel_for_adder_left(pc_sel_for_adder_left),
@@ -68,7 +68,7 @@ PC #(WIDTH) PC_INTER(
 
 // IF
 IFU #(32) IFU_INTER(
-    .clk(clk_2),
+    .clk(clk_2_n),
     .rst(rst),
     .pc(pc),
     .inst(inst)
@@ -113,7 +113,7 @@ EXU #(32) EXU_INTER(
 
 // MEM
 MEM #(32) MEM_INTER(
-    .clk(clk_2_n),
+    .clk(clk_2),
     .we(mem_we),
     .mem_op(mem_op),
     .write_addr(result),
@@ -130,7 +130,7 @@ wire [WIDTH - 1 : 0] rd_data = rd_input_sel == 2'b01 ? read_data :
 
 
 registerfile #(32) RF_INTER (
-    .clk(clk_2_n),
+    .clk(clk_2),
     .we(rd_we),
     .rd_addr(rd_addr),
     .rd_data(rd_data),
@@ -143,7 +143,7 @@ registerfile #(32) RF_INTER (
 wire [31 : 0] csr_data_in = csr_sel ? rs1_data | csr_data_out : rs1_data;
 
 CSR #(32) CSR_INTER(
-    .clk(clk_2_n),
+    .clk(clk_2),
     .rst(rst),
     .we(csr_we),
     .is_ecall(csr_is_ecall),
