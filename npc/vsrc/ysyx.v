@@ -17,7 +17,7 @@ reg clk_2, clk_2_n;
 always @(posedge clk) begin
     if (rst) begin
         clk_2 <= 1'b0;
-    end else 
+    end else
         clk_2 <= ~clk_2;
 end
 
