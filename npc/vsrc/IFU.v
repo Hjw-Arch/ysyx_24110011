@@ -2,13 +2,17 @@ module IFU #(parameter WIDTH = 32) (
     input clk,
     input rst,
     input [WIDTH - 1 : 0] pc,
-    output [31 : 0] inst
+    output reg [31 : 0] inst
 );
 
 
 import "DPI-C" function int fetch_inst(input int pc);
 
-assign inst = fetch_inst(pc);
+always @(posedge clk) begin
+    inst <= fetch_inst(pc);
+end
+
+//assign inst = fetch_inst(pc);
 
 // RAM IF_RAM (
 //     .clk(clk),
