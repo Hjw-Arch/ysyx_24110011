@@ -1,13 +1,13 @@
-module RAM #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 8) (
+module RAM  (
     input clk,
     input we,
-    input [ADDR_WIDTH - 1 : 0] write_addr,
-    input [DATA_WIDTH - 1 : 0] write_data,
-    input [ADDR_WIDTH - 1 : 0] read_addr,
-    output [DATA_WIDTH - 1 : 0] read_data
+    input [7 : 0] write_addr,
+    input [31 : 0] write_data,
+    input [7 : 0] read_addr,
+    output [31 : 0] read_data
 );
 
-reg [DATA_WIDTH - 1 : 0] ram_reg [ 2 ** ADDR_WIDTH - 1 : 0];
+reg [31 : 0] ram_reg [255 : 0];
 
 always @(posedge clk) begin
     if (we) begin

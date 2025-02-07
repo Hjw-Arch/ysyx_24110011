@@ -10,10 +10,10 @@ import "DPI-C" function int fetch_inst(input int pc);
 
 assign inst = fetch_inst(pc);
 
-// RAM #(32, 8) IF_RAM (
+// RAM IF_RAM (
 //     .clk(clk),
 //     .we(0),
-//     .write_addr(32'b0),
+//     .write_addr(8'b0),
 //     .write_data(32'b0),
 //     .read_addr(pc[7 : 0]),
 //     .read_data(inst)

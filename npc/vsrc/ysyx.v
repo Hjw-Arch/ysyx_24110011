@@ -8,18 +8,10 @@ module ysyx #(parameter WIDTH = 32) (
     output [WIDTH - 1 : 0] _csr_data_out,
     output [WIDTH - 1 : 0] _rs1_data, _rs2_data,
     output [WIDTH - 1 : 0] _read_data,
-    output [4 : 0] _rs1_addr, _rs2_addr
+    output [4 : 0] _rs1_addr, _rs2_addr,
+    output [WIDTH - 1 : 0] _imm, 
 );
 
-assign _pc = pc;
-assign _inst = inst;
-assign _result = result;
-assign _csr_data_out = csr_data_out;
-assign _rs1_data = rs1_data;
-assign _rs2_data = rs2_data;
-assign _read_data = read_data;
-assign _rs1_addr = rs1_addr;
-assign _rs2_addr = rs2_addr;
 
 
 // 内部信号
@@ -153,6 +145,17 @@ CSR #(32) CSR_INTER(
     .mtvec(mtvec),
     .mepc(mepc)
 );
+
+assign _pc = pc;
+assign _inst = inst;
+assign _result = result;
+assign _csr_data_out = csr_data_out;
+assign _rs1_data = rs1_data;
+assign _rs2_data = rs2_data;
+assign _read_data = read_data;
+assign _rs1_addr = rs1_addr;
+assign _rs2_addr = rs2_addr;
+assign _imm = imm;
 
 
 endmodule
