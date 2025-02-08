@@ -55,7 +55,7 @@ wire [WIDTH - 1 : 0] read_data;
 // PC
 
 PC #(WIDTH) PC_INTER(
-    .clk(clk_2_n),
+    .clk(clk_2),
     .rst(rst),
     .sel(pc_sel),
     .sel_for_adder_left(pc_sel_for_adder_left),
