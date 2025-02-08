@@ -153,7 +153,7 @@ int diff_wp(vaddr_t front_pc) {
     }
 
     #include "../Include/cpu_exec.h"
-    if(flag) cpu_state = IDLE;
+    if(flag) cpu_state = STOPPED;
     return flag;
 }
 
