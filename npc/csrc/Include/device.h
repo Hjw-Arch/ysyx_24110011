@@ -20,7 +20,7 @@
 
 #define CONFIG_SERIAL_MMIO      0xa00003f8
 #define CONFIG_RTC_MMIO         0xa0000048
-#define CONFIG_I8042_DATA_MMIO  0xa0000080      // 与nemu不同
+#define CONFIG_I8042_DATA_MMIO  0xa0000060      // 与nemu不同
 #define CONFIG_FB_ADDR          0xa1000000
 #define CONFIG_VGA_CTL_MMIO     0xa0000100
 #define CONFIG_AUDIO_CTL_MMIO   0xa0000200
