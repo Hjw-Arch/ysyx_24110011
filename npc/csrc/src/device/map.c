@@ -29,7 +29,6 @@ void init_map() {
 }
 
 word_t map_read(paddr_t addr, int len, IOMap *map) {
-    printf("addr = 0x%08x\n", addr);
     assert(len >= 1 && len <= 8);
     if (map == NULL) {
         return 0;
