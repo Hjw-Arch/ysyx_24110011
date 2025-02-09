@@ -43,7 +43,7 @@ void cpu_exec_one() {
         halt();
     }
 
-    cycle;
+    // cycle;
 }
 
 void cpu_exec(uint32_t n) {
