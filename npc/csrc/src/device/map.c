@@ -42,7 +42,6 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
 }
 
 void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
-    assert(0);
     assert(len >= 1 && len <= 8);
     paddr_t offset = addr - map->low;
     *(uint32_t *)(map->space + offset) = data;
