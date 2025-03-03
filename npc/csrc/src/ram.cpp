@@ -16,7 +16,6 @@ void *guest_to_host(uint32_t addr) {
     return ((uint8_t *)pmem + addr - RAM_START_ADDR);
 }
 
-
 int pmem_read(int addr, int len) {
     uint32_t ret = 0;
     if (len == 0) len = 1;
