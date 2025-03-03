@@ -19,6 +19,12 @@ do { \
 
 #define cpu_rst \
 do {    \
+    dut.rst_clk = 1;    \
+    dut.clk = 0;    \
+    dut.eval();     \
+    dut.clk = 1;    \
+    dut.eval();     \
+    dut.rst_clk = 0;    \
     dut.rst = 1;    \
     dut.clk = 0;    \
     dut.eval();     \

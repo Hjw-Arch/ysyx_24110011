@@ -1,6 +1,7 @@
 module ysyx #(parameter WIDTH = 32) (
     input clk,
     input rst,
+    input rst_clk,
 
     output [WIDTH - 1 : 0] _pc,
     output [WIDTH - 1 : 0] _inst,
@@ -15,7 +16,7 @@ module ysyx #(parameter WIDTH = 32) (
 reg clk_2, clk_2_n;
 
 always @(posedge clk) begin
-    if (rst) begin
+    if (rst_clk) begin
         clk_2 <= 1'b0;
     end else
         clk_2 <= ~clk_2;
