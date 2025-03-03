@@ -70,6 +70,8 @@ void cpu_exec(uint32_t n) {
         // 执行一次
         cpu_exec_one();
 
+        printf("111\n");
+
         IFDEF(CONFIG_ITRACE, iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst));
 
         IFDEF(CONFIG_FTRACE, FTRACE_RECORD);
