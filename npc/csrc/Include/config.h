@@ -9,7 +9,7 @@
 #define CONFIG_RVE
 // #define RV64
 
-#define CONFIG_WATCHPOINT   1
+// #define CONFIG_WATCHPOINT   1
 
 // trace
 // #define CONFIG_TRACE        1
