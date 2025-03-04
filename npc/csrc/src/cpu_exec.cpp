@@ -56,7 +56,10 @@ void cpu_exec(uint32_t n) {
         vaddr_t old_pc = cpu.pc;
         word_t old_inst = dut.rootp->ysyx__DOT__inst;
 #endif
-        
+
+        // 执行一次
+        cpu_exec_one();
+
         if (n < min_num_to_disasm) {
             char p[64];
             printf("0x%08x: ", cpu.pc);
@@ -67,8 +70,6 @@ void cpu_exec(uint32_t n) {
             printf("        %s\n", p);
         }
 
-        // 执行一次
-        cpu_exec_one();
 
         IFDEF(CONFIG_ITRACE, iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst));
 
