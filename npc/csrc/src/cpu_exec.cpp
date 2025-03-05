@@ -35,6 +35,7 @@ void halt() {
 
 void cpu_exec_one() {
     cycle;
+    cycle;
 
     cycle_times++;      // 测试CPU性能使用
 
