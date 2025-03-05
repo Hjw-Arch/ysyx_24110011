@@ -38,6 +38,8 @@ void cpu_exec_one() {
     cycle;
     cycle;
     cycle;
+    cycle;
+    cycle;
 
     cycle_times++;      // 测试CPU性能使用
 
