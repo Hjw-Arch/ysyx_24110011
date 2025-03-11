@@ -21,7 +21,7 @@ wire pc_sel_for_adder_left;
 wire is_branch;
 wire [31 : 0] pc_imm;
 wire [31 : 0] pc_inst;
-wire pc;
+wire [31 : 0] pc;
 
 
 // IF
