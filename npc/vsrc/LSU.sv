@@ -67,12 +67,14 @@ assign rdata_extend[7 : 0] = rdata[7 : 0];
 
 always_ff @(posedge clk) begin
     lsu_data <= (lsu_ren & lsu_valid & wbu_ready) ? {exu_data[108 : 77], rdata_extend, rest_exu_data} : lsu_data;
+    $display("lsu_valid = %d", lsu_valid);
 end
 
 // 写
 always @(posedge clk) begin
     if(lsu_wen & lsu_valid & wbu_ready) begin
         pmem_write(lsu_addr, lsu_wdata, lsu_op[1:0]);
+        $display("lsu_valid = %d", lsu_valid);
     end
 end
 
