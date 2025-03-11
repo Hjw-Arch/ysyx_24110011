@@ -99,10 +99,6 @@ CSR #(32) CSR_INTER(
 
 always_ff @(posedge clk) begin
     exu_data <= (exu_valid & lsu_ready) ? {alu_result, rest_idu_data, csr_data_o} : exu_data;
-    $display("exu_valid = %d", exu_valid);
-    $display("alu result = 0x%08x", alu_result);
-    $display("alu_data1 = 0x%08x", alu_data1);
-    $display("alu_data2 = 0x%08x", alu_data2);
 end
 
 

@@ -76,9 +76,5 @@ always @(posedge clk) begin
     end
 end
 
-always_ff @( posedge clk ) begin
-    $display("lsu_valid = %d", lsu_valid);    
-end
-
 endmodule
 
