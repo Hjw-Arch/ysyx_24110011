@@ -43,6 +43,7 @@ always_ff @(posedge clk) begin
     ifu_data <= (ifu_valid & idu_ready) ? {fetch_inst(pc), pc} : ifu_data;
     $display("start = %d", start);
     $display("ifu_valid = %d", ifu_valid);
+    $display("pc = 0x%08x", pc);
 end
 
 

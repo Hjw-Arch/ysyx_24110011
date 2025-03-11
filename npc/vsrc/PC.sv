@@ -39,7 +39,6 @@ always_ff @(posedge clk) begin
     if (rst) pc <= 32'h80000000;
     else if (valid) pc <= new_pc;
     else pc <= pc;
-    $display("pc = 0x%08x", pc);
 end
 
 
