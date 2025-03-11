@@ -10,9 +10,9 @@ do { \
     dut.eval();     \
     dut.clk = 1;    \
     dut.eval();     \
-    cpu.pc = dut.rootp->ysyx__DOT__pc;  \
+    cpu.pc = dut.rootp->PC;  \
     for (int i = 0; i < 31; i++) {  \
-        cpu.registerFile[i] = dut.rootp->ysyx__DOT__RF_INTER__DOT__register_file[i];    \
+        cpu.registerFile[i] = dut.rootp->ysyx__DOT__WBU_INTER__DOT__RF_INTER__DOT__register_file[i];    \
     }   \
 } while(0) \
 
@@ -25,8 +25,8 @@ do {    \
     dut.clk = 1;    \
     dut.eval();     \
     dut.rst = 0;    \
-    cpu.pc = dut.rootp->ysyx__DOT__pc;  \
-    iringbuf_load(cpu.pc, dut.rootp->ysyx__DOT__inst); \
+    cpu.pc = dut.rootp->PC;  \
+    iringbuf_load(cpu.pc, dut.rootp->inst); \
 } while(0) \
 
 typedef MUXDEF(ISA64, uint64_t, uint32_t)   word_t;

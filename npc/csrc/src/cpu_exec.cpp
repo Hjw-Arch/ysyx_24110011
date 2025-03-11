@@ -39,7 +39,7 @@ void cpu_exec_one() {
 
     cycle_times++;      // 测试CPU性能使用
 
-    if (dut.rootp->ysyx__DOT__inst == ebreak) {
+    if (dut.rootp->inst == ebreak) {
         Log("Get 'ebreak' instruction, program over.");
         halt();
     }
@@ -66,9 +66,9 @@ void cpu_exec(uint32_t n) {
             char p[64];
             printf("0x%08x: ", old_pc);
             for(int j = 3; j >= 0; j--) {
-                printf("%02x ", ((uint8_t *)&dut.rootp->ysyx__DOT__inst)[j]);
+                printf("%02x ", ((uint8_t *)&dut.rootp->inst)[j]);
             }
-            disassemble(p, sizeof(p), cpu.pc, (uint8_t *)&dut.rootp->ysyx__DOT__inst, 4);
+            disassemble(p, sizeof(p), cpu.pc, (uint8_t *)&dut.rootp->inst, 4);
             printf("        %s\n", p);
         }
 
