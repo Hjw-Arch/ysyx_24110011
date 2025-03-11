@@ -20,7 +20,7 @@ int pmem_read(int addr, int len) {
     uint32_t ret = 0;
     if (len == 0) len = 1;
     else if (len == 1) len = 2;
-    else if (len == 2) len = 4;
+    else if (len == 3) len = 4;
     if (addr >= RAM_START_ADDR && addr <= RAM_END_ADDR) {
         switch (len) {
             case 1: // 1
@@ -53,7 +53,7 @@ void pmem_write(int addr, int data, int len) {
     // Assert((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR), "Addr 0x%08x transbordered the boundary.", addr);
     if (len == 0) len = 1;
     else if (len == 1) len = 2;
-    else if (len == 2) len = 4;
+    else if (len == 3) len = 4;
     if ((addr <= RAM_END_ADDR) && (addr >= RAM_START_ADDR)) {
         IFDEF(CONFIG_MTRACE, mtrace_write(addr, len == 0 ? 1 : len == 1 ? 2 : 4, data, 0));
         switch (len) {

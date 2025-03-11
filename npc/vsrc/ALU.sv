@@ -39,23 +39,25 @@ wire overflow_flag = (data1[WIDTH - 1] & real_symbol & ~addsub_result[WIDTH - 1]
 wire [WIDTH - 1 : 0] less_signed_result = {{(WIDTH - 1){1'b0}}, addsub_result[WIDTH - 1] ^ overflow_flag};
 wire [WIDTH - 1 : 0] less_unsigned_result = {{(WIDTH - 1){1'b0}}, cout ^ cin};
 
-
+logic [WIDTH - 1 : 0] result_comb;
 // 选择器
 always_comb begin
     case(alu_op)
-        4'b0000, 4'b0001: result <= addsub_result;
-        4'b1110: result <= and_result;
-        4'b1100: result <= or_result;
-        4'b1000: result <= xor_result;
-        4'b0010: result <= left_logic_shifter;
-        4'b1010: result <= right_logic_shifter;
-        4'b1011: result <= right_arithmetic_shifter;
-        4'b0100: result <= less_signed_result;
-        4'b0110: result <= less_unsigned_result;
-        default: result <= data2;
+        4'b0000: result_comb = addsub_result;
+        4'b0001: result_comb = addsub_result;
+        4'b1110: result_comb = and_result;
+        4'b1100: result_comb = or_result;
+        4'b1000: result_comb = xor_result;
+        4'b0010: result_comb = left_logic_shifter;
+        4'b1010: result_comb = right_logic_shifter;
+        4'b1011: result_comb = right_arithmetic_shifter;
+        4'b0100: result_comb = less_signed_result;
+        4'b0110: result_comb = less_unsigned_result;
+        default: result_comb = data2;
     endcase
 end
 
+assign result = result_comb;
 assign zero_flag = ~(|addsub_result);
 
 endmodule

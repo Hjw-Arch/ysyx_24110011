@@ -18,7 +18,7 @@ reg [WIDTH - 1 : 0] register_file [31 : 0];
 wire not_x0 = |rd_addr;
 
 always @(posedge clk) begin
-    if (we & not_x0) register_file[rd_addr] <= rd_data;
+    if (wen & not_x0) register_file[rd_addr] <= rd_data;
 end
 
 

@@ -40,7 +40,7 @@ assign ifu_valid = has_new_inst | (state == S_WAIT_READY);
 
 // 模拟SRAM取指
 always_ff @(posedge clk) begin
-    ifu_data <= {fetch_inst(pc), pc} : idu_data;
+    ifu_data <= (ifu_valid & idu_ready) ? {fetch_inst(pc), pc} : ifu_data;
 end
 
 

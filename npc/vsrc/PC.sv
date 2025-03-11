@@ -20,7 +20,7 @@ module PC #(parameter WIDTH = 32) (
     output reg [WIDTH - 1 : 0] pc
 );
 
-wire sel_for_adder_right = inst[6] & inst[2] |     // 这条信号会是瓶颈，是关键路径，单周期不影响，流水线需要单独设置这条信号
+wire sel_for_adder_right = inst[6] & inst[2] |     // 这条信号会是瓶颈，是关键路径，单多周期不影响，流水线需要单独设置这条信号
                             is_branch & ~inst[14] & ~inst[12] & zero_flag |
                             is_branch & ~inst[14] & inst[12] & ~zero_flag |
                             is_branch & inst[14] & ~inst[12] & less_flag |
@@ -35,9 +35,9 @@ wire [WIDTH - 1 : 0] new_pc = sel == 2'b01 ? mtvec :
                               sel == 2'b11 ? mepc  : 
                               adder_result;
 
-always @(posedge clk) begin
+always_ff @(posedge clk) begin
     if (rst) pc <= 32'h80000000;
-    else if (exu_valid) pc <= new_pc;
+    else if (valid) pc <= new_pc;
     else pc <= pc;
 end
 

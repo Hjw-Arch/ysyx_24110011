@@ -3,11 +3,11 @@ module EXU #(parameter WIDTH = 32) (
     input rst,
 
     input idu_valid,
-    input [190 : 0] idu_data,
+    input [191 : 0] idu_data,
     output exu_ready,
 
     output exu_valid,
-    output reg [107 : 0] exu_data,
+    output reg [108 : 0] exu_data,
     input lsu_ready,
 
 
@@ -23,10 +23,11 @@ module EXU #(parameter WIDTH = 32) (
 
 
 
-wire [WIDTH - 1 : 0] alu_data1 = idu_data[190 : 159];
-wire [WIDTH - 1 : 0] alu_data2 = idu_data[158 : 127];
-wire [3 : 0] alu_op = idu_data[126 : 123];
-wire csr_wen = idu_data[122];
+wire [WIDTH - 1 : 0] alu_data1 = idu_data[191 : 160];
+wire [WIDTH - 1 : 0] alu_data2 = idu_data[159 : 128];
+wire [3 : 0] alu_op = idu_data[127 : 124];
+wire csr_wen = idu_data[123];
+wire csr_sel = idu_data[122];
 wire csr_is_ecall = idu_data[121];
 wire [11 : 0] csr_addr = idu_data[120 : 109];
 wire [31 : 0] pc_now = idu_data[108 : 77];
@@ -37,7 +38,7 @@ wire [44 : 0] rest_idu_data = idu_data[44 : 0];
 
 typedef enum logic { 
     S_IDLE,
-    S_WAIT_READY,
+    S_WAIT_READY
 } exu_state_t;
 
 exu_state_t state, next_state;
@@ -53,7 +54,7 @@ always_comb begin
         S_WAIT_READY:
             next_state = (lsu_ready) ? S_IDLE : S_WAIT_READY;
         default:
-            next_state <= S_IDLE;
+            next_state = S_IDLE;
     endcase
 end
 
@@ -70,8 +71,8 @@ wire zero_flag;
 
 ALU #(WIDTH) alu (
     .alu_op(alu_op),
-    .left_data(alu_data1),
-    .right_data(alu_data2),
+    .data1(alu_data1),
+    .data2(alu_data2),
     .result(alu_result),
     .zero_flag(zero_flag)
 );
@@ -81,6 +82,7 @@ ALU #(WIDTH) alu (
 wire [31 : 0] mtvec;    // For PC
 wire [31 : 0] mepc;     // For PC
 
+wire [31 : 0] csr_data_o;
 wire [31 : 0] csr_data_i = csr_sel ? rs1_data | csr_data_o : rs1_data;
 CSR #(32) CSR_INTER(
     .clk(clk),

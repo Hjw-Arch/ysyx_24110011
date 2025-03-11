@@ -1,4 +1,4 @@
-module IDU #(parameter WIDTH = 32) (
+module IDU (
     // 异步读寄存器堆
     output [4 : 0] rs1_addr,
     output [4 : 0] rs2_addr,
@@ -15,7 +15,7 @@ module IDU #(parameter WIDTH = 32) (
 
     // IDU部分
     output idu_valid,
-    output reg [190 : 0] idu_data;
+    output reg [191 : 0] idu_data,
     input exu_ready,
 
 
@@ -28,8 +28,8 @@ module IDU #(parameter WIDTH = 32) (
     output [31 : 0] pc_inst
 );
 
-wire inst = ifu_data[63 : 32];
-wire pc = ifu_data[31 : 0];
+wire [31 : 0] inst = ifu_data[63 : 32];
+wire [31 : 0] pc = ifu_data[31 : 0];
 
 // IDU部分
 // 握手协议实现
@@ -64,7 +64,7 @@ assign idu_valid = has_new_data | (state == S_WAIT_READY);
 assign idu_ready = exu_ready;      // 需要调整
 
 always_ff @(posedge clk) begin
-    idu_data <= (idu_valid & exu_ready) ? {alu_data1, alu_data2, alu_op, csr_wen, csr_is_ecall, csr_addr, pc, rs1_data, lsu_ren, lsu_wen, lsu_op, rs2_data, rd_wen, rd_addr, rd_input_sel} : idu_data_reg;
+    idu_data <= (idu_valid & exu_ready) ? {alu_data1, alu_data2, alu_op, csr_wen, csr_sel, csr_is_ecall, csr_addr, pc, rs1_data, lsu_ren, lsu_wen, lsu_op, rs2_data, rd_wen, rd_addr, rd_input_sel} : idu_data;
 end
 
 
@@ -77,10 +77,10 @@ ImmGen #(32) ImmGen_INTER(inst, imm);
 // RF部分
 assign rs1_addr = inst[19 : 15];    // rs1 & rs2 直通RF，不需要握手信号
 assign rs2_addr = inst[24 : 20];
-wire rd_addr = inst[11 : 7];        // 给到WBU
+wire [4 : 0] rd_addr = inst[11 : 7];        // 给到WBU
 
 // EXU部分 如果使用独热码，关键路径可以被优化, 面积会增加
-wire [4 : 0] alu_op;
+wire [3 : 0] alu_op;
 assign alu_op[0] = ~inst[5] & inst[4] & ~inst[2] & inst[14] & ~inst[13] & inst[12] & inst[30] |             // srai
                    inst[5] & inst[4] & inst[30] |          // R
                    inst[5] & inst[4] & inst[2];   //  lui
@@ -94,13 +94,14 @@ assign alu_op[2] = inst[4] & ~inst[2] & inst[13] |       // compute i + compute 
 assign alu_op[3] = inst[4] & ~inst[2] & inst[14] |        // compute i + compute R
                   inst[5] & inst[4] & inst[2];        // lui
 
-assign alu_left_sel = inst[2];  // U + J
-assign alu_right_sel = inst[4] & inst[2] | ~inst[5] & inst[4] | ~inst[6] & ~inst[4];    // U + competeI + L + S
+wire alu_left_sel = inst[2];  // U + J
+wire alu_right_sel = inst[4] & inst[2] | ~inst[5] & inst[4] | ~inst[6] & ~inst[4];    // U + competeI + L + S
 
-wire alu_data1 = {32{alu_left_sel}} & pc | {32{~alu_left_sel}} & rs1_data;
-wire alu_data2 = {32{~alu_left_sel & ~alu_right_sel}} & rs2_data | {32{alu_left_sel & ~alu_right_sel}} & {{29{1'b0}}, 3'b100} | {32{alu_right_sel}} & imm;
+wire [31 : 0] alu_data1 = {32{alu_left_sel}} & pc | {32{~alu_left_sel}} & rs1_data;
+wire [31 : 0] alu_data2 = {32{~alu_left_sel & ~alu_right_sel}} & rs2_data | {32{alu_left_sel & ~alu_right_sel}} & {{29{1'b0}}, 3'b100} | {32{alu_right_sel}} & imm;
 
 // CSR
+wire [11 : 0] csr_addr = inst[31 : 20];
 wire csr_wen = inst[6] & inst[4] & |inst[13 : 12]; // Zicsr    添加此类指令需重构
 wire csr_sel = inst[6] & inst[4] & inst[13];  // // Zicsr    添加此类指令需重构
 wire csr_is_ecall = is_sys & ~inst[29];
@@ -118,8 +119,8 @@ wire is_sys = inst[6] & inst[4] & ~inst[13] & ~inst[12];    // 系统相关指�
 // RF WB
 wire rd_wen = ~(inst[5] & ~inst[4] & ~inst[2] | is_sys);   // ~((B + S) | sys)
 wire [1 : 0] rd_input_sel;
-assign rd_input_sel = inst[6] & inst[4];     // CSR
-assign rd_input_sel = ~inst[5] & ~inst[4];   // Load
+assign rd_input_sel[1] = inst[6] & inst[4];     // CSR
+assign rd_input_sel[0] = ~inst[5] & ~inst[4];   // Load
 
 // PC部分   直通PC
 assign pc_sel[1] = is_sys & inst[29];   // mret
@@ -127,7 +128,7 @@ assign pc_sel[0] = is_sys;  // ecall
 assign pc_sel_for_adder_left = inst[6] & ~inst[3] & inst[2];
 assign is_branch = inst[6] & ~inst[4] & ~inst[2];
 assign pc_imm = imm;
-assign pc_inst = pc_inst;
+assign pc_inst = inst;
 
 endmodule
 

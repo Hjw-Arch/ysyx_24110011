@@ -32,10 +32,10 @@ always @(posedge clk) begin
             reg_mepc <= pc;
             reg_mstatus <= 32'h1800;    // for difftest
         end else begin
-            reg_mcause <= (is_mcause & we) ? data_in : reg_mcause;
-            reg_mstatus <= (is_mstatus & we) ? data_in : reg_mstatus;
-            reg_mtvec <= (is_mtvec & we) ? data_in : reg_mtvec;
-            reg_mepc <= (is_mepc & we) ? data_in : reg_mepc;
+            reg_mcause <= (is_mcause & wen) ? data_in : reg_mcause;
+            reg_mstatus <= (is_mstatus & wen) ? data_in : reg_mstatus;
+            reg_mtvec <= (is_mtvec & wen) ? data_in : reg_mtvec;
+            reg_mepc <= (is_mepc & wen) ? data_in : reg_mepc;
         end
     end
 end

@@ -1,7 +1,14 @@
 module ysyx #(parameter WIDTH = 32) (
     input clk,
-    input rst
+    input rst,
+
+    // 用于测试
+    output [31 : 0] inst,
+    output [31 : 0] PC
 );
+
+assign inst = ifu_data[63 : 32];
+assign PC = pc;
 
 // PC
 // 五级流水线需要修改
@@ -10,37 +17,42 @@ wire pc_sel_for_adder_left;
 wire is_branch;
 wire [31 : 0] pc_imm;
 wire [31 : 0] pc_inst;
-wire pc;
+wire [31 : 0] pc;
 
 
 // IF
 wire ifu_valid;
 wire [63 : 0] ifu_data;
+wire [4 : 0] rs1_addr;
+wire [4 : 0] rs2_addr;
 
 // ID
 wire idu_ready;
 wire idu_valid;
-wire [190 : 0] idu_data;
+wire [191 : 0] idu_data;
 
 
 // EX
 wire exu_ready;
 wire exu_valid;
-wire [107 : 0] exu_data;
+wire [108 : 0] exu_data;
 
 // LS
 wire lsu_ready;
 wire lsu_valid;
-wire [ : ] lsu_data;
+wire [103 : 0] lsu_data;
 
-
+// WB
+wire can_start;
+wire [31 : 0] rs1_data;
+wire [31 : 0] rs2_data;
 
 
 // IF
-IFU #(32) IFU_INTER(
+IFU #(WIDTH) IFU_INTER(
     .clk(clk),
     .rst(rst),
-    .start(start),
+    .start(can_start),
     .pc(pc),        // 五级流水线需要修改
     .ifu_valid(ifu_valid),
     .ifu_data(ifu_data),
@@ -49,7 +61,7 @@ IFU #(32) IFU_INTER(
 
 
 // ID
-IDU #(32) IDU_INTER(
+IDU IDU_INTER(
     .rs1_addr(rs1_addr),
     .rs2_addr(rs2_addr),
     .rs1_data(rs1_data),
@@ -68,12 +80,12 @@ IDU #(32) IDU_INTER(
     .pc_sel(pc_sel),
     .pc_sel_for_adder_left(pc_sel_for_adder_left),
     .is_branch(is_branch),
-    .imm(imm),
-    .inst(inst)
+    .pc_imm(pc_imm),
+    .pc_inst(pc_inst)
 );
 
 // EX
-EXU #(32) EXU_INTER(
+EXU #(WIDTH) EXU_INTER(
     .clk(clk),
     .rst(rst),
 
@@ -89,52 +101,39 @@ EXU #(32) EXU_INTER(
     .pc_sel(pc_sel),
     .pc_sel_for_adder_left(pc_sel_for_adder_left),
     .is_branch(is_branch),
-    .imm(imm),
-    .inst(inst),
+    .imm(pc_imm),
+    .inst(pc_inst),
     .pc(pc)
 );
 
-// MEM
-LSU #(32) LSU_INTER(
-    
-);
-
-// WB  rf
-
-wire [WIDTH - 1 : 0] rd_data = rd_input_sel == 2'b01 ? read_data : 
-                               rd_input_sel == 2'b10 ? csr_data_out : 
-                               result;
-
-
-registerfile #(32) RF_INTER (
+// LS
+LSU #(WIDTH) LSU_INTER(
     .clk(clk),
     .rst(rst),
-    .we(rd_we),
-    .valid(ifu_valid),
-    .start(start),
-    .rd_addr(rd_addr),
-    .rd_data(rd_data),
+
+    .exu_valid(exu_valid),
+    .exu_data(exu_data),
+    .lsu_ready(lsu_ready),
+
+    .lsu_valid(lsu_valid),
+    .lsu_data(lsu_data),
+    .wbu_ready(1'b1)
+);
+
+// WB
+WBU #(WIDTH) WBU_INTER(
     .rs1_addr(rs1_addr),
-    .rs1_data(rs1_data),
     .rs2_addr(rs2_addr),
-    .rs2_data(rs2_data)
-);
+    .rs1_data(rs1_data),
+    .rs2_data(rs2_data),
 
-wire [31 : 0] csr_data_in = csr_sel ? rs1_data | csr_data_out : rs1_data;
-
-CSR #(32) CSR_INTER(
     .clk(clk),
     .rst(rst),
-    .we(csr_we),
-    .is_ecall(csr_is_ecall),
-    .addr(inst[31 : 20]),
-    .data_in(csr_data_in),
-    .pc(pc),
-    .data_out(csr_data_out),
-    .mtvec(mtvec),
-    .mepc(mepc)
-);
 
+    .lsu_valid(lsu_valid),
+    .lsu_data(lsu_data),
+    .can_start(can_start)
+);
 
 
 
