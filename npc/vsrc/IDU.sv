@@ -120,8 +120,8 @@ wire is_sys = inst[6] & inst[4] & ~inst[13] & ~inst[12];    // 系统相关指�
 // RF WB
 wire rd_wen = ~(inst[5] & ~inst[4] & ~inst[2] | is_sys);   // ~((B + S) | sys)
 wire [1 : 0] rd_input_sel;
-assign rd_input_sel = inst[6] & inst[4];     // CSR
-assign rd_input_sel = ~inst[5] & ~inst[4];   // Load
+assign rd_input_sel[1] = inst[6] & inst[4];     // CSR
+assign rd_input_sel[0] = ~inst[5] & ~inst[4];   // Load
 
 // PC部分   直通PC
 assign pc_sel[1] = is_sys & inst[29];   // mret
