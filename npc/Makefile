@@ -38,6 +38,7 @@ default: run
 all: run
 
 run:
+	@$(call git_commit, "sim RTL")
 	@echo
 	# @echo "---------------- Verilator running -----------------"
 	@$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUTS) \
@@ -51,7 +52,6 @@ run:
 	$(OBJ_DIR)/V$(TOP_NAME) $(NPCARGS) $(IMG)
 	@echo
 	@echo "-------------------- Finish -----------------------"
-	@$(call git_commit, "sim RTL")
 
 # --------------------------- NVboard ----------------------------"
 #
