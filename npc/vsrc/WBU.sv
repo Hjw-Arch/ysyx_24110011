@@ -53,6 +53,10 @@ registerfile #(32) RF_INTER (
     .rs2_data(rs2_data)
 );
 
+always_ff @(posedge clk) begin
+    $display("wen = %d", rd_wen);;
+end
+
 
 endmodule
 
