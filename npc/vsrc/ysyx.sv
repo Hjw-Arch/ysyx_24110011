@@ -7,6 +7,10 @@ module ysyx #(parameter WIDTH = 32) (
     output [31 : 0] PC
 );
 
+always_ff @(posedge clk) begin
+    $display("pc = 0x%08x", pc);
+end
+
 assign inst = ifu_data[63 : 32];
 assign PC = pc;
 
