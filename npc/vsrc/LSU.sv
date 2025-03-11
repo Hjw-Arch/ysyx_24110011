@@ -66,7 +66,7 @@ assign rdata_extend[15 : 8] = {8{rdata[7] & ~lsu_op[2] & ~lsu_op[1] & ~lsu_op[0]
 assign rdata_extend[7 : 0] = rdata[7 : 0];
 
 always_ff @(posedge clk) begin
-    lsu_data <= (lsu_ren & lsu_valid & wbu_ready) ? {exu_data[108 : 77], rdata_extend, rest_exu_data} : lsu_data;
+    lsu_data <= (lsu_valid & wbu_ready) ? {exu_data[108 : 77], rdata_extend, rest_exu_data} : lsu_data;
 end
 
 // 写
