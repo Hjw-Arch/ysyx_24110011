@@ -51,7 +51,7 @@ end
 
 reg has_new_data;
 always_ff @(posedge clk) begin
-    has_new_data <= (lsu_valid & wbu_ready) ? 1'b1 : 1'b0;
+    has_new_data <= (exu_valid & lsu_ready) ? 1'b1 : 1'b0;
 end
 
 assign lsu_ready = wbu_ready;
