@@ -65,8 +65,6 @@ assign idu_ready = exu_ready;      // 需要调整
 
 always_ff @(posedge clk) begin
     idu_data <= (idu_valid & exu_ready) ? {alu_data1, alu_data2, alu_op, csr_wen, csr_sel, csr_is_ecall, csr_addr, pc, rs1_data, lsu_ren, lsu_wen, lsu_op, rs2_data, rd_wen, rd_addr, rd_input_sel} : idu_data;
-    $display("idu_valid = %d", idu_valid);
-    $display("idu wen = %d", rd_wen);
 end
 
 
