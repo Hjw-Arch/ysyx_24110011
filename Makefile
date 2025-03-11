@@ -1,5 +1,5 @@
-STUID = ysyx_hjw
-STUNAME = hjw
+STUID = ysyx_24110011
+STUNAME = 胡晋玮
 
 # DO NOT modify the following code!!!
 

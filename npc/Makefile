@@ -50,8 +50,8 @@ run:
 	@echo
 	$(OBJ_DIR)/V$(TOP_NAME) $(NPCARGS) $(IMG)
 	@echo
+	$(call git_commit, "sim RTL")
 	@echo "-------------------- Finish -----------------------"
-	@$(call git_commit, "sim RTL")
 
 # --------------------------- NVboard ----------------------------"
 #
