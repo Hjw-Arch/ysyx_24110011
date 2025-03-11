@@ -1,10 +1,7 @@
 module registerfile #(parameter WIDTH = 32) (
     input clk,
     input rst,
-    input we,
-
-    input valid,
-    output reg start,
+    input wen,
     
     input [4 : 0] rd_addr,
     input [WIDTH - 1 : 0] rd_data,
@@ -21,16 +18,7 @@ reg [WIDTH - 1 : 0] register_file [31 : 0];
 wire not_x0 = |rd_addr;
 
 always @(posedge clk) begin
-    if (we & not_x0 & valid) register_file[rd_addr] <= rd_data;
-end
-
-// 
-always_ff @(posedge clk) begin
-    if (valid || rst) begin
-        start <= 1'b1;
-    end else begin
-        start <= 1'b0;
-    end
+    if (we & not_x0) register_file[rd_addr] <= rd_data;
 end
 
 

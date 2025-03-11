@@ -1,95 +1,86 @@
 module IDU #(parameter WIDTH = 32) (
+    // 异步读寄存器堆
+    output [4 : 0] rs1_addr,
+    output [4 : 0] rs2_addr,
+    input [31 : 0] rs1_data,
+    input [31 : 0] rs2_data,
+
     input clk,
     input rst,
 
-    // IDU部分
     // 实现上下游握手信号
     input ifu_valid,
-    input [31 : 0] inst,  
-    output ifu_ready,
+    input [63 : 0] ifu_data,
+    output idu_ready,
 
+    // IDU部分
     output idu_valid,
-    output idu_data,
-    input idu_ready,
-
-    input zero_flag,
-    input less_flag,
-
-    output [4 : 0] rd_addr,
-    output [4 : 0] rs1_addr,
-    output [4 : 0] rs2_addr,
-
-    output [3 : 0] alu_op,
-    output alu_left_sel,
-    output alu_right_sel,
-
-    output [1 : 0] pc_val_sel,
-    output pc_adder_left_sel,
-    output pc_adder_right_sel,
-
-    output mem_we,
-    output mem_re,
-    output [2 : 0] mem_op,
-
-    output rd_we,
-    output [1 : 0] rd_input_sel,
-
-    output csr_we,
-    output csr_sel,
-    output csr_is_ecall,
-
-    output [WIDTH - 1 : 0] imm
+    output reg [190 : 0] idu_data;
+    input exu_ready,
 
 
-    // WB部分, 也就是registerFile写回部分
 
-    input [31 : 0] load_data,
-    input [31 : 0] csr_data,
+    // 直通PC，仅仅在多周期有效，五级流水线需要修改，因为不是最终版因此随意了一些
+    output [1 : 0] pc_sel,
+    output pc_sel_for_adder_left,
+    output is_branch,
+    output [31 : 0] pc_imm,
+    output [31 : 0] pc_inst
 );
 
+wire inst = ifu_data[63 : 32];
+wire pc = ifu_data[31 : 0];
 
-// 为多周期处理器做调整
-assign ifu_ready = 1'b1;      // 只要有数据，一个周期一定能处理掉，因此ifu_ready之间置1
+// IDU部分
+// 握手协议实现
+typedef enum logic { 
+    S_IDLE,
+    S_WAIT_READY
+} idu_state_t;
+
+idu_state_t state, next_state;
+
+always_ff @(posedge clk) begin
+    state <= rst ? S_IDLE : next_state;
+end
+
+always_comb begin
+    case(state)
+        S_IDLE:
+            next_state = (idu_valid & ~exu_ready) ? S_WAIT_READY : S_IDLE;
+        S_WAIT_READY:
+            next_state = exu_ready ? S_IDLE : S_WAIT_READY;
+        default: 
+            next_state = S_IDLE;
+    endcase
+end
+
+reg has_new_data;
+always_ff @(posedge clk) begin
+    has_new_data <= (ifu_valid & idu_ready) ? 1'b1 : 1'b0;
+end
+
+assign idu_valid = has_new_data | (state == S_WAIT_READY);
+assign idu_ready = exu_ready;      // 需要调整
+
+always_ff @(posedge clk) begin
+    idu_data <= (idu_valid & exu_ready) ? {alu_data1, alu_data2, alu_op, csr_wen, csr_is_ecall, csr_addr, pc, rs1_data, lsu_ren, lsu_wen, lsu_op, rs2_data, rd_wen, rd_addr, rd_input_sel} : idu_data_reg;
+end
 
 
-// rf index
-assign rd_addr = inst[11 : 7];
-assign rs1_addr = inst[19 : 15];
+
+
+// Imm
+wire [31 : 0] imm;
+ImmGen #(32) ImmGen_INTER(inst, imm);
+
+// RF部分
+assign rs1_addr = inst[19 : 15];    // rs1 & rs2 直通RF，不需要握手信号
 assign rs2_addr = inst[24 : 20];
+wire rd_addr = inst[11 : 7];        // 给到WBU
 
-
-// PC信号应该让PC单独处理， PC的更新在EXU之后
-// PC Control signals
-wire is_sys = inst[6] & inst[4] & ~inst[13] & ~inst[12];    // 系统相关指令，ecall、mret，添加指令时可能需要做调整
-wire is_b_type = inst[6] & ~inst[4] & ~inst[2];
-
-// 想法：只需要在ID阶段做一个减法器就能在ID阶段判断出是否需要转移
-assign pc_val_sel[1] = is_sys & inst[29];   // mret
-assign pc_val_sel[0] = is_sys;  // ecall
-assign pc_adder_left_sel = inst[6] & ~inst[3] & inst[2];
-assign pc_adder_right_sel = inst[6] & inst[2] |     // 这条信号会是瓶颈，是关键路径，单周期不影响，流水线需要单独设置这条信号
-                            is_b_type & ~inst[14] & ~inst[12] & zero_flag |
-                            is_b_type & ~inst[14] & inst[12] & ~zero_flag |
-                            is_b_type & inst[14] & ~inst[12] & less_flag |
-                            is_b_type & inst[14] & inst[12] & ~less_flag;
-
-// MEM Control signals
-assign mem_we = ~inst[6] & inst[5] & ~inst[4];      // S
-assign mem_re = 
-assign mem_op = inst[14 : 12];
-
-
-// RF Control signals
-assign rd_we = ~(inst[5] & ~inst[4] & ~inst[2] | is_sys);   // ~((B + S) | sys)
-assign rd_input_sel[1] = inst[6] & inst[4];     // CSR
-assign rd_input_sel[0] = ~inst[5] & ~inst[4];   // Load
-
-// CSR Control signals
-assign csr_we = inst[6] & inst[4] & |inst[13 : 12]; // Zicsr    添加此类指令需重构
-assign csr_sel = inst[6] & inst[4] & inst[13];  // // Zicsr    添加此类指令需重构
-assign csr_is_ecall = is_sys & ~inst[29];
-
-// ALU Control signals
+// EXU部分 如果使用独热码，关键路径可以被优化, 面积会增加
+wire [4 : 0] alu_op;
 assign alu_op[0] = ~inst[5] & inst[4] & ~inst[2] & inst[14] & ~inst[13] & inst[12] & inst[30] |             // srai
                    inst[5] & inst[4] & inst[30] |          // R
                    inst[5] & inst[4] & inst[2];   //  lui
@@ -106,7 +97,53 @@ assign alu_op[3] = inst[4] & ~inst[2] & inst[14] |        // compute i + compute
 assign alu_left_sel = inst[2];  // U + J
 assign alu_right_sel = inst[4] & inst[2] | ~inst[5] & inst[4] | ~inst[6] & ~inst[4];    // U + competeI + L + S
 
-// imm
+wire alu_data1 = {32{alu_left_sel}} & pc | {32{~alu_left_sel}} & rs1_data;
+wire alu_data2 = {32{~alu_left_sel & ~alu_right_sel}} & rs2_data | {32{alu_left_sel & ~alu_right_sel}} & {{29{1'b0}}, 3'b100} | {32{alu_right_sel}} & imm;
+
+// CSR
+wire csr_wen = inst[6] & inst[4] & |inst[13 : 12]; // Zicsr    添加此类指令需重构
+wire csr_sel = inst[6] & inst[4] & inst[13];  // // Zicsr    添加此类指令需重构
+wire csr_is_ecall = is_sys & ~inst[29];
+
+
+// LSU部分
+wire lsu_wen = ~inst[6] & inst[5] & ~inst[4];      // S
+wire lsu_ren = ~inst[5] & ~inst[4];        // L
+wire [2 : 0] lsu_op = {inst[14], inst[13], inst[13] | inst[12]};
+
+
+
+wire is_sys = inst[6] & inst[4] & ~inst[13] & ~inst[12];    // 系统相关指令，ecall、mret，添加指令时可能需要做调整
+
+// RF WB
+wire rd_wen = ~(inst[5] & ~inst[4] & ~inst[2] | is_sys);   // ~((B + S) | sys)
+wire [1 : 0] rd_input_sel;
+assign rd_input_sel = inst[6] & inst[4];     // CSR
+assign rd_input_sel = ~inst[5] & ~inst[4];   // Load
+
+// PC部分   直通PC
+assign pc_sel[1] = is_sys & inst[29];   // mret
+assign pc_sel[0] = is_sys;  // ecall
+assign pc_sel_for_adder_left = inst[6] & ~inst[3] & inst[2];
+assign is_branch = inst[6] & ~inst[4] & ~inst[2];
+assign pc_imm = imm;
+assign pc_inst = pc_inst;
+
+endmodule
+
+
+
+
+
+
+
+
+
+// 立即数生成器
+module ImmGen #(parameter WIDTH = 32)(
+    input [31 : 0] inst,
+    output [31 : 0] imm
+);
 
 // 64位需要扩展符号位
 assign imm[WIDTH - 1 : 31] = {(WIDTH - 31){inst[31]}};
@@ -139,41 +176,6 @@ assign imm[11] = inst[31] & ~inst[6] & inst[5] & ~inst[4] |
                  inst[7] & inst[6] & ~inst[2] |
                  inst[20] & inst[3];
 
-
-// WB部分
-
-wire [WIDTH - 1 : 0] rd_data = rd_input_sel == 2'b01 ? read_data : 
-                               rd_input_sel == 2'b10 ? csr_data_out : 
-                               result;
-
-registerfile #(32) RF_INTER (
-    .clk(clk),
-    .rst(rst),
-    .we(rd_we),
-    .valid(ifu_valid),
-    .start(start),
-    .rd_addr(rd_addr),
-    .rd_data(rd_data),
-    .rs1_addr(rs1_addr),
-    .rs1_data(rs1_data),
-    .rs2_addr(rs2_addr),
-    .rs2_data(rs2_data)
-);
-
-wire [31 : 0] csr_data_in = csr_sel ? rs1_data | csr_data_out : rs1_data;
-
-CSR #(32) CSR_INTER(
-    .clk(clk),
-    .rst(rst),
-    .we(csr_we),
-    .is_ecall(csr_is_ecall),
-    .addr(inst[31 : 20]),
-    .data_in(csr_data_in),
-    .pc(pc),
-    .data_out(csr_data_out),
-    .mtvec(mtvec),
-    .mepc(mepc)
-);
-
-
 endmodule
+
+

@@ -1,30 +1,122 @@
 module EXU #(parameter WIDTH = 32) (
-    input [3 : 0] alu_op,
-    input [WIDTH - 1 : 0] rs1,
-    input [WIDTH - 1 : 0] pc,
-    input [WIDTH - 1 : 0] imm,
-    input [WIDTH - 1 : 0] rs2,
-    input alu_sel_left,
-    input [1 : 0] alu_sel_right,
+    input clk,
+    input rst,
 
-    output [WIDTH - 1 : 0] result,
-    output zero_flag
+    input idu_valid,
+    input [190 : 0] idu_data,
+    output exu_ready,
+
+    output exu_valid,
+    output reg [107 : 0] exu_data,
+    input lsu_ready,
+
+
+    // 直通PC
+    // 仅仅适用多周期处理器
+    input [1 : 0] pc_sel,
+    input pc_sel_for_adder_left,
+    input is_branch,
+    input [31 : 0] imm,
+    input [31 : 0] inst,
+    output [31 : 0] pc
 );
 
-// 判断需要的数据
-wire [WIDTH - 1 : 0] left_data = alu_sel_left ? pc : rs1;
-wire [WIDTH - 1 : 0] right_data = alu_sel_right == 2'b00 ? rs2 : 
-                                  alu_sel_right == 2'b10 ? {{(WIDTH - 3){1'b0}}, 3'b100} : 
-                                  imm;
+
+
+wire [WIDTH - 1 : 0] alu_data1 = idu_data[190 : 159];
+wire [WIDTH - 1 : 0] alu_data2 = idu_data[158 : 127];
+wire [3 : 0] alu_op = idu_data[126 : 123];
+wire csr_wen = idu_data[122];
+wire csr_is_ecall = idu_data[121];
+wire [11 : 0] csr_addr = idu_data[120 : 109];
+wire [31 : 0] pc_now = idu_data[108 : 77];
+wire [31 : 0] rs1_data = idu_data[76 : 45];
+wire [44 : 0] rest_idu_data = idu_data[44 : 0];
+
+
+
+typedef enum logic { 
+    S_IDLE,
+    S_WAIT_READY,
+} exu_state_t;
+
+exu_state_t state, next_state;
+
+always_ff @(posedge clk) begin
+    state <= rst ? S_IDLE : next_state;
+end
+
+always_comb begin
+    case(state)
+        S_IDLE:
+            next_state = (exu_valid & ~lsu_ready) ? S_WAIT_READY : S_IDLE;
+        S_WAIT_READY:
+            next_state = (lsu_ready) ? S_IDLE : S_WAIT_READY;
+        default:
+            next_state <= S_IDLE;
+    endcase
+end
+
+reg has_new_data;
+always_ff @(posedge clk) begin
+    has_new_data <= (idu_valid & exu_ready) ? 1'b1 : 1'b0;
+end
+
+assign exu_ready = lsu_ready;
+assign exu_valid = has_new_data | (state == S_WAIT_READY);
+
+wire [31 : 0] alu_result;
+wire zero_flag;
 
 ALU #(WIDTH) alu (
     .alu_op(alu_op),
-    .left_data(left_data),
-    .right_data(right_data),
-    .result(result),
+    .left_data(alu_data1),
+    .right_data(alu_data2),
+    .result(alu_result),
     .zero_flag(zero_flag)
 );
 
+
+// 直接在EXU内做完对CSR寄存器的读取写入全流程
+wire [31 : 0] mtvec;    // For PC
+wire [31 : 0] mepc;     // For PC
+
+wire [31 : 0] csr_data_i = csr_sel ? rs1_data | csr_data_o : rs1_data;
+CSR #(32) CSR_INTER(
+    .clk(clk),
+    .rst(rst),
+    .wen(csr_wen & has_new_data),
+    .is_ecall(csr_is_ecall & has_new_data),
+    .addr(csr_addr),
+    .data_in(csr_data_i),
+    .pc(pc_now),
+    .data_out(csr_data_o),
+    .mtvec(mtvec),
+    .mepc(mepc)
+);
+
+always_ff @(posedge clk) begin
+    exu_data <= (exu_valid & lsu_ready) ? {alu_result, rest_idu_data, csr_data_o} : exu_data;
+end
+
+
+// PC直通
+PC #(WIDTH) PC_INTER(
+    .clk(clk),
+    .rst(rst),
+    .valid(exu_valid),
+    .sel(pc_sel),
+    .sel_for_adder_left(pc_sel_for_adder_left),
+    .is_branch(is_branch),
+    .zero_flag(zero_flag),
+    .less_flag(alu_result[0]),
+    .inst(inst),
+    .rs1(rs1_data),
+    .imm(imm),
+    .mtvec(mtvec),
+    .mepc(mepc),
+    .pc(pc)
+);
 
 
 endmodule

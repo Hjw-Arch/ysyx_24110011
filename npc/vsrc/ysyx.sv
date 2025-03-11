@@ -3,112 +3,100 @@ module ysyx #(parameter WIDTH = 32) (
     input rst
 );
 
-// 内部信号
 // PC
+// 五级流水线需要修改
 wire [1 : 0] pc_sel;
-wire pc_sel_for_adder_left, pc_sel_for_adder_right;
-wire [WIDTH - 1 : 0] rs1_data, rs2_data, imm, mtvec, mepc;
-wire [WIDTH - 1 : 0] pc;
+wire pc_sel_for_adder_left;
+wire is_branch;
+wire [31 : 0] pc_imm;
+wire [31 : 0] pc_inst;
+wire pc;
+
 
 // IF
-wire [31 : 0] inst;
 wire ifu_valid;
-wire ifu_ready;
-wire start;
+wire [63 : 0] ifu_data;
 
 // ID
-wire [4 : 0] rd_addr, rs1_addr, rs2_addr;
-wire [3 : 0] alu_op;
-wire alu_left_sel, alu_right_sel;
-wire mem_we;
-wire [2 : 0] mem_op;
-wire rd_we;
-wire [1 : 0] rd_input_sel;
-wire [WIDTH - 1 : 0] csr_data_out;
-wire csr_we, csr_sel, csr_is_ecall;
+wire idu_ready;
+wire idu_valid;
+wire [190 : 0] idu_data;
+
 
 // EX
-wire [WIDTH - 1 : 0] result;
-wire zero_flag;
+wire exu_ready;
+wire exu_valid;
+wire [107 : 0] exu_data;
 
-// MEM
-wire [WIDTH - 1 : 0] read_data;
+// LS
+wire lsu_ready;
+wire lsu_valid;
+wire [ : ] lsu_data;
 
-// PC
 
-PC #(WIDTH) PC_INTER(
-    .clk(clk),
-    .rst(rst),
-    .valid(ifu_valid),
-    .sel(pc_sel),
-    .sel_for_adder_left(pc_sel_for_adder_left),
-    .sel_for_adder_right(pc_sel_for_adder_right),
-    .rs1(rs1_data),
-    .imm(imm),
-    .mtvec(mtvec),
-    .mepc(mepc),
-    .pc(pc)
-);
+
 
 // IF
 IFU #(32) IFU_INTER(
     .clk(clk),
     .rst(rst),
-    .pc(pc),
     .start(start),
+    .pc(pc),        // 五级流水线需要修改
     .ifu_valid(ifu_valid),
-    .ifu_inst(inst),
-    .ifu_ready(ifu_ready)
+    .ifu_data(ifu_data),
+    .idu_ready(idu_ready)
 );
+
 
 // ID
 IDU #(32) IDU_INTER(
-    .inst(inst),
-    .zero_flag(zero_flag),
-    .less_flag(result[0]),
-    .rd_addr(rd_addr),
     .rs1_addr(rs1_addr),
     .rs2_addr(rs2_addr),
-    .alu_op(alu_op),
-    .alu_left_sel(alu_left_sel),
-    .alu_right_sel(alu_right_sel),
-    .pc_val_sel(pc_sel),
-    .pc_adder_left_sel(pc_sel_for_adder_left),
-    .pc_adder_right_sel(pc_sel_for_adder_right),
-    .mem_we(mem_we),
-    .mem_op(mem_op),
-    .rd_we(rd_we),
-    .rd_input_sel(rd_input_sel),
-    .csr_we(csr_we),
-    .csr_sel(csr_sel),
-    .csr_is_ecall(csr_is_ecall),
+    .rs1_data(rs1_data),
+    .rs2_data(rs2_data),
+
+    .clk(clk),
+    .rst(rst),
+    .ifu_valid(ifu_valid),
+    .ifu_data(ifu_data),
+    .idu_ready(idu_ready),
+    .idu_valid(idu_valid),
+    .idu_data(idu_data),
+    .exu_ready(exu_ready),
+
+    // PC直通，五级流水线需要修改
+    .pc_sel(pc_sel),
+    .pc_sel_for_adder_left(pc_sel_for_adder_left),
+    .is_branch(is_branch),
     .imm(imm),
-    .ifu_ready(ifu_ready)
+    .inst(inst)
 );
 
 // EX
 EXU #(32) EXU_INTER(
-    .alu_op(alu_op),
-    .rs1(rs1_data),
-    .pc(pc),
+    .clk(clk),
+    .rst(rst),
+
+    .idu_valid(idu_valid),
+    .idu_data(idu_data),
+    .exu_ready(exu_ready),
+
+    .exu_valid(exu_valid),
+    .exu_data(exu_data),
+    .lsu_ready(lsu_ready),
+
+    // 直通PC，五级流水线需修改
+    .pc_sel(pc_sel),
+    .pc_sel_for_adder_left(pc_sel_for_adder_left),
+    .is_branch(is_branch),
     .imm(imm),
-    .rs2(rs2_data),
-    .alu_sel_left(alu_left_sel),
-    .alu_sel_right({alu_left_sel, alu_right_sel}),
-    .result(result),
-    .zero_flag(zero_flag)
+    .inst(inst),
+    .pc(pc)
 );
 
 // MEM
 LSU #(32) LSU_INTER(
-    .clk(clk),
-    .we(mem_we),
-    .valid(ifu_valid),
-    .mem_op(mem_op),
-    .write_addr(result),
-    .write_data(rs2_data),
-    .read_addr(result),
-    .read_data(read_data)
+    
 );
 
 // WB  rf

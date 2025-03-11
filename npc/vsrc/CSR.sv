@@ -1,8 +1,9 @@
 // not a competed version
+// 在五级流水线中，如果需要分步、分别堆CSR进行读和写，需要添加读地址和写地址
 module CSR #(parameter WIDTH = 32) (
     input clk,
     input rst,
-    input we,
+    input wen,
     input is_ecall,
     input [11 : 0] addr,
     input [WIDTH - 1 : 0] data_in,
