@@ -86,7 +86,7 @@ always_ff @(posedge clk) begin
 end
 
 
-assign RDATA = (~is_rcnt_not_zero) ? pmem_read(raddr_buf, {28'b0, WSTRB}) : 32'b0;  // 这里的r_state == R_ACTIVE可能没什么必要，除非0周期读数
+assign RDATA = ~is_rcnt_not_zero ? pmem_read(raddr_buf, {28'b0, WSTRB}) : 32'b0;
 assign RRESP = 2'b00;
 
 
@@ -145,7 +145,9 @@ assign WREADY = w_state == W_IDLE | w_state == W_WAIT_DATA;
 assign BVALID = w_state == W_ACTIVE & ~is_wcnt_not_zero | w_state == W_WAIT_BREADY;
 
 always_comb begin
-    if (~is_wcnt_not_zero) pmem_write(waddr_buf, wdata_buf, {28'b0, WSTRB});
+    if (~is_wcnt_not_zero && w_state == W_ACTIVE) begin
+       pmem_write(waddr_buf, wdata_buf, {28'b0, WSTRB});
+    end
 end
 
 assign BRESP = 2'b00;

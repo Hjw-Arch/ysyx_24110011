@@ -44,8 +44,10 @@ module axi4_lite_master (
     output BREADY
 );
 
-typedef enum logic { 
+// 五级流水线的时候可以不需要R_WAIT_ARREADY
+typedef enum logic [2 : 0] { 
     R_IDLE,
+    R_WAIT_ARREADY,
     R_WAIT_RDATA
 } r_state_t;
 
@@ -66,7 +68,13 @@ end
 always_comb begin
     case(r_state)
         R_IDLE:
-            next_r_state = ARVALID & ARREADY ? R_WAIT_RDATA : R_IDLE;
+            case({ARVALID, ARREADY})
+                2'b11: next_r_state = R_WAIT_RDATA;
+                2'b10: next_r_state = R_WAIT_ARREADY;
+                default: next_r_state = R_IDLE;
+            endcase
+        R_WAIT_ARREADY:
+            next_r_state = ARREADY ? R_WAIT_RDATA : R_WAIT_ARREADY;
         R_WAIT_RDATA:
             next_r_state = RVALID & RREADY ? R_IDLE : R_WAIT_RDATA;
         default: 
@@ -78,9 +86,8 @@ assign ARADDR = raddr;
 assign rdata = RDATA;
 assign rresp = RRESP;
 
-assign ARVALID = r_state == R_IDLE & ren;
+assign ARVALID = r_state == R_IDLE & ren | r_state == R_WAIT_ARREADY;
 assign RREADY = r_state == R_WAIT_RDATA & user_ready;
-
 
 
 // 写通道
