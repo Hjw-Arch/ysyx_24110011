@@ -8,7 +8,7 @@ module ysyx #(parameter WIDTH = 32) (
 );
 
 assign inst = ifu_data[63 : 32];
-assign PC = pc;
+assign PC = ifu_data[31 : 0];
 
 // PC
 // 五级流水线需要修改
@@ -25,6 +25,7 @@ wire ifu_valid;
 wire [63 : 0] ifu_data;
 wire [4 : 0] rs1_addr;
 wire [4 : 0] rs2_addr;
+wire ifu_prerequest;
 
 // ID
 wire idu_ready;
@@ -36,14 +37,17 @@ wire [191 : 0] idu_data;
 wire exu_ready;
 wire exu_valid;
 wire [108 : 0] exu_data;
+wire pre_lsu_ren;
+wire pre_lsu_wen;
 
 // LS
 wire lsu_ready;
 wire lsu_valid;
 wire [103 : 0] lsu_data;
+wire lsu_prerequest;
 
 // WB
-wire can_start;
+wire wbu_valid;
 wire [31 : 0] rs1_data;
 wire [31 : 0] rs2_data;
 
@@ -52,12 +56,13 @@ wire [31 : 0] rs2_data;
 IFU #(WIDTH) IFU_INTER(
     .clk       	(clk        ),
     .rst       	(rst        ),
-    .start     	(can_start  ),
+    .wbu_valid  (wbu_valid  ),
     .pc        	(pc         ),
     .ifu_valid 	(ifu_valid  ),
     .ifu_data  	(ifu_data   ),
     .idu_ready 	(idu_ready  ),
     // SRAM
+    .prerequest(ifu_prerequest),
     .ARADDR    	(IFU_ARADDR ),
     .ARVALID   	(IFU_ARVALID),
     .RREADY    	(IFU_RREADY ),
@@ -116,6 +121,9 @@ EXU #(WIDTH) EXU_INTER(
     .exu_data(exu_data),
     .lsu_ready(lsu_ready),
 
+    .pre_lsu_ren(pre_lsu_ren),
+    .pre_lsu_wen(pre_lsu_wen),
+
     // 直通PC，五级流水线需修改
     .pc_sel(pc_sel),
     .pc_sel_for_adder_left(pc_sel_for_adder_left),
@@ -136,6 +144,9 @@ LSU LSU_INTER(
     .lsu_data  	(lsu_data   ),
     .wbu_ready 	(1'b1       ),
     // SRAM
+    .pre_lsu_ren(pre_lsu_ren),
+    .pre_lsu_wen(pre_lsu_wen),
+    .prerequest(lsu_prerequest),
     .ARADDR    	(LSU_ARADDR ),
     .ARVALID   	(LSU_ARVALID),
     .RREADY    	(LSU_RREADY ),
@@ -168,7 +179,7 @@ WBU #(WIDTH) WBU_INTER(
 
     .lsu_valid(lsu_valid),
     .lsu_data(lsu_data),
-    .can_start(can_start)
+    .wbu_valid(wbu_valid)
 );
 
 
@@ -230,7 +241,7 @@ wire [1 : 0] mbready = {LSU_BREADY, IFU_BREADY};
 axi4_lite_arbiter u_axi4_lite_arbiter(
     .clk        	(clk         ),
     .rst        	(rst         ),
-    .prerequest 	({1'b0, 1'b0}),
+    .prerequest 	({lsu_prerequest, ifu_prerequest}),
     .maraddr    	(maraddr     ),
     .marvalid   	(marvalid    ),
     .marready   	(marready    ),
@@ -311,30 +322,30 @@ wire [31 : 0] SRAM_WDATA = swdata;
 wire [3 : 0] SRAM_WSTRB = swstrb;
 wire SRAM_BREADY = sbready;
 
-SRAM #(
-    .R_DELAY_TIME 	(1  ),
-    .W_DELAY_TIME 	(1  ))
-u_SRAM(
-    .clk     	(clk      ),
-    .rst     	(rst      ),
-    .ARVALID 	(SRAM_ARVALID  ),
-    .ARREADY 	(SRAM_ARREADY  ),
-    .ARADDR  	(SRAM_ARADDR   ),
-    .RVALID  	(SRAM_RVALID   ),
-    .RREADY  	(SRAM_RREADY   ),
-    .RDATA   	(SRAM_RDATA    ),
-    .RRESP   	(SRAM_RRESP    ),
-    .AWVALID 	(SRAM_AWVALID  ),
-    .AWREADY 	(SRAM_AWREADY  ),
-    .AWADDR  	(SRAM_AWADDR   ),
-    .WVALID  	(SRAM_WVALID   ),
-    .WREADY  	(SRAM_WREADY   ),
-    .WDATA   	(SRAM_WDATA    ),
-    .WSTRB   	(SRAM_WSTRB    ),
-    .BREADY  	(SRAM_BREADY   ),
-    .BVALID  	(SRAM_BVALID   ),
-    .BRESP   	(SRAM_BRESP    )
-);
+// SRAM #(
+//     .R_DELAY_TIME 	(1  ),
+//     .W_DELAY_TIME 	(1  ))
+// u_SRAM(
+//     .clk     	(clk      ),
+//     .rst     	(rst      ),
+//     .ARVALID 	(SRAM_ARVALID  ),
+//     .ARREADY 	(SRAM_ARREADY  ),
+//     .ARADDR  	(SRAM_ARADDR   ),
+//     .RVALID  	(SRAM_RVALID   ),
+//     .RREADY  	(SRAM_RREADY   ),
+//     .RDATA   	(SRAM_RDATA    ),
+//     .RRESP   	(SRAM_RRESP    ),
+//     .AWVALID 	(SRAM_AWVALID  ),
+//     .AWREADY 	(SRAM_AWREADY  ),
+//     .AWADDR  	(SRAM_AWADDR   ),
+//     .WVALID  	(SRAM_WVALID   ),
+//     .WREADY  	(SRAM_WREADY   ),
+//     .WDATA   	(SRAM_WDATA    ),
+//     .WSTRB   	(SRAM_WSTRB    ),
+//     .BREADY  	(SRAM_BREADY   ),
+//     .BVALID  	(SRAM_BVALID   ),
+//     .BRESP   	(SRAM_BRESP    )
+// );
 
 
 

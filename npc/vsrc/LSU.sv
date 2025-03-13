@@ -1,16 +1,20 @@
 module LSU (
-    input clk,
-    input rst,
+    input  clk,
+    input  rst,
 
-    input exu_valid,
-    input [108 : 0] exu_data,
+    input  exu_valid,
+    input  [108 : 0] exu_data,
     output lsu_ready,
 
     output lsu_valid,
     output reg [103 : 0] lsu_data,
-    input wbu_ready,
+    input  wbu_ready,
 
     // 连接SRAM
+    // 来自上游模块的预使能信号
+    input  pre_lsu_ren,
+    input  pre_lsu_wen,
+    output prerequest,      // 给到总线仲裁器
     // output declaration of module axi4_lite_master
     output [31:0] ARADDR,
     output ARVALID,
@@ -23,14 +27,14 @@ module LSU (
     output BREADY,
 
     // input declaration of module SRAM
-    input ARREADY,
-    input RVALID,
-    input [31:0] RDATA,
-    input [1:0] RRESP,
-    input AWREADY,
-    input WREADY,
-    input BVALID,
-    input [1:0] BRESP
+    input  ARREADY,
+    input  RVALID,
+    input  [31:0] RDATA,
+    input  [1:0] RRESP,
+    input  AWREADY,
+    input  WREADY,
+    input  BVALID,
+    input  [1:0] BRESP
 );
 
 
@@ -141,6 +145,8 @@ axi4_lite_master u_axi4_lite_master(
     .BREADY     	(BREADY      )
 );
 
+// 提前通知仲裁器
+assign prerequest = exu_valid & lsu_ready & pre_lsu_ren | exu_valid & lsu_ready & pre_lsu_wen;
 
 
 endmodule
