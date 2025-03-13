@@ -50,8 +50,8 @@ wire [39 : 0] rest_exu_data = exu_data[39 : 0];
 // 五级流水线时，lsu是必经之路，但是多周期lsu可以跳过，不过我不打算跳过了
 // 五级流水线时，S_WAIT_READY不需要，只要发生valid就可以，不需要这种状态机，多周期这里不更改了
 
-import "DPI-C" function int pmem_read(input int addr, input int len);
-import "DPI-C" function void pmem_write(input int addr, input int data, input int len);
+// import "DPI-C" function int pmem_read(input int addr, input int len);
+// import "DPI-C" function void pmem_write(input int addr, input int data, input int len);
 
 typedef enum logic { 
     S_IDLE,

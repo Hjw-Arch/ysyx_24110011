@@ -322,30 +322,30 @@ wire [31 : 0] SRAM_WDATA = swdata;
 wire [3 : 0] SRAM_WSTRB = swstrb;
 wire SRAM_BREADY = sbready;
 
-// SRAM #(
-//     .R_DELAY_TIME 	(1  ),
-//     .W_DELAY_TIME 	(1  ))
-// u_SRAM(
-//     .clk     	(clk      ),
-//     .rst     	(rst      ),
-//     .ARVALID 	(SRAM_ARVALID  ),
-//     .ARREADY 	(SRAM_ARREADY  ),
-//     .ARADDR  	(SRAM_ARADDR   ),
-//     .RVALID  	(SRAM_RVALID   ),
-//     .RREADY  	(SRAM_RREADY   ),
-//     .RDATA   	(SRAM_RDATA    ),
-//     .RRESP   	(SRAM_RRESP    ),
-//     .AWVALID 	(SRAM_AWVALID  ),
-//     .AWREADY 	(SRAM_AWREADY  ),
-//     .AWADDR  	(SRAM_AWADDR   ),
-//     .WVALID  	(SRAM_WVALID   ),
-//     .WREADY  	(SRAM_WREADY   ),
-//     .WDATA   	(SRAM_WDATA    ),
-//     .WSTRB   	(SRAM_WSTRB    ),
-//     .BREADY  	(SRAM_BREADY   ),
-//     .BVALID  	(SRAM_BVALID   ),
-//     .BRESP   	(SRAM_BRESP    )
-// );
+SRAM #(
+    .R_DELAY_TIME 	(1  ),
+    .W_DELAY_TIME 	(1  ))
+u_SRAM(
+    .clk     	(clk      ),
+    .rst     	(rst      ),
+    .ARVALID 	(SRAM_ARVALID  ),
+    .ARREADY 	(SRAM_ARREADY  ),
+    .ARADDR  	(SRAM_ARADDR   ),
+    .RVALID  	(SRAM_RVALID   ),
+    .RREADY  	(SRAM_RREADY   ),
+    .RDATA   	(SRAM_RDATA    ),
+    .RRESP   	(SRAM_RRESP    ),
+    .AWVALID 	(SRAM_AWVALID  ),
+    .AWREADY 	(SRAM_AWREADY  ),
+    .AWADDR  	(SRAM_AWADDR   ),
+    .WVALID  	(SRAM_WVALID   ),
+    .WREADY  	(SRAM_WREADY   ),
+    .WDATA   	(SRAM_WDATA    ),
+    .WSTRB   	(SRAM_WSTRB    ),
+    .BREADY  	(SRAM_BREADY   ),
+    .BVALID  	(SRAM_BVALID   ),
+    .BRESP   	(SRAM_BRESP    )
+);
 
 
 
