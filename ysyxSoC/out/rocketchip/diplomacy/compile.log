@@ -1,0 +1,12 @@
+[0m[[0m[0minfo[0m] [0m[0mcompiling 36 Scala sources to /home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/diplomacy/compile.dest/classes ...[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/src/diplomacy/nodes/NodeImp.scala:62:20: parameter node in method mixI is never used[0m
+[0m[[0m[33mwarn[0m] [0m[0m  def mixI(pu: UI, node: InwardNode[DI, UI, BI]): UI = pu[0m
+[0m[[0m[33mwarn[0m] [0m[0m                   ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/src/diplomacy/nodes/NodeImp.scala:137:20: parameter node in method mixO is never used[0m
+[0m[[0m[33mwarn[0m] [0m[0m  def mixO(pd: DO, node: OutwardNode[DO, UO, BO]): DO = pd[0m
+[0m[[0m[33mwarn[0m] [0m[0m                   ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:5:8: Importing from firrtl is deprecated as of Chisel's 3.6.0 release.[0m
+[0m[[0m[33mwarn[0m] [0m[0mimport firrtl.passes.InlineAnnotation[0m
+[0m[[0m[33mwarn[0m] [0m[0m       ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mthree warnings found[0m
+[0m[[0m[0minfo[0m] [0m[0mdone compiling[0m

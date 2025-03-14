@@ -1,0 +1,9 @@
+{
+    "value": [
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/compile-resources",
+        "ref:v0:6862d815:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/src/main/resources",
+        "ref:v0:d24a3704:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/compile.dest/classes"
+    ],
+    "valueHash": -351064070,
+    "inputsHash": -1694210185
+}

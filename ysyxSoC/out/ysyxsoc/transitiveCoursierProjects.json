@@ -1,0 +1,2050 @@
+{
+    "value": [
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "ysyxsoc"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        },
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "rocketchip"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-macros"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-macros"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-hardfloat"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-hardfloat"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-diplomacy"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-diplomacy"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "com.lihaoyi"
+                            },
+                            "name": {
+                                "value": "mainargs_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0.5.4",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "com.lihaoyi"
+                            },
+                            "name": {
+                                "value": "mainargs_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0.5.4",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.json4s"
+                            },
+                            "name": {
+                                "value": "json4s-jackson_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "4.0.6",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.json4s"
+                            },
+                            "name": {
+                                "value": "json4s-jackson_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "4.0.6",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        },
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "rocketchip-macros"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-reflect"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-reflect"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        },
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "rocketchip-hardfloat"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        },
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "rocketchip-diplomacy"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-cde"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "mill-internal"
+                            },
+                            "name": {
+                                "value": "rocketchip-cde"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0+mill-internal",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.chipsalliance"
+                            },
+                            "name": {
+                                "value": "chisel_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "7.0.0-M2",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "com.lihaoyi"
+                            },
+                            "name": {
+                                "value": "sourcecode_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0.3.1",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "com.lihaoyi"
+                            },
+                            "name": {
+                                "value": "sourcecode_2.13"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "0.3.1",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        },
+        {
+            "module": {
+                "organization": {
+                    "value": "mill-internal"
+                },
+                "name": {
+                    "value": "rocketchip-cde"
+                },
+                "attributes": {}
+            },
+            "version": "0+mill-internal",
+            "dependencies": [
+                [
+                    {
+                        "value": "compile"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "compile"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    {
+                        "module": {
+                            "organization": {
+                                "value": "org.scala-lang"
+                            },
+                            "name": {
+                                "value": "scala-library"
+                            },
+                            "attributes": {}
+                        },
+                        "version": "2.13.14",
+                        "configuration": {
+                            "value": "runtime"
+                        },
+                        "minimizedExclusions": {
+                            "data": "coursier.core.MinimizedExclusions.ExcludeNone"
+                        },
+                        "publication": {
+                            "name": "",
+                            "type": {
+                                "value": ""
+                            },
+                            "ext": {
+                                "value": ""
+                            },
+                            "classifier": {
+                                "value": ""
+                            }
+                        },
+                        "optional": false,
+                        "transitive": true,
+                        "overrides": [],
+                        "boms": [],
+                        "bomDependencies": [],
+                        "overridesMap": []
+                    }
+                ]
+            ],
+            "configurations": [
+                [
+                    {
+                        "value": "test"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "provided"
+                    },
+                    [
+                        {
+                            "value": "provided"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "compile"
+                    },
+                    []
+                ],
+                [
+                    {
+                        "value": "default"
+                    },
+                    [
+                        {
+                            "value": "runtime"
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "value": "runtime"
+                    },
+                    [
+                        {
+                            "value": "compile"
+                        }
+                    ]
+                ]
+            ],
+            "parent": [],
+            "dependencyManagement": [],
+            "properties": [],
+            "profiles": [],
+            "versions": [],
+            "snapshotVersioning": [],
+            "packagingOpt": [],
+            "relocated": false,
+            "actualVersionOpt": [],
+            "publications": [],
+            "info": {
+                "description": "",
+                "homePage": "",
+                "developers": [],
+                "publication": [],
+                "scm": [],
+                "licenseInfo": []
+            },
+            "overrides": []
+        }
+    ],
+    "valueHash": 882255019,
+    "inputsHash": -1717957992
+}

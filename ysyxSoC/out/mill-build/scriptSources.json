@@ -1,0 +1,11 @@
+{
+    "value": [
+        "ref:v0:8e2c9afc:/home/hjw-arch/ysyx-workbench/ysyxSoC/build.sc",
+        "ref:v0:a323e437:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/common.sc",
+        "ref:v0:fcb8a0ae:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/common.sc",
+        "ref:v0:f18a6578:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/common.sc",
+        "ref:v0:97b300ce:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/hardfloat/common.sc"
+    ],
+    "valueHash": -1733883203,
+    "inputsHash": 1179763233
+}

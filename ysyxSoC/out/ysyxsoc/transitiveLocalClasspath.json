@@ -1,0 +1,21 @@
+{
+    "value": [
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/cde/compile-resources",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/cde/resources",
+        "ref:v0:3837b465:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/cde/compile.dest/classes",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/compile-resources",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/resources",
+        "ref:v0:41945126:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/diplomacy/compile.dest/classes",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/hardfloat/hardfloat/compile-resources",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/hardfloat/hardfloat/src/main/resources",
+        "ref:v0:390fc082:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/hardfloat/compile.dest/classes",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/macros/compile-resources",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/macros/src/main/resources",
+        "ref:v0:5778bdf9:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/macros/compile.dest/classes",
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/compile-resources",
+        "ref:v0:6862d815:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/src/main/resources",
+        "ref:v0:d24a3704:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/compile.dest/classes"
+    ],
+    "valueHash": -1465356788,
+    "inputsHash": -1333092288
+}

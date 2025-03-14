@@ -1,0 +1,8 @@
+{
+    "value": [
+        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/diplomacy/diplomacy/resources",
+        "ref:v0:41945126:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/diplomacy/compile.dest/classes"
+    ],
+    "valueHash": -777828679,
+    "inputsHash": 1053268281
+}

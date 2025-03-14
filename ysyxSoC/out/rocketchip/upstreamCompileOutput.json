@@ -1,0 +1,22 @@
+{
+    "value": [
+        {
+            "analysisFile": "/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/macros/compile.dest/zinc",
+            "classes": "ref:v0:5778bdf9:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/macros/compile.dest/classes"
+        },
+        {
+            "analysisFile": "/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/hardfloat/compile.dest/zinc",
+            "classes": "ref:v0:390fc082:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/hardfloat/compile.dest/classes"
+        },
+        {
+            "analysisFile": "/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/cde/compile.dest/zinc",
+            "classes": "ref:v0:3837b465:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/cde/compile.dest/classes"
+        },
+        {
+            "analysisFile": "/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/diplomacy/compile.dest/zinc",
+            "classes": "ref:v0:41945126:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/diplomacy/compile.dest/classes"
+        }
+    ],
+    "valueHash": 1905911193,
+    "inputsHash": -435814834
+}
