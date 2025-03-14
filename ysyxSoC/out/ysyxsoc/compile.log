@@ -1,7 +1,0 @@
-[0m[[0m[0minfo[0m] [0m[0mcompiling 35 Scala sources to /home/hjw-arch/ysyx-workbench/ysyxSoC/out/ysyxsoc/compile.dest/classes ...[0m
-[0m[[0m[33mwarn[0m] [0m[0m1 deprecation (since 2.13.0)[0m
-[0m[[0m[33mwarn[0m] [0m[0m1 deprecation (since 2.13.3)[0m
-[0m[[0m[33mwarn[0m] [0m[0m90 deprecations (since rocketchip 2.0.0)[0m
-[0m[[0m[33mwarn[0m] [0m[0m92 deprecations in total; re-run with -deprecation for details[0m
-[0m[[0m[33mwarn[0m] [0m[0mfour warnings found[0m
-[0m[[0m[0minfo[0m] [0m[0mdone compiling[0m

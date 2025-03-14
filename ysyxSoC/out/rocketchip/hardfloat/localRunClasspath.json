@@ -1,8 +1,0 @@
-{
-    "value": [
-        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/hardfloat/hardfloat/src/main/resources",
-        "ref:v0:390fc082:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/hardfloat/compile.dest/classes"
-    ],
-    "valueHash": -1996083258,
-    "inputsHash": -773003434
-}

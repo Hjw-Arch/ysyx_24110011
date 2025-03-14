@@ -1,8 +1,0 @@
-{
-    "value": [
-        "qref:v1:472d5ac4:/home/hjw-arch/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
-        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/cde/compile-resources"
-    ],
-    "valueHash": 215215621,
-    "inputsHash": -781057925
-}

@@ -1,9 +1,0 @@
-{
-    "value": [
-        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/cde/compile-resources",
-        "ref:v0:c984eca8:/home/hjw-arch/ysyx-workbench/ysyxSoC/rocket-chip/dependencies/cde/cde/resources",
-        "ref:v0:3837b465:/home/hjw-arch/ysyx-workbench/ysyxSoC/out/rocketchip/cde/compile.dest/classes"
-    ],
-    "valueHash": -231037200,
-    "inputsHash": 2032690854
-}
