@@ -44,7 +44,7 @@ module axi4_lite_master (
     output BREADY
 );
 
-// 五级流水线的时候可以不需要R_WAIT_ARREADY
+
 typedef enum logic [2 : 0] { 
     R_IDLE,
     R_WAIT_ARREADY,
